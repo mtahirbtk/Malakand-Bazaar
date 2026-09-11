@@ -21,10 +21,10 @@ export function AnnouncementBar() {
   const [tehsil, setTehsil] = React.useState("all");
 
   return (
-    <aside className="bg-accent-green-dark text-white text-xs font-medium py-1.5 px-4 sm:px-8 border-b border-accent-green-darker/40">
+    <aside className="bg-accent-green-dark text-white text-sm font-medium py-2.5 px-4 sm:px-8 border-b border-accent-green-darker/40">
       <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 pr-3 border-r border-white/30">
+          <div className="hidden sm:flex items-center gap-2 pr-3 border-r border-white/30">
             <a className="hover:opacity-80 transition-opacity" href="#" title={t("facebook")}>
               <Icon name="public" size={15} />
             </a>
@@ -41,7 +41,10 @@ export function AnnouncementBar() {
           </span>
         </div>
 
-        <div className="flex items-center gap-3 text-[11px]">
+        {/* Tehsil + language move into the mobile hamburger drawer (SiteHeader)
+            below sm — duplicated below, not shared, since neither component
+            has a global filter store yet. */}
+        <div className="hidden sm:flex items-center gap-3 text-[11px]">
           <span className="hidden md:inline-block text-white/90">{t("officialHub")}</span>
           <div className="flex items-center gap-1 bg-white/15 px-2.5 py-0.5 rounded-full backdrop-blur-sm border border-white/20">
             <Icon name="location_on" size={14} />
@@ -57,7 +60,7 @@ export function AnnouncementBar() {
               chevronClassName="text-white/80"
             />
           </div>
-          <div className="hidden sm:flex items-center bg-white/15 px-2 py-0.5 rounded-full backdrop-blur-sm border border-white/20">
+          <div className="flex items-center bg-white/15 px-2 py-0.5 rounded-full backdrop-blur-sm border border-white/20">
             <LocaleSwitcher
               variant="bare"
               className="text-white h-auto py-0 pl-1 pr-0"

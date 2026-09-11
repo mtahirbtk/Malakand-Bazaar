@@ -145,7 +145,7 @@ export default function HomeContent() {
       >
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-primary tracking-tight">
+            <h2 className="text-lg sm:text-xl font-extrabold text-on-surface tracking-tight">
               {t("sectors.heading")}
             </h2>
             <p className="text-xs text-on-surface-muted">{t("sectors.subheading")}</p>
@@ -168,9 +168,7 @@ export default function HomeContent() {
       {/* 3. Shelf A: Electronics & Solar Tech */}
       <section className="space-y-4">
         <SectionHeader
-          eyebrow={t("shelfA.eyebrow")}
           title={t("shelfA.title")}
-          icon="solar_power"
           actionLabel={t("shelfA.action")}
           actionHref="/search?category=solar-energy"
         />
@@ -184,14 +182,9 @@ export default function HomeContent() {
       {/* 4. Shelf B: Fresh Valley Fruits & Agro Produce */}
       <section className="space-y-4">
         <SectionHeader
-          eyebrow={t("shelfB.eyebrow")}
-          eyebrowIcon="spa"
           title={t("shelfB.title")}
-          icon="nutrition"
           actionLabel={t("shelfB.action")}
           actionHref="/search?category=fresh-produce-food"
-          tileClassName="bg-[#fef5ec]"
-          iconClassName="text-[#875520]"
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {byId(SHELF_B_IDS).map((listing) => (
@@ -203,13 +196,9 @@ export default function HomeContent() {
       {/* 5. Shelf C: Vehicles & Motorbikes */}
       <section className="space-y-4">
         <SectionHeader
-          eyebrow={t("shelfC.eyebrow")}
-          eyebrowIcon="directions_car"
           title={t("shelfC.title")}
-          icon="two_wheeler"
           actionLabel={t("shelfC.action")}
           actionHref="/search?category=vehicles"
-          iconClassName="text-secondary"
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {byId(SHELF_C_IDS).map((listing) => (
@@ -225,11 +214,7 @@ export default function HomeContent() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-4">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-1.5 text-accent-green-dark font-extrabold text-xs uppercase tracking-wider">
-              <Icon name="workspace_premium" size={16} />
-              <span>{t("sellers.eyebrow")}</span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-primary tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
               {t("sellers.title")}
             </h2>
             <p className="text-xs text-on-surface-muted">{t("sellers.subtitle")}</p>

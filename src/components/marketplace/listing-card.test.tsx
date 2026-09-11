@@ -55,22 +55,12 @@ describe("ListingCard", () => {
     expect(screen.getByText("2 Yr Warranty")).toBeInTheDocument();
   });
 
-  it("links to WhatsApp with the listing title in the message", () => {
+  it("links to the listing detail page, with no contact buttons on the card", () => {
     renderCard();
-    const link = screen.getByRole("link", { name: /WhatsApp/ });
-    expect(link).toHaveAttribute(
-      "href",
-      expect.stringContaining("https://wa.me/923166441108?text=")
-    );
-    expect(decodeURIComponent(link.getAttribute("href")!)).toContain(listing.title);
-  });
-
-  it("links to a tel: URL for calling", () => {
-    renderCard();
-    expect(screen.getByRole("link", { name: /Call/ })).toHaveAttribute(
-      "href",
-      "tel:+923166441108"
-    );
+    const link = screen.getByRole("link", { name: new RegExp(listing.title) });
+    expect(link).toHaveAttribute("href", `/en/listing/${listing.slug}`);
+    expect(screen.queryByRole("link", { name: /WhatsApp/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
   it("gives the image alt text", () => {

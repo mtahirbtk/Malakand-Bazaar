@@ -24,7 +24,10 @@ describe("Home page", () => {
 
   it("renders five listing cards per shelf", () => {
     renderHome();
-    expect(screen.getAllByRole("link", { name: /WhatsApp/ }).length).toBeGreaterThanOrEqual(15);
+    const listingLinks = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("href")?.includes("/listing/"));
+    expect(listingLinks.length).toBeGreaterThanOrEqual(15);
   });
 
   it("renders eight popular sector circles", () => {

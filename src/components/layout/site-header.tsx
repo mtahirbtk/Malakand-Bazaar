@@ -6,9 +6,13 @@ import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
+import { Select } from "@/components/ui/select";
+import { Drawer } from "@/components/ui/drawer";
 import { BrandLogo } from "./brand-logo";
 import { CategoryRibbon } from "./category-ribbon";
+import { LocaleSwitcher } from "./locale-switcher";
 import { CATEGORY_OPTIONS } from "@/data/categories";
+import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { Link } from "@/i18n/routing";
 
 /**
@@ -20,18 +24,60 @@ import { Link } from "@/i18n/routing";
 export function SiteHeader() {
   const t = useTranslations("header");
   const common = useTranslations("common");
+  const announcement = useTranslations("announcement");
+  const locale = useTranslations("locale");
   const [sector, setSector] = React.useState("");
   const [query, setQuery] = React.useState("");
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [tehsil, setTehsil] = React.useState("all");
 
   return (
     <header className="bg-surface sticky top-0 z-50 border-b border-surface-border shadow-sm">
       <div className="max-w-[1360px] mx-auto px-3 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-2 sm:gap-4 lg:gap-8">
-        <Link className="shrink-0 flex items-center gap-2 group" href="/">
-          {/* Smaller than the source's flat h-10 below sm: at 390px width the
-              header's action items (sign in + Become a Seller) don't fit
-              beside a 40px-tall logo without causing horizontal scroll. */}
-          <BrandLogo className="h-8 sm:h-10 md:h-12 w-auto" />
-        </Link>
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Tehsil + language live here on mobile instead of the
+              announcement bar — see announcement-bar.tsx. */}
+          <button
+            type="button"
+            aria-label={t("menuAria")}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(true)}
+            className="sm:hidden flex items-center justify-center p-2 -ml-2 text-on-surface rounded-lg hover:bg-surface-low"
+          >
+            <Icon name="menu" size={24} />
+          </button>
+
+          <Link className="flex items-center gap-2 group" href="/">
+            {/* Smaller than the source's flat h-10 below sm: at 390px width the
+                header's action items (sign in + Become a Seller) don't fit
+                beside a 40px-tall logo without causing horizontal scroll. */}
+            <BrandLogo className="h-8 sm:h-10 md:h-12 w-auto" />
+          </Link>
+        </div>
+
+        <Drawer open={menuOpen} onOpenChange={setMenuOpen} title={t("menuTitle")} side="left">
+          <div className="space-y-5">
+            <div>
+              <div className="text-[11px] font-bold text-on-surface-muted uppercase tracking-wider mb-1.5">
+                {announcement("tehsilLabel")}
+              </div>
+              <Select
+                ariaLabel={announcement("tehsilAria")}
+                selectSize="sm"
+                value={tehsil}
+                onValueChange={setTehsil}
+                options={TEHSIL_OPTIONS}
+                className="w-full"
+              />
+            </div>
+            <div>
+              <div className="text-[11px] font-bold text-on-surface-muted uppercase tracking-wider mb-1.5">
+                {locale("aria")}
+              </div>
+              <LocaleSwitcher />
+            </div>
+          </div>
+        </Drawer>
 
         {/* min-w-0 overrides the flex-item default of min-width:auto — without
             it, this flex-1 box refuses to shrink below the Input's intrinsic
@@ -71,22 +117,6 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          <button
-            type="button"
-            className="hidden xl:flex items-center gap-2 border border-surface-border hover:border-brand-400 bg-surface-low/80 hover:bg-surface-low px-3.5 py-2 rounded-lg text-left transition-colors"
-          >
-            <Icon name="store" size={22} className="text-primary" />
-            <div className="leading-tight">
-              <div className="text-[10px] uppercase font-bold text-on-surface-muted tracking-wider">
-                {t("tradingHub")}
-              </div>
-              <div className="text-xs font-bold text-primary flex items-center gap-0.5">
-                {t("tradingHubValue")}
-                <Icon name="expand_more" size={14} />
-              </div>
-            </div>
-          </button>
-
           <Link
             className="flex items-center gap-1.5 text-on-surface hover:text-brand-600 font-semibold text-xs px-2 py-2 transition-colors"
             href="/sign-in"

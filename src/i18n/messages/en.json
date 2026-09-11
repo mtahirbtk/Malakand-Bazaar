@@ -11,7 +11,7 @@
     "call": "Call Seller"
   },
   "announcement": {
-    "message": "Prices & availability confirmed directly via WhatsApp. Zero middleman fees across Malakand District!",
+    "message": "Zero middleman fees — confirmed directly via WhatsApp.",
     "officialHub": "Official Regional Hub: Batkhela • Dargai • Thana Baizai",
     "tehsilLabel": "Tehsil:",
     "tehsilAria": "Select a tehsil",
@@ -25,8 +25,8 @@
     "searchPlaceholderMobile": "Search items, crops, vehicles in Malakand...",
     "sectorAria": "Sector",
     "sectorPlaceholder": "All Sectors",
-    "tradingHub": "Trading Hub",
-    "tradingHubValue": "Batkhela Central"
+    "menuAria": "Menu",
+    "menuTitle": "Menu"
   },
   "nav": {
     "allCategories": "All Categories",
@@ -35,8 +35,7 @@
     "vehiclesBikes": "Vehicles & Bikes",
     "propertyPlots": "Property & Plots",
     "solarElectronics": "Solar & Electronics",
-    "topLocalSellers": "Top Local Sellers",
-    "hotDeals": "Verified Hot Deals"
+    "topLocalSellers": "Top Local Sellers"
   },
   "megaMenu": {
     "title": "All Categories",
@@ -128,22 +127,18 @@
       "mobilePhones": "Mobile Phones"
     },
     "shelfA": {
-      "eyebrow": "High-Output Valley Hardware & Certified Tech",
       "title": "Electronics & Solar Tech",
       "action": "View All Electronics (410+)"
     },
     "shelfB": {
-      "eyebrow": "100% Mountain Pure & Fresh Harvest",
       "title": "Fresh Valley Fruits & Agro Produce",
       "action": "View All Fruits & Fresh Produce (185+)"
     },
     "shelfC": {
-      "eyebrow": "Authentic Papers & Malakand Pass Checked",
       "title": "Vehicles & Motorbikes",
       "action": "View All Vehicles (340+)"
     },
     "sellers": {
-      "eyebrow": "Malakand Verified Merchants",
       "title": "Top Verified Local Sellers & Farms",
       "subtitle": "Trusted business owners with 100% verified identities and real local stores"
     },
