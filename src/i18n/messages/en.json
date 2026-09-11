@@ -75,5 +75,13 @@
     "en": "English",
     "ur": "اردو",
     "aria": "Language"
+  },
+  "marketplace": {
+    "saveListing": "Save listing",
+    "sold": "Sold",
+    "reserved": "Reserved",
+    "verified": "Verified",
+    "visitStore": "Visit Store & Chat",
+    "registerVerifiedSeller": "Register as Verified Seller"
   }
 }

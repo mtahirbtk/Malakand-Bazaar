@@ -75,5 +75,13 @@
     "en": "English",
     "ur": "اردو",
     "aria": "زبان"
+  },
+  "marketplace": {
+    "saveListing": "اشتہار محفوظ کریں",
+    "sold": "فروخت شدہ",
+    "reserved": "محفوظ شدہ",
+    "verified": "تصدیق شدہ",
+    "visitStore": "دکان دیکھیں اور بات کریں",
+    "registerVerifiedSeller": "تصدیق شدہ فروخت کنندہ بنیں"
   }
 }
