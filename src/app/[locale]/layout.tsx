@@ -38,9 +38,13 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dirForLocale(locale)} className={jakarta.variable}>
       <head>
+        {/* App Router has no pages/_document, so the no-page-custom-font rule does not apply. */}
+        {/* display=block is deliberate: an icon font with swap/optional flashes the raw
+            ligature text (the word "search") before the glyph loads. */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font, @next/next/google-font-display */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
         />
       </head>
       <body className="bg-background font-sans text-on-surface antialiased min-h-screen flex flex-col">

@@ -10,5 +10,6 @@ export default defineConfig({
     globals: true,
     include: ["src/**/*.test.{ts,tsx}", "tests/**/*.test.{ts,tsx}"],
   },
+  esbuild: { jsx: "automatic" },
   resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
 });
