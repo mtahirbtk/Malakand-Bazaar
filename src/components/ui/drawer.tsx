@@ -37,12 +37,12 @@ export function Drawer({
           )}
         >
           <div className="sticky top-0 z-10 flex items-center justify-between border-b border-surface-border bg-surface px-4 py-3">
-            <Dialog.Title className="text-sm font-bold uppercase tracking-wider text-primary">
+            <Dialog.Title className="text-sm font-bold uppercase tracking-wider text-brand-700">
               {title}
             </Dialog.Title>
             <Dialog.Close
               aria-label="Close"
-              className="rounded-lg p-1 text-on-surface-muted hover:bg-surface-low hover:text-primary"
+              className="rounded-lg p-1 text-on-surface-muted hover:bg-brand-50 hover:text-brand-700"
             >
               <Icon name="close" size={20} />
             </Dialog.Close>

@@ -22,12 +22,12 @@ export function Breadcrumb({
           {item.href ? (
             <a
               href={item.href}
-              className="text-on-surface-muted hover:text-primary hover:underline"
+              className="text-on-surface-muted hover:text-brand-600 hover:underline"
             >
               {item.label}
             </a>
           ) : (
-            <span aria-current="page" className="text-primary">
+            <span aria-current="page" className="text-brand-700">
               {item.label}
             </span>
           )}

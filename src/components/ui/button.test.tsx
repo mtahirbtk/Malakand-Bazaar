@@ -16,9 +16,21 @@ describe("Button", () => {
     expect(screen.getByRole("button")).toHaveClass("bg-primary");
   });
 
-  it("applies the whatsapp variant", () => {
+  // The fill is accent-green-dark, not accent-green: white on #50a23e is
+  // 3.19:1 and fails WCAG AA for small text.
+  it("applies the whatsapp variant with an accessible fill", () => {
     render(<Button variant="whatsapp">Chat</Button>);
-    expect(screen.getByRole("button")).toHaveClass("bg-accent-green");
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveClass("bg-accent-green-dark");
+    expect(btn).not.toHaveClass("bg-accent-green");
+  });
+
+  // White on sand #c89b6d is 2.51:1 and fails badly; dark text is required.
+  it("uses dark text on the sand variant", () => {
+    render(<Button variant="sand">Feature Boost</Button>);
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveClass("text-on-surface");
+    expect(btn).not.toHaveClass("text-white");
   });
 
   it("calls onClick", async () => {

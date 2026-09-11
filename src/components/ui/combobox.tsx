@@ -49,15 +49,15 @@ export function Combobox({
         aria-label={ariaLabel}
         className={cn(
           "inline-flex h-10 items-center justify-between gap-1.5 rounded-lg border border-surface-border bg-surface px-3",
-          "text-xs font-bold text-on-surface outline-none transition-colors hover:border-secondary",
-          "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
+          "text-xs font-bold text-on-surface outline-none transition-colors hover:border-brand-400",
+          "focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1",
           className
         )}
       >
         <span className={cn("truncate", !selected && "text-on-surface-muted")}>
           {selected ? selected.label : placeholder}
         </span>
-        <Icon name="expand_more" size={16} className="shrink-0 text-secondary" />
+        <Icon name="expand_more" size={16} className="shrink-0 text-brand-500" />
       </Popover.Trigger>
 
       <Popover.Portal>
@@ -95,9 +95,9 @@ export function Combobox({
                   onClick={() => choose(option.value)}
                   className={cn(
                     "flex w-full items-center gap-2 rounded px-2.5 py-2 text-left text-xs font-semibold text-on-surface",
-                    "hover:bg-surface-low hover:text-primary",
+                    "hover:bg-brand-50 hover:text-brand-700",
                     option.value === value &&
-                      "bg-primary text-white hover:bg-primary hover:text-white"
+                      "bg-brand-600 text-white hover:bg-brand-600 hover:text-white"
                   )}
                 >
                   {option.icon && <Icon name={option.icon} size={16} />}

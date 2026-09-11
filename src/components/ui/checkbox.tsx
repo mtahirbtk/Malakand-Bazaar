@@ -24,7 +24,7 @@ export function Checkbox({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-2 rounded p-1.5 transition-colors hover:bg-neutral-50",
+        "flex items-center justify-between gap-2 rounded p-1.5 transition-colors hover:bg-brand-50",
         disabled && "opacity-60",
         className
       )}
@@ -37,9 +37,9 @@ export function Checkbox({
           onCheckedChange={(c) => onCheckedChange(c === true)}
           className={cn(
             "peer h-4 w-4 shrink-0 rounded border-[1.5px] outline-none transition-all",
-            "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
-            "border-secondary/40 bg-surface",
-            "data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+            "focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1",
+            "border-brand-300 bg-surface",
+            "data-[state=checked]:border-brand-600 data-[state=checked]:bg-brand-600"
           )}
         >
           <RadixCheckbox.Indicator className="flex items-center justify-center text-white">

@@ -31,6 +31,7 @@ import { Tabs, TabPanel } from "@/components/ui/tabs";
 import { Accordion } from "@/components/ui/accordion";
 import { Carousel } from "@/components/ui/carousel";
 import { ToastProvider, useToast } from "@/components/ui/toast";
+import { cn } from "@/lib/cn";
 import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { CATEGORY_OPTIONS, allSubcategoryOptions } from "@/data/categories";
 
@@ -46,7 +47,7 @@ function Section({
   return (
     <section className="rounded-2xl border border-surface-border bg-surface p-5 shadow-xs sm:p-6">
       <div className="mb-4 flex items-baseline gap-2 border-b border-surface-border pb-3">
-        <h2 className="text-lg font-extrabold tracking-tight text-primary">{title}</h2>
+        <h2 className="text-lg font-extrabold tracking-tight text-brand-700">{title}</h2>
         {count && (
           <span className="text-[11px] font-semibold text-on-surface-muted">{count}</span>
         )}
@@ -78,6 +79,65 @@ function ToastButtons() {
         Error toast
       </Button>
     </>
+  );
+}
+
+
+const BRAND_RAMP = [
+  { tone: "50", cls: "bg-brand-50", hex: "#f0f9f5", ratio: "—", role: "tinted surfaces, dropdown hover" },
+  { tone: "100", cls: "bg-brand-100", hex: "#def2e8", ratio: "—", role: "selected rows, soft badges, avatars" },
+  { tone: "200", cls: "bg-brand-200", hex: "#bce1d0", ratio: "—", role: "borders of selected elements" },
+  { tone: "300", cls: "bg-brand-300", hex: "#8ec7af", ratio: "1.92", role: "resting control borders" },
+  { tone: "400", cls: "bg-brand-400", hex: "#59ab89", ratio: "2.76", role: "hover borders" },
+  { tone: "500", cls: "bg-brand-500", hex: "#3d8f6e", ratio: "3.92", role: "UI shapes only — chevrons, tracks" },
+  { tone: "600", cls: "bg-brand-600", hex: "#2d7659", ratio: "5.46", role: "the workhorse — icons, active states, focus" },
+  { tone: "700", cls: "bg-brand-700", hex: "#255f48", ratio: "7.48", role: "section headings, dialog titles" },
+  { tone: "800", cls: "bg-brand-800", hex: "#1f4d3a", ratio: "9.63", role: "RESERVED — primary CTA, price, page title" },
+  { tone: "900", cls: "bg-brand-900", hex: "#133426", ratio: "13.58", role: "text on tinted brand grounds" },
+];
+
+const ACCENTS = [
+  { cls: "bg-accent-green-dark", hex: "#418532", label: "accent-green-dark", role: "WhatsApp / direct contact only", white: "4.54:1 pass" },
+  { cls: "bg-accent-green", hex: "#50a23e", label: "accent-green", role: "decoration & hover only", white: "3.19:1 — no small text" },
+  { cls: "bg-tertiary", hex: "#c89b6d", label: "tertiary (sand)", role: "price emphasis, featured badges, stars", white: "2.51:1 — dark text only" },
+  { cls: "bg-on-surface", hex: "#16231d", label: "on-surface", role: "all body copy — not green", white: "16.25:1 pass" },
+];
+
+function PaletteSection() {
+  return (
+    <Section title="Palette" count="one hue, ten tones, strict roles">
+      <div className="space-y-1">
+        {BRAND_RAMP.map((t) => (
+          <div key={t.tone} className="flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-brand-50">
+            <div className={cn("h-9 w-16 shrink-0 rounded-md border border-black/5", t.cls)} />
+            <div className="w-20 shrink-0">
+              <div className="text-xs font-extrabold text-on-surface">brand-{t.tone}</div>
+              <div className="tabular text-[10px] text-on-surface-muted">{t.hex}</div>
+            </div>
+            <div className="tabular w-14 shrink-0 text-[10px] font-semibold text-on-surface-muted">
+              {t.ratio === "—" ? "—" : `${t.ratio}:1`}
+            </div>
+            <div className="text-[11px] text-on-surface-muted">{t.role}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-1 border-t border-surface-border pt-4">
+        {ACCENTS.map((a) => (
+          <div key={a.label} className="flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-brand-50">
+            <div className={cn("h-9 w-16 shrink-0 rounded-md border border-black/5", a.cls)} />
+            <div className="w-32 shrink-0">
+              <div className="text-xs font-extrabold text-on-surface">{a.label}</div>
+              <div className="tabular text-[10px] text-on-surface-muted">{a.hex}</div>
+            </div>
+            <div className="w-40 shrink-0 text-[10px] font-semibold text-on-surface-muted">
+              white on it: {a.white}
+            </div>
+            <div className="text-[11px] text-on-surface-muted">{a.role}</div>
+          </div>
+        ))}
+      </div>
+    </Section>
   );
 }
 
@@ -116,6 +176,8 @@ export default function GalleryPage() {
               controls anywhere on this page.
             </p>
           </header>
+
+          <PaletteSection />
 
           <Section title="Buttons">
             <Row label="Variants">

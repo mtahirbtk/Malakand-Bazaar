@@ -6,6 +6,24 @@ export default {
   theme: {
     extend: {
       colors: {
+        /**
+         * Brand tonal ramp. One hue (~155deg), ten steps, so hierarchy comes
+         * from tone rather than from four similar-weight greens competing.
+         * Role assignment lives in docs/palette.md — read it before reaching
+         * for a colour.
+         */
+        brand: {
+          50: "#f0f9f5",
+          100: "#def2e8",
+          200: "#bce1d0",
+          300: "#8ec7af",
+          400: "#59ab89",
+          500: "#3d8f6e",
+          600: "#2d7659",
+          700: "#255f48",
+          800: "#1f4d3a",
+          900: "#133426",
+        },
         primary: "#1f4d3a",
         "primary-dark": "#16382b",
         "primary-light": "#28664e",
@@ -19,6 +37,7 @@ export default {
         "surface-border": "#e1ebe4",
         "accent-green": "#50a23e",
         "accent-green-dark": "#418532",
+        "accent-green-darker": "#35691f",
         "on-surface": "#16231d",
         "on-surface-muted": "#52635a",
         danger: "#e11d48",

@@ -40,7 +40,7 @@ export function DropdownMenu({
               asChild={Boolean(item.href)}
               className={cn(
                 "flex cursor-pointer select-none items-center gap-2 rounded px-2.5 py-2 text-xs font-semibold text-on-surface outline-none",
-                "data-[highlighted]:bg-surface-low data-[highlighted]:text-primary"
+                "data-[highlighted]:bg-brand-50 data-[highlighted]:text-brand-700"
               )}
             >
               {item.href ? (

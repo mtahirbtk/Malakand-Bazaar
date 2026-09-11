@@ -31,8 +31,8 @@ export function Chip({
       className={cn(
         "inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-semibold transition-colors",
         active
-          ? "border-primary bg-primary text-white"
-          : "border-surface-border bg-surface text-on-surface hover:border-secondary",
+          ? "border-brand-600 bg-brand-600 text-white"
+          : "border-surface-border bg-surface text-on-surface hover:border-brand-400",
         className
       )}
     >

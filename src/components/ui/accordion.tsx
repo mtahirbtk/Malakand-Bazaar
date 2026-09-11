@@ -23,12 +23,12 @@ export function Accordion({
       {items.map((item) => (
         <RadixAccordion.Item key={item.value} value={item.value}>
           <RadixAccordion.Header>
-            <RadixAccordion.Trigger className="group flex w-full items-center justify-between py-3 text-left text-xs font-bold uppercase tracking-wider text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <RadixAccordion.Trigger className="group flex w-full items-center justify-between py-3 text-left text-xs font-bold uppercase tracking-wider text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-brand-600">
               {item.title}
               <Icon
                 name="expand_more"
                 size={18}
-                className="text-secondary transition-transform group-data-[state=open]:rotate-180"
+                className="text-brand-500 transition-transform group-data-[state=open]:rotate-180"
               />
             </RadixAccordion.Trigger>
           </RadixAccordion.Header>

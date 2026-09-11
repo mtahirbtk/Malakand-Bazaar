@@ -25,8 +25,8 @@ export function Switch({
         aria-label={label}
         className={cn(
           "h-5 w-9 shrink-0 rounded-full bg-neutral-300 outline-none transition-colors",
-          "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
-          "data-[state=checked]:bg-primary"
+          "focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1",
+          "data-[state=checked]:bg-brand-600"
         )}
       >
         <RadixSwitch.Thumb className="block h-4 w-4 translate-x-0.5 rounded-full bg-white shadow transition-transform data-[state=checked]:translate-x-[18px]" />

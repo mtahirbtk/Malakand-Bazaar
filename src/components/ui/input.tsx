@@ -27,7 +27,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <Icon
           name={leadingIcon}
           size={18}
-          className="pointer-events-none absolute left-3 text-secondary"
+          className="pointer-events-none absolute left-3 text-brand-500"
         />
       )}
       <input
@@ -35,7 +35,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         aria-invalid={invalid || undefined}
         className={cn(
           "w-full rounded-lg border bg-surface text-on-surface placeholder:text-on-surface-muted/70",
-          "transition-shadow focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary",
+          "transition-shadow focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600",
           inputSize === "md" ? "h-12 px-3.5 text-sm" : "h-9 px-3 text-xs",
           leadingIcon && "pl-9",
           trailingIcon && "pr-9",

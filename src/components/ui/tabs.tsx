@@ -27,7 +27,7 @@ export function Tabs({
             value={tab.value}
             className={cn(
               "inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 border-transparent px-3 py-2.5 text-xs font-bold text-on-surface-muted transition-colors",
-              "hover:text-primary data-[state=active]:border-primary data-[state=active]:text-primary"
+              "hover:text-brand-600 data-[state=active]:border-brand-600 data-[state=active]:text-brand-600"
             )}
           >
             {tab.icon && <Icon name={tab.icon} size={16} />}

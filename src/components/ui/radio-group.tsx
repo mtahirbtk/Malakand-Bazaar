@@ -32,12 +32,12 @@ export function RadioGroup({
               id={id}
               value={option.value}
               className={cn(
-                "h-4 w-4 shrink-0 rounded-full border-[1.5px] border-secondary/40 bg-surface outline-none transition-all",
-                "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
-                "data-[state=checked]:border-primary"
+                "h-4 w-4 shrink-0 rounded-full border-[1.5px] border-brand-300 bg-surface outline-none transition-all",
+                "focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1",
+                "data-[state=checked]:border-brand-600"
               )}
             >
-              <RadixRadio.Indicator className="flex h-full w-full items-center justify-center after:block after:h-2 after:w-2 after:rounded-full after:bg-primary" />
+              <RadixRadio.Indicator className="flex h-full w-full items-center justify-center after:block after:h-2 after:w-2 after:rounded-full after:bg-brand-600" />
             </RadixRadio.Item>
             <label
               htmlFor={id}

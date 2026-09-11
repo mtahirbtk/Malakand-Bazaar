@@ -36,7 +36,7 @@ export function Modal({
         >
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
-              <Dialog.Title className="text-lg font-extrabold tracking-tight text-primary">
+              <Dialog.Title className="text-lg font-extrabold tracking-tight text-brand-700">
                 {title}
               </Dialog.Title>
               {description && (
@@ -47,7 +47,7 @@ export function Modal({
             </div>
             <Dialog.Close
               aria-label="Close"
-              className="rounded-lg p-1 text-on-surface-muted transition-colors hover:bg-surface-low hover:text-primary"
+              className="rounded-lg p-1 text-on-surface-muted transition-colors hover:bg-brand-50 hover:text-brand-700"
             >
               <Icon name="close" size={20} />
             </Dialog.Close>

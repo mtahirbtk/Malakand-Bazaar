@@ -51,7 +51,7 @@ export function Pagination({
         onClick={() => onPageChange(page - 1)}
         className={cn(
           base,
-          "border-surface-border bg-surface text-primary hover:bg-surface-low"
+          "border-surface-border bg-surface text-brand-700 hover:bg-brand-50"
         )}
       >
         <Icon name="chevron_left" size={16} />
@@ -73,8 +73,8 @@ export function Pagination({
             className={cn(
               base,
               entry === page
-                ? "border-primary bg-primary text-white"
-                : "border-surface-border bg-surface text-on-surface hover:bg-surface-low"
+                ? "border-brand-600 bg-brand-600 text-white"
+                : "border-surface-border bg-surface text-on-surface hover:bg-brand-50"
             )}
           >
             {entry}
@@ -88,7 +88,7 @@ export function Pagination({
         onClick={() => onPageChange(page + 1)}
         className={cn(
           base,
-          "border-surface-border bg-surface text-primary hover:bg-surface-low"
+          "border-surface-border bg-surface text-brand-700 hover:bg-brand-50"
         )}
       >
         <span className="sr-only">{labels.next}</span>

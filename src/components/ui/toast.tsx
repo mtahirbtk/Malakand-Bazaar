@@ -35,7 +35,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           className={cn(
             "flex items-center gap-2 rounded-lg px-4 py-3 text-xs font-bold text-white shadow-floating",
             "data-[state=open]:animate-in data-[state=open]:slide-in-from-right",
-            toast?.tone === "error" ? "bg-danger" : "bg-primary"
+            toast?.tone === "error" ? "bg-danger" : "bg-brand-700"
           )}
         >
           <Icon name={toast?.tone === "error" ? "error" : "check_circle"} size={18} />

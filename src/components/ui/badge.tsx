@@ -11,7 +11,7 @@ const badgeVariants = cva(
         primary: "bg-primary text-white",
         sand: "bg-[#875520] text-white",
         green: "bg-accent-green text-white",
-        neutral: "bg-surface-low text-primary",
+        neutral: "bg-brand-100 text-brand-700",
         danger: "bg-danger-soft text-danger",
       },
     },

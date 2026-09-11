@@ -58,7 +58,7 @@ export function PriceRange({
                 aria-label={field.label}
                 value={field.val}
                 onChange={(e) => field.set(Number(e.target.value || 0))}
-                className="tabular w-full rounded border border-neutral-300 bg-neutral-50 py-1.5 pl-6 pr-2 text-xs font-medium focus:border-primary focus:outline-none"
+                className="tabular w-full rounded border border-neutral-300 bg-neutral-50 py-1.5 pl-6 pr-2 text-xs font-medium focus:border-brand-600 focus:outline-none"
               />
             </div>
           </div>

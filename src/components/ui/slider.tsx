@@ -35,15 +35,15 @@ export function Slider({
       )}
     >
       <RadixSlider.Track className="relative h-1.5 w-full grow rounded-full bg-neutral-200">
-        <RadixSlider.Range className="absolute h-full rounded-full bg-primary" />
+        <RadixSlider.Range className="absolute h-full rounded-full bg-brand-600" />
       </RadixSlider.Track>
       {value.map((_, i) => (
         <RadixSlider.Thumb
           key={i}
           aria-label={`${ariaLabel} ${i === 0 ? "minimum" : "maximum"}`}
           className={cn(
-            "block h-4 w-4 rounded-full border-2 border-primary bg-surface shadow outline-none transition-transform",
-            "hover:scale-110 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
+            "block h-4 w-4 rounded-full border-2 border-brand-600 bg-surface shadow outline-none transition-transform",
+            "hover:scale-110 focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1"
           )}
         />
       ))}
