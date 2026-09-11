@@ -20,7 +20,7 @@ export function Price({
   className?: string;
 }) {
   return (
-    <span className={cn("flex items-baseline gap-1.5", className)}>
+    <span dir="ltr" className={cn("flex items-baseline gap-1.5", className)}>
       <span className={cn("tabular font-extrabold text-primary", sizes[size])}>
         {formatPkr(value)}
       </span>

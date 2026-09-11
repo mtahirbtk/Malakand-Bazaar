@@ -8,7 +8,7 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number];
 
-export const { Link, redirect, usePathname, useRouter, getPathname } =
+export const { Link, redirect, usePathname, useRouter } =
   createSharedPathnamesNavigation(routing);
 
 export function dirForLocale(locale: string): "ltr" | "rtl" {

@@ -87,3 +87,10 @@ describe("EmptyState", () => {
     expect(screen.getByText("Try a wider area.")).toBeInTheDocument();
   });
 });
+
+describe("Price in RTL context", () => {
+  it("forces left-to-right so PKR amounts are not reordered in Urdu", () => {
+    const { container } = render(<Price value={240000} />);
+    expect(container.querySelector("span")).toHaveAttribute("dir", "ltr");
+  });
+});

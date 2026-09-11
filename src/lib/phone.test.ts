@@ -42,3 +42,10 @@ describe("whatsappUrl", () => {
     );
   });
 });
+
+describe("isolateLtr", () => {
+  it("wraps text in Unicode isolate marks", async () => {
+    const { isolateLtr } = await import("./phone");
+    expect(isolateLtr("+92 300 1234567")).toBe("⁦+92 300 1234567⁩");
+  });
+});

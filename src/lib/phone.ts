@@ -14,3 +14,12 @@ export function formatPhoneDisplay(e164: string): string {
   const d = e164.replace(/^\+92/, "");
   return `+92 ${d.slice(0, 3)} ${d.slice(3)}`;
 }
+
+/**
+ * Wraps a phone number in Unicode isolates so it renders left-to-right even
+ * inside Urdu (RTL) text. Without this, "+92 300 1234567" displays as
+ * "1234567 300 92+".
+ */
+export function isolateLtr(text: string): string {
+  return `\u2066${text}\u2069`;
+}

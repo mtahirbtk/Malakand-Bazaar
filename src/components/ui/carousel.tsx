@@ -66,7 +66,7 @@ export function Carousel({
           aria-current={i === index ? "true" : undefined}
           aria-hidden={i !== index}
           className={cn(
-            "transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]",
+            "transition-opacity duration-700 ease-in-out",
             i === index
               ? "opacity-100"
               : "pointer-events-none absolute inset-0 opacity-0"
