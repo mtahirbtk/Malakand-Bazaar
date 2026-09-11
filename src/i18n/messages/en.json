@@ -83,5 +83,94 @@
     "verified": "Verified",
     "visitStore": "Visit Store & Chat",
     "registerVerifiedSeller": "Register as Verified Seller"
+  },
+  "home": {
+    "hero": {
+      "slide1Eyebrow": "Malakand Seasonal Harvest & Livestock Fair",
+      "slide1Title": "The Digital Grand Bazaar of",
+      "slide1Accent": "Malakand",
+      "slide1Body": "Direct farmer-to-door fresh produce, verified local motorbikes, Batkhela highway plots, and regional livestock with instant WhatsApp contact and zero mediator fees.",
+      "slide2Eyebrow": "Batkhela Central & Sakhakot Commercial Hub",
+      "slide2Title": "Direct Trade from",
+      "slide2Accent": "Asia's Longest Bazaar",
+      "slide2Body": "Explore hundreds of verified wholesale and retail deals straight from Batkhela Main Road, Dargai electronics row, and Sakhakot textile centers.",
+      "slide3Eyebrow": "High Alpine Agriculture & Clean Solar Power",
+      "slide3Title": "Clean Solar Agri-Tech &",
+      "slide3Accent": "Pure Organic Dairy",
+      "slide3Body": "Heavy-duty 15kW tube-well inverters, high-yield Sahiwal dairy cattle, and 100% natural Totakan mountain honey directly from verified local families.",
+      "primaryCta": "Explore Verified Deals",
+      "secondaryCta": "Become a Seller (Free)"
+    },
+    "promo1": {
+      "eyebrow": "Daily Fresh & Pure",
+      "title": "Sahiwal Dairy & Swat Wild Honey",
+      "body": "Pure mountain organic yield from Totakan & Batkhela orchards.",
+      "highlight": "Starting from Rs. 850 / kg",
+      "link": "View Livestock & Produce"
+    },
+    "promo2": {
+      "eyebrow": "Valley Agri-Tech",
+      "title": "Solar Tube-well Inverters",
+      "body": "Specialized 10kW to 25kW systems tested for Malakand terrain water depth.",
+      "highlight": "Direct from Authorized Dargai Dealers",
+      "link": "Inspect Machinery Listings"
+    },
+    "sectors": {
+      "heading": "Popular Marketplace Sectors",
+      "subheading": "Fast access to Malakand's most searched regional departments",
+      "orchardsFruits": "Orchards & Fruits",
+      "sahiwalCattle": "Sahiwal Cattle",
+      "hondaBikes": "Honda Bikes",
+      "solarSystems": "Solar Systems",
+      "commercialPlots": "Commercial Plots",
+      "swatWoodcraft": "Swat Woodcraft",
+      "honeyHerbs": "Honey & Herbs",
+      "mobilePhones": "Mobile Phones"
+    },
+    "shelfA": {
+      "eyebrow": "High-Output Valley Hardware & Certified Tech",
+      "title": "Electronics & Solar Tech",
+      "action": "View All Electronics (410+)"
+    },
+    "shelfB": {
+      "eyebrow": "100% Mountain Pure & Fresh Harvest",
+      "title": "Fresh Valley Fruits & Agro Produce",
+      "action": "View All Fruits & Fresh Produce (185+)"
+    },
+    "shelfC": {
+      "eyebrow": "Authentic Papers & Malakand Pass Checked",
+      "title": "Vehicles & Motorbikes",
+      "action": "View All Vehicles (340+)"
+    },
+    "sellers": {
+      "eyebrow": "Malakand Verified Merchants",
+      "title": "Top Verified Local Sellers & Farms",
+      "subtitle": "Trusted business owners with 100% verified identities and real local stores"
+    },
+    "banner": {
+      "badge": "100% Direct Buyer-Seller Dealings",
+      "title": "Zero Brokerage Fees. Direct WhatsApp Handshake.",
+      "body": "MalakandBazaar connects buyers straight to valley producers. Register your shop, orchard, or livestock stall for free and start receiving direct inquiries immediately.",
+      "cta1": "Become a Verified Seller",
+      "cta2": "Seller Registration (Free)"
+    },
+    "strip1": {
+      "label": "Batkhela Woodcraft",
+      "title": "Carved Deodar Beds & Sofas",
+      "body": "Authentic artisan wood direct from workshops.",
+      "link": "Browse Furniture"
+    },
+    "strip2": {
+      "label": "Sakhakot Cloth Market",
+      "title": "Wool Shawls & Chappals",
+      "body": "Wholesale and retail prices on Pashto attire.",
+      "link": "Shop Fabrics"
+    },
+    "strip3": {
+      "label": "Batkhela Mobile Market",
+      "title": "PTA Approved Mobiles",
+      "body": "Checked batteries, original warranty receipts.",
+      "link": "Explore Electronics"
+    }
   }
 }
