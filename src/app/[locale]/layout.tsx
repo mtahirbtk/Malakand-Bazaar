@@ -4,6 +4,12 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, dirForLocale } from "@/i18n/routing";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ToastProvider } from "@/components/ui/toast";
+import { AnnouncementBar } from "@/components/layout/announcement-bar";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { FloatingWhatsapp } from "@/components/layout/floating-whatsapp";
 import "../globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -49,7 +55,15 @@ export default async function LocaleLayout({
       </head>
       <body className="bg-background font-sans text-on-surface antialiased min-h-screen flex flex-col">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <TooltipProvider>
+            <ToastProvider>
+              <AnnouncementBar />
+              <SiteHeader />
+              {children}
+              <SiteFooter />
+              <FloatingWhatsapp />
+            </ToastProvider>
+          </TooltipProvider>
         </NextIntlClientProvider>
       </body>
     </html>

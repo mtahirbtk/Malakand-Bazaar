@@ -9,5 +9,71 @@
     "viewAll": "سب دیکھیں",
     "whatsapp": "واٹس ایپ",
     "call": "کال کریں"
+  },
+  "announcement": {
+    "message": "قیمتیں اور دستیابی براہ راست واٹس ایپ پر تصدیق شدہ۔ ملاکنڈ ڈسٹرکٹ بھر میں کوئی بچولیا فیس نہیں!",
+    "officialHub": "سرکاری علاقائی مرکز: بٹ خیلہ • درگئی • تھانہ بائزئی",
+    "tehsilLabel": "تحصیل:",
+    "tehsilAria": "تحصیل منتخب کریں",
+    "facebook": "فیس بک",
+    "whatsappCommunity": "واٹس ایپ کمیونٹی",
+    "phoneSupport": "براہ راست فون سپورٹ"
+  },
+  "header": {
+    "searchAria": "اشیاء تلاش کریں",
+    "searchPlaceholderDesktop": "بٹ خیلہ، درگئی، تھانہ میں تلاش کریں (مثلاً سولر انورٹر، ہونڈا سی ڈی 70، سوات شہد، پلاٹس)...",
+    "searchPlaceholderMobile": "ملاکنڈ میں اشیاء، فصلیں، گاڑیاں تلاش کریں...",
+    "sectorAria": "شعبہ",
+    "sectorPlaceholder": "تمام شعبے",
+    "tradingHub": "تجارتی مرکز",
+    "tradingHubValue": "بٹ خیلہ مرکزی"
+  },
+  "nav": {
+    "allCategories": "تمام زمرہ جات",
+    "dailyFreshAgro": "روزانہ تازہ اور زرعی اجناس",
+    "livestockCattle": "مویشی اور گائے بھینس",
+    "vehiclesBikes": "گاڑیاں اور موٹر سائیکلیں",
+    "propertyPlots": "جائیداد اور پلاٹس",
+    "solarElectronics": "سولر اور الیکٹرونکس",
+    "topLocalSellers": "نمایاں مقامی فروخت کنندگان",
+    "hotDeals": "تصدیق شدہ خصوصی آفرز"
+  },
+  "megaMenu": {
+    "title": "تمام زمرہ جات",
+    "viewAll": "سب دیکھیں"
+  },
+  "footer": {
+    "description": "بٹ خیلہ، درگئی اور تھانہ بائزئی میں صارفین، کسانوں اور خاندانی کاروباروں کو ملانے والی مخصوص ڈیجیٹل مارکیٹ۔",
+    "whatsappHotline": "علاقائی واٹس ایپ ہاٹ لائن",
+    "email": "support@malakandbazaar.pk",
+    "address": "بازار سہولت مرکز، مین کمرشل روڈ، بٹ خیلہ",
+    "marketLinksHeading": "مارکیٹ لنکس",
+    "electronicsSolar": "الیکٹرونکس اور سولر",
+    "dailyFreshProduce": "روزانہ تازہ پیداوار",
+    "vehiclesBikes": "گاڑیاں اور موٹر سائیکلیں",
+    "verifiedSellersList": "تصدیق شدہ فروخت کنندگان کی فہرست",
+    "sellerRegistration": "فروخت کنندہ رجسٹریشن",
+    "securityPoliciesHeading": "تحفظ اور پالیسیاں",
+    "safeTradingGuidelines": "محفوظ تجارت کے رہنما اصول",
+    "verifiedSellerProgram": "تصدیق شدہ فروخت کنندہ پروگرام",
+    "livestockHealthVerification": "مویشیوں کی صحت کی تصدیق",
+    "vehicleNcpGuidance": "گاڑی این سی پی اور رجسٹریشن رہنمائی",
+    "privacyTerms": "پرائیویسی اور شرائطِ خدمت",
+    "newsletterHeading": "ہفتہ وار ویلی بلیٹن",
+    "newsletterBody": "بٹ خیلہ کی منڈی کی قیمتوں، موسمی لیموں کی فصل اور مویشی میلوں کی فوری اپڈیٹس حاصل کریں۔",
+    "newsletterPlaceholder": "اپنا فون نمبر یا ای میل درج کریں...",
+    "newsletterAria": "ہفتہ وار بلیٹن کے لیے فون یا ای میل",
+    "newsletterSubmitAria": "سبسکرائب کریں",
+    "newsletterNote": "براہ راست پشتو/اردو واٹس ایپ الرٹس دستیاب ہیں۔",
+    "copyright": "© 2026 ملاکنڈ بازار.pk • ملاکنڈ ڈسٹرکٹ، خیبر پختونخوا کے شہریوں اور کاروباروں کے لیے مخصوص مارکیٹ۔",
+    "privacyPolicy": "پرائیویسی پالیسی",
+    "termsOfTrade": "تجارت کی شرائط",
+    "helpCenter": "مدد مرکز",
+    "whatsappSupport": "ملاکنڈ بازار سپورٹ سے بات کریں"
+  },
+  "locale": {
+    "en": "English",
+    "ur": "اردو",
+    "aria": "زبان"
   }
 }

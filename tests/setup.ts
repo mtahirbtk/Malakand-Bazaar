@@ -17,3 +17,21 @@ if (!Element.prototype.hasPointerCapture) {
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
 }
+
+// jsdom implements no media query engine at all — window.matchMedia is
+// simply absent. Default every query to "not matching" (desktop-first
+// components like useMediaQuery("(min-width: 768px)") read as mobile,
+// carousel's prefers-reduced-motion reads as motion allowed) unless a test
+// overrides window.matchMedia itself, as the carousel and media-query specs do.
+if (!window.matchMedia) {
+  window.matchMedia = ((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  })) as unknown as typeof window.matchMedia;
+}

@@ -9,5 +9,71 @@
     "viewAll": "View All",
     "whatsapp": "WhatsApp",
     "call": "Call Seller"
+  },
+  "announcement": {
+    "message": "Prices & availability confirmed directly via WhatsApp. Zero middleman fees across Malakand District!",
+    "officialHub": "Official Regional Hub: Batkhela • Dargai • Thana Baizai",
+    "tehsilLabel": "Tehsil:",
+    "tehsilAria": "Select a tehsil",
+    "facebook": "Facebook",
+    "whatsappCommunity": "WhatsApp Community",
+    "phoneSupport": "Direct Phone Support"
+  },
+  "header": {
+    "searchAria": "Search listings",
+    "searchPlaceholderDesktop": "Search in Batkhela, Dargai, Thana (e.g. Solar Inverter, Honda CD70, Swat Honey, Plots)...",
+    "searchPlaceholderMobile": "Search items, crops, vehicles in Malakand...",
+    "sectorAria": "Sector",
+    "sectorPlaceholder": "All Sectors",
+    "tradingHub": "Trading Hub",
+    "tradingHubValue": "Batkhela Central"
+  },
+  "nav": {
+    "allCategories": "All Categories",
+    "dailyFreshAgro": "Daily Fresh & Agro",
+    "livestockCattle": "Livestock & Cattle",
+    "vehiclesBikes": "Vehicles & Bikes",
+    "propertyPlots": "Property & Plots",
+    "solarElectronics": "Solar & Electronics",
+    "topLocalSellers": "Top Local Sellers",
+    "hotDeals": "Verified Hot Deals"
+  },
+  "megaMenu": {
+    "title": "All Categories",
+    "viewAll": "View all"
+  },
+  "footer": {
+    "description": "The dedicated digital marketplace connecting consumers, farmers, and family enterprises across Batkhela, Dargai and Thana Baizai.",
+    "whatsappHotline": "Regional WhatsApp Hotline",
+    "email": "support@malakandbazaar.pk",
+    "address": "Bazaar Facilitation Center, Main Commercial Road, Batkhela",
+    "marketLinksHeading": "Market Links",
+    "electronicsSolar": "Electronics & Solar",
+    "dailyFreshProduce": "Daily Fresh Produce",
+    "vehiclesBikes": "Vehicles & Bikes",
+    "verifiedSellersList": "Verified Sellers List",
+    "sellerRegistration": "Seller Registration",
+    "securityPoliciesHeading": "Security & Policies",
+    "safeTradingGuidelines": "Safe Trading Guidelines",
+    "verifiedSellerProgram": "Verified Seller Program",
+    "livestockHealthVerification": "Livestock Health Verification",
+    "vehicleNcpGuidance": "Vehicle NCP & Reg Guidance",
+    "privacyTerms": "Privacy & Terms of Service",
+    "newsletterHeading": "Weekly Valley Bulletin",
+    "newsletterBody": "Get instant updates regarding Batkhela market rates, seasonal citrus harvests, and cattle fairs.",
+    "newsletterPlaceholder": "Enter your phone or email...",
+    "newsletterAria": "Phone or email for the weekly bulletin",
+    "newsletterSubmitAria": "Subscribe",
+    "newsletterNote": "Direct Pashto/Urdu WhatsApp alerts supported.",
+    "copyright": "© 2026 MalakandBazaar.pk • Dedicated Marketplace for the Citizens and Enterprises of Malakand District, KP.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfTrade": "Terms of Trade",
+    "helpCenter": "Help Center",
+    "whatsappSupport": "Chat with MalakandBazaar Support"
+  },
+  "locale": {
+    "en": "English",
+    "ur": "اردو",
+    "aria": "Language"
   }
 }

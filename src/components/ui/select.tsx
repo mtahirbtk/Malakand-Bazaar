@@ -21,6 +21,7 @@ export function Select({
   variant = "default",
   selectSize = "md",
   className,
+  chevronClassName = "text-brand-500",
 }: {
   value: string;
   onValueChange: (value: string) => void;
@@ -30,6 +31,8 @@ export function Select({
   variant?: "default" | "bare";
   selectSize?: "sm" | "md";
   className?: string;
+  /** Override the chevron's colour — e.g. on a dark or coloured trigger. */
+  chevronClassName?: string;
 }) {
   return (
     <RadixSelect.Root value={value || undefined} onValueChange={onValueChange}>
@@ -47,7 +50,7 @@ export function Select({
       >
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon asChild>
-          <Icon name="expand_more" size={16} className="text-brand-500" />
+          <Icon name="expand_more" size={16} className={chevronClassName} />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
 
