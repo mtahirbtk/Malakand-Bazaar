@@ -81,7 +81,14 @@
     "reserved": "Reserved",
     "verified": "Verified",
     "visitStore": "Visit Store & Chat",
-    "registerVerifiedSeller": "Register as Verified Seller"
+    "registerVerifiedSeller": "Register as Verified Seller",
+    "showNumber": "Show Number ({phone})",
+    "postedOn": "Posted {date}",
+    "soldBy": "Sold by",
+    "visitStorefront": "Visit Storefront",
+    "moreFromSeller": "More from {seller}",
+    "allListingsBy": "All listings by {seller}",
+    "noListingsYet": "No other listings yet."
   },
   "home": {
     "hero": {

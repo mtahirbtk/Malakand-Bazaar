@@ -15,6 +15,7 @@ import { Slider } from "@/components/ui/slider";
 import { PriceRange } from "@/components/ui/price-range";
 import { Modal } from "@/components/ui/modal";
 import { Drawer } from "@/components/ui/drawer";
+import { Lightbox } from "@/components/ui/lightbox";
 import { Popover } from "@/components/ui/popover";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -157,6 +158,8 @@ export default function GalleryPage() {
   const [drawerSide, setDrawerSide] = React.useState<
     "left" | "right" | "bottom" | null
   >(null);
+  const [lightboxOpen, setLightboxOpen] = React.useState(false);
+  const [lightboxIndex, setLightboxIndex] = React.useState(0);
 
   const subOptions = React.useMemo(() => allSubcategoryOptions(), []);
 
@@ -375,6 +378,9 @@ export default function GalleryPage() {
               </Button>
               <Button size="sm" variant="ghost" onClick={() => setDrawerSide("bottom")}>
                 Drawer bottom
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setLightboxOpen(true)}>
+                Lightbox
               </Button>
               <Popover trigger={<Button size="sm" variant="subtle">Popover</Button>}>
                 <p className="w-48 text-xs text-on-surface-muted">
@@ -639,6 +645,15 @@ export default function GalleryPage() {
               />
             </div>
           </Drawer>
+
+          <Lightbox
+            images={["/images/seed/1.jpg", "/images/seed/2.jpg"]}
+            alt="Gallery preview"
+            index={lightboxIndex}
+            onIndexChange={setLightboxIndex}
+            open={lightboxOpen}
+            onOpenChange={setLightboxOpen}
+          />
         </main>
       </ToastProvider>
     </TooltipProvider>

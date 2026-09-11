@@ -57,9 +57,9 @@ describe("SellerCard", () => {
     expect(screen.getByText("KS")).toBeInTheDocument();
   });
 
-  it("links the contact button to WhatsApp", () => {
+  it("links the Visit Store button to the seller's storefront", () => {
     renderCard();
     const link = screen.getByRole("link", { name: /Visit Store/ });
-    expect(link).toHaveAttribute("href", expect.stringContaining("https://wa.me/923166441108"));
+    expect(link).toHaveAttribute("href", `/en/seller/${seller.slug}`);
   });
 });

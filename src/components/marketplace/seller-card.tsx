@@ -5,7 +5,7 @@ import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
-import { whatsappUrl } from "@/lib/whatsapp";
+import { Link } from "@/i18n/routing";
 import type { Seller } from "@/types";
 
 /** Ported from code.html:971-1006 (Seller 1: Khan Solar). */
@@ -51,14 +51,10 @@ export function SellerCard({ seller }: { seller: Seller }) {
       </div>
 
       <Button asChild className="mt-3.5 w-full">
-        <a
-          href={whatsappUrl(seller.phone, `Hello ${seller.name}`)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Icon name="chat" size={15} />
+        <Link href={`/seller/${seller.slug}`}>
+          <Icon name="storefront" size={15} />
           <span>{t("visitStore")}</span>
-        </a>
+        </Link>
       </Button>
     </div>
   );

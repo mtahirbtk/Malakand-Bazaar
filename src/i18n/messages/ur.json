@@ -81,7 +81,14 @@
     "reserved": "محفوظ شدہ",
     "verified": "تصدیق شدہ",
     "visitStore": "دکان دیکھیں اور بات کریں",
-    "registerVerifiedSeller": "تصدیق شدہ فروخت کنندہ بنیں"
+    "registerVerifiedSeller": "تصدیق شدہ فروخت کنندہ بنیں",
+    "showNumber": "نمبر دکھائیں ({phone})",
+    "postedOn": "تاریخ اشاعت {date}",
+    "soldBy": "فروخت کنندہ",
+    "visitStorefront": "دکان دیکھیں",
+    "moreFromSeller": "{seller} کی مزید اشیاء",
+    "allListingsBy": "{seller} کی تمام اشیاء",
+    "noListingsYet": "ابھی کوئی دوسری اشیاء نہیں۔"
   },
   "home": {
     "hero": {
