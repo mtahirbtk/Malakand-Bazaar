@@ -67,7 +67,7 @@ Cows · Buffaloes · Bulls & Oxen · Calves · Goats · Sheep · Qurbani Animals
 Camels · Horses · Donkeys & Mules · Poultry (Desi & Broiler) · Day-Old Chicks ·
 Hatching Eggs · Pigeons · Ornamental Birds · Fish & Fingerlings · Aquarium & Supplies ·
 Dogs · Cats · Other Pets · Animal Feed (Wanda, Silage, Bhoosa) ·
-Veterinary Medicine & Supplies · Pet Food & Accessories
+Veterinary Medicine & Supplies · Pet Food & Accessories · Other Livestock & Animals
 
 ## 10. Fresh Produce & Food — تازہ پیداوار اور خوراک `nutrition`
 Peaches · Persimmon (Amlok) · Citrus & Malta · Apples · Apricots · Plums · Pears ·
@@ -210,4 +210,4 @@ Stolen or smuggled goods (beyond legally tradable NCP vehicles)
   (`vehicles-tractors` vs `agriculture-tractors-implements`).
 - "Other X" tail subcategory in every branch catches what the list misses and
   gives admin a signal for which subcategory to create next.
-- Counts: 26 categories, ~430 subcategories.
+- Counts: 26 categories, 444 subcategories (verified by scripts/generate-categories.mjs).
