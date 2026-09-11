@@ -12,8 +12,10 @@ import { cn } from "@/lib/cn";
  * but not a manually-browsed, non-autoplaying gallery. Desktop hover shows
  * a zoom lens (plain CSS, no library); mobile tap opens the Lightbox.
  */
+const MAX_IMAGES = 5;
+
 export function ImageGallery({
-  images,
+  images: allImages,
   alt,
   iconFallback,
 }: {
@@ -21,6 +23,7 @@ export function ImageGallery({
   alt: string;
   iconFallback?: string;
 }) {
+  const images = allImages.slice(0, MAX_IMAGES);
   const [index, setIndex] = React.useState(0);
   const [lensPos, setLensPos] = React.useState<{ x: number; y: number } | null>(null);
   const [lightboxOpen, setLightboxOpen] = React.useState(false);

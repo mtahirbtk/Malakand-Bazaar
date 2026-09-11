@@ -172,7 +172,7 @@ export default function HomeContent() {
           actionLabel={t("shelfA.action")}
           actionHref="/search?category=solar-energy"
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {byId(SHELF_A_IDS).map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
@@ -186,7 +186,7 @@ export default function HomeContent() {
           actionLabel={t("shelfB.action")}
           actionHref="/search?category=fresh-produce-food"
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {byId(SHELF_B_IDS).map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
@@ -200,7 +200,7 @@ export default function HomeContent() {
           actionLabel={t("shelfC.action")}
           actionHref="/search?category=vehicles"
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {byId(SHELF_C_IDS).map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}

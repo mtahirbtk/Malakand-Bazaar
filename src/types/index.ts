@@ -73,4 +73,8 @@ export type Seller = {
   statLabel: string;
   statValue: string;
   phone: string;
+  /** Storefront banner shown atop the seller's page. */
+  storefrontBanner?: string;
+  /** Store location, shown on the listing detail page's map. */
+  coordinates?: { lat: number; lng: number };
 };

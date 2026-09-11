@@ -36,7 +36,7 @@ export function AnnouncementBar() {
             </a>
           </div>
           <span className="inline-flex items-center gap-1.5 tracking-tight font-semibold">
-            <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-white animate-none sm:animate-ping" />
             {t("message")}
           </span>
         </div>

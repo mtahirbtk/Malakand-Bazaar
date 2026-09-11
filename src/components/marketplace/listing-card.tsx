@@ -24,15 +24,17 @@ export function ListingCard({ listing }: { listing: Listing }) {
   return (
     <Link
       href={`/listing/${listing.slug}`}
-      className="group block bg-surface rounded-xl border border-surface-border hover:shadow-md hover:scale-[1.03] transition-transform duration-200 p-3.5"
+      className="group block bg-surface rounded-xl sm:rounded-2xl border border-surface-border overflow-hidden hover:shadow-md hover:scale-[1.03] transition-transform duration-200"
     >
-      <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5">
+      {/* Full-bleed image, no card padding around it — edge to edge, only the
+          outer rounded-xl/2xl (via overflow-hidden) rounds its corners. */}
+      <div className="relative aspect-square w-full bg-surface-low">
         {hasPhoto ? (
           <Image
             src={listing.images[0]}
             alt={listing.title}
             fill
-            sizes="(max-width: 640px) 100vw, 20vw"
+            sizes="(max-width: 640px) 50vw, 20vw"
             className={cn("object-cover", isSold && "opacity-60")}
           />
         ) : (
@@ -62,14 +64,18 @@ export function ListingCard({ listing }: { listing: Listing }) {
         )}
       </div>
 
-      <div className="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
-        <Icon name="location_on" size={13} />
-        {listing.localityLabel}
+      <div className="p-2 sm:p-3.5">
+        <div className="text-[10px] sm:text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+          <Icon name="location_on" size={12} className="shrink-0" />
+          <span className="truncate">{listing.localityLabel}</span>
+        </div>
+
+        <h3 className="text-[11px] sm:text-xs font-bold text-on-surface line-clamp-2 mt-0.5 sm:mt-1">
+          {listing.title}
+        </h3>
+
+        <Price value={listing.price} compareAt={listing.compareAtPrice} size="sm" className="mt-1 sm:mt-2" />
       </div>
-
-      <h3 className="text-xs font-bold text-on-surface line-clamp-2 mt-1">{listing.title}</h3>
-
-      <Price value={listing.price} compareAt={listing.compareAtPrice} size="sm" className="mt-2" />
     </Link>
   );
 }

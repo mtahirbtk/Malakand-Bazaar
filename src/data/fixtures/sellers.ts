@@ -17,6 +17,8 @@ export const SELLERS: Seller[] = [
     statLabel: "Deals Done",
     statValue: "142 Systems",
     phone: "+923166441108",
+    storefrontBanner: "/images/seed/hero-2.jpg",
+    coordinates: { lat: 34.5167, lng: 71.9333 },
   },
   {
     id: "s2",
@@ -33,6 +35,8 @@ export const SELLERS: Seller[] = [
     statLabel: "Dispatches",
     statValue: "280+ Crates",
     phone: "+923166441108",
+    storefrontBanner: "/images/seed/hero-1.jpg",
+    coordinates: { lat: 34.6167, lng: 71.9500 },
   },
   {
     id: "s3",
@@ -49,6 +53,8 @@ export const SELLERS: Seller[] = [
     statLabel: "Vehicles Sold",
     statValue: "89 Units",
     phone: "+923166441108",
+    storefrontBanner: "/images/seed/hero-3.jpg",
+    coordinates: { lat: 34.5200, lng: 71.9380 },
   },
   {
     id: "s4",
@@ -65,6 +71,8 @@ export const SELLERS: Seller[] = [
     statLabel: "Orders Shipped",
     statValue: "310+ Jars",
     phone: "+923166441108",
+    storefrontBanner: "/images/seed/hero-2.jpg",
+    coordinates: { lat: 34.6833, lng: 72.0333 },
   },
   {
     id: "s5",
@@ -81,6 +89,8 @@ export const SELLERS: Seller[] = [
     statLabel: "Livestock Sold",
     statValue: "64 Dairy Cattle",
     phone: "+923166441108",
+    storefrontBanner: "/images/seed/hero-1.jpg",
+    coordinates: { lat: 34.6100, lng: 71.9450 },
   },
 ];
 

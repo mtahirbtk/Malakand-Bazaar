@@ -34,6 +34,6 @@ describe("SellerStorefront", () => {
 
   it("reveals the seller's phone on demand", () => {
     renderStorefront();
-    expect(screen.getByRole("button", { name: /Show Number/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Show WhatsApp Number/ })).toBeInTheDocument();
   });
 });

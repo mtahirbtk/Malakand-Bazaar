@@ -5,18 +5,7 @@ import { useTranslations } from "next-intl";
 import { Icon } from "@/components/ui/icon";
 import { MegaMenu } from "./mega-menu";
 import { Link } from "@/i18n/routing";
-
-const QUICK_LINKS: {
-  labelKey: "dailyFreshAgro" | "livestockCattle" | "vehiclesBikes" | "propertyPlots" | "solarElectronics" | "topLocalSellers";
-  href: string;
-}[] = [
-  { labelKey: "dailyFreshAgro", href: "/search?category=fresh-produce-food" },
-  { labelKey: "livestockCattle", href: "/search?category=livestock-animals" },
-  { labelKey: "vehiclesBikes", href: "/search?category=vehicles" },
-  { labelKey: "propertyPlots", href: "/search?category=property-for-sale" },
-  { labelKey: "solarElectronics", href: "/search?category=solar-energy" },
-  { labelKey: "topLocalSellers", href: "/sellers" },
-];
+import { QUICK_LINKS } from "@/data/quick-links";
 
 /** Ported from code.html:162-208. */
 export function CategoryRibbon() {

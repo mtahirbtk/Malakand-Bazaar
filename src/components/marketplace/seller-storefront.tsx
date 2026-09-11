@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Avatar } from "@/components/ui/avatar";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
@@ -12,28 +13,35 @@ export function SellerStorefront({ seller, listings }: { seller: Seller; listing
 
   return (
     <div className="space-y-6">
-      <div className="bg-surface rounded-2xl border border-surface-border p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
-        <div className="flex items-center gap-3.5">
-          <Avatar initials={seller.initials} alt={seller.name} size="lg" />
-          <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
-              {seller.name}
-            </h1>
-            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-              <Rating value={seller.rating} count={seller.reviewCount} />
-              {seller.verified && (
-                <Badge tone="green" icon="check_circle">
-                  {t("verified")}
-                </Badge>
-              )}
-            </div>
-            <p className="text-xs text-on-surface-muted flex items-center gap-1 mt-1">
-              <Icon name="location_on" size={13} />
-              {seller.localityLabel} · {seller.specialty}
-            </p>
+      <div className="bg-surface rounded-2xl border border-surface-border overflow-hidden">
+        {seller.storefrontBanner && (
+          <div className="relative h-28 sm:h-40 w-full bg-surface-low">
+            <Image src={seller.storefrontBanner} alt="" fill sizes="100vw" className="object-cover" />
           </div>
+        )}
+        <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+          <div className="flex items-center gap-3.5">
+            <Avatar initials={seller.initials} alt={seller.name} size="lg" />
+            <div>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
+                {seller.name}
+              </h1>
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                <Rating value={seller.rating} count={seller.reviewCount} />
+                {seller.verified && (
+                  <Badge tone="green" icon="check_circle">
+                    {t("verified")}
+                  </Badge>
+                )}
+              </div>
+              <p className="text-xs text-on-surface-muted flex items-center gap-1 mt-1">
+                <Icon name="location_on" size={13} />
+                {seller.localityLabel} · {seller.specialty}
+              </p>
+            </div>
+          </div>
+          <PhoneReveal phone={seller.phone} listingTitle={seller.name} />
         </div>
-        <PhoneReveal phone={seller.phone} listingTitle={seller.name} />
       </div>
 
       <div className="space-y-3">

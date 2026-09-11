@@ -39,7 +39,8 @@
   },
   "megaMenu": {
     "title": "تمام زمرہ جات",
-    "viewAll": "سب دیکھیں"
+    "viewAll": "سب دیکھیں",
+    "toggleSubcategories": "{category} کے ذیلی زمرے دکھائیں"
   },
   "footer": {
     "description": "بٹ خیلہ، درگئی اور تھانہ بائزئی میں صارفین، کسانوں اور خاندانی کاروباروں کو ملانے والی مخصوص ڈیجیٹل مارکیٹ۔",
@@ -82,13 +83,15 @@
     "verified": "تصدیق شدہ",
     "visitStore": "دکان دیکھیں اور بات کریں",
     "registerVerifiedSeller": "تصدیق شدہ فروخت کنندہ بنیں",
-    "showNumber": "نمبر دکھائیں ({phone})",
+    "showWhatsappNumber": "واٹس ایپ نمبر دکھائیں",
     "postedOn": "تاریخ اشاعت {date}",
     "soldBy": "فروخت کنندہ",
     "visitStorefront": "دکان دیکھیں",
     "moreFromSeller": "{seller} کی مزید اشیاء",
     "allListingsBy": "{seller} کی تمام اشیاء",
-    "noListingsYet": "ابھی کوئی دوسری اشیاء نہیں۔"
+    "noListingsYet": "ابھی کوئی دوسری اشیاء نہیں۔",
+    "storeLocation": "دکان کا مقام",
+    "getDirections": "راستہ دیکھیں"
   },
   "home": {
     "hero": {

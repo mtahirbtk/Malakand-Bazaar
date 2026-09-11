@@ -39,7 +39,8 @@
   },
   "megaMenu": {
     "title": "All Categories",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "toggleSubcategories": "Toggle {category} subcategories"
   },
   "footer": {
     "description": "The dedicated digital marketplace connecting consumers, farmers, and family enterprises across Batkhela, Dargai and Thana Baizai.",
@@ -82,13 +83,15 @@
     "verified": "Verified",
     "visitStore": "Visit Store & Chat",
     "registerVerifiedSeller": "Register as Verified Seller",
-    "showNumber": "Show Number ({phone})",
+    "showWhatsappNumber": "Show WhatsApp Number",
     "postedOn": "Posted {date}",
     "soldBy": "Sold by",
     "visitStorefront": "Visit Storefront",
     "moreFromSeller": "More from {seller}",
     "allListingsBy": "All listings by {seller}",
-    "noListingsYet": "No other listings yet."
+    "noListingsYet": "No other listings yet.",
+    "storeLocation": "Store Location",
+    "getDirections": "Get Directions"
   },
   "home": {
     "hero": {

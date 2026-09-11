@@ -27,7 +27,7 @@ describe("ListingDetail", () => {
 
   it("shows a masked number behind a reveal button, then reveals contact actions", () => {
     renderDetail();
-    const revealButton = screen.getByRole("button", { name: /Show Number/ });
+    const revealButton = screen.getByRole("button", { name: /Show WhatsApp Number/ });
     expect(screen.queryByRole("link", { name: /WhatsApp/ })).not.toBeInTheDocument();
     fireEvent.click(revealButton);
     expect(screen.getByRole("link", { name: /WhatsApp/ })).toHaveAttribute(

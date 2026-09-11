@@ -6,6 +6,7 @@ import { Link } from "@/i18n/routing";
 import { ImageGallery } from "./image-gallery";
 import { PhoneReveal } from "./phone-reveal";
 import { ListingCard } from "./listing-card";
+import { LocationMap } from "./location-map";
 import { CATEGORIES } from "@/data/categories";
 import type { Listing, Seller } from "@/types";
 
@@ -24,6 +25,7 @@ export function ListingDetail({
   const posted = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium" }).format(
     new Date(listing.createdAt)
   );
+  const mapCoordinates = seller?.coordinates ?? listing.coordinates;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -82,6 +84,10 @@ export function ListingDetail({
               <Icon name="arrow_forward" size={15} />
             </span>
           </Link>
+        )}
+
+        {mapCoordinates && (
+          <LocationMap coordinates={mapCoordinates} label={seller?.name ?? listing.title} />
         )}
       </div>
 

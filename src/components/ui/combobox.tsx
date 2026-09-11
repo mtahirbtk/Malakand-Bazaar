@@ -64,7 +64,7 @@ export function Combobox({
         <Popover.Content
           align="start"
           sideOffset={6}
-          className="z-[60] w-72 overflow-hidden rounded-lg border border-surface-border bg-surface shadow-floating"
+          className="z-[110] w-72 overflow-hidden rounded-lg border border-surface-border bg-surface shadow-floating"
         >
           <div className="border-b border-surface-border p-2">
             <Input

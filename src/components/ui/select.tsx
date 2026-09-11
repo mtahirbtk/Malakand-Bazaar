@@ -59,7 +59,10 @@ export function Select({
           position="popper"
           sideOffset={6}
           className={cn(
-            "z-[60] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg",
+            // Above Drawer's z-[80]/z-[70] — a Select opened inside a Drawer
+            // (e.g. the mobile hamburger menu) must render on top of it, not
+            // underneath where clicks land on the overlay instead.
+            "z-[110] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg",
             "border border-surface-border bg-surface shadow-floating",
             "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
           )}

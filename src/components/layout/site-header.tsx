@@ -11,8 +11,10 @@ import { Drawer } from "@/components/ui/drawer";
 import { BrandLogo } from "./brand-logo";
 import { CategoryRibbon } from "./category-ribbon";
 import { LocaleSwitcher } from "./locale-switcher";
+import { MegaMenu } from "./mega-menu";
 import { CATEGORY_OPTIONS } from "@/data/categories";
 import { TEHSIL_OPTIONS } from "@/data/tehsils";
+import { QUICK_LINKS } from "@/data/quick-links";
 import { Link } from "@/i18n/routing";
 
 /**
@@ -26,9 +28,11 @@ export function SiteHeader() {
   const common = useTranslations("common");
   const announcement = useTranslations("announcement");
   const locale = useTranslations("locale");
+  const nav = useTranslations("nav");
   const [sector, setSector] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [categoriesOpen, setCategoriesOpen] = React.useState(false);
   const [tehsil, setTehsil] = React.useState("all");
 
   return (
@@ -57,7 +61,36 @@ export function SiteHeader() {
 
         <Drawer open={menuOpen} onOpenChange={setMenuOpen} title={t("menuTitle")} side="left">
           <div className="space-y-5">
-            <div>
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                setCategoriesOpen(true);
+              }}
+              className="flex w-full items-center justify-between rounded-lg bg-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white"
+            >
+              <span className="flex items-center gap-2">
+                <Icon name="menu" size={18} />
+                {nav("allCategories")}
+              </span>
+              <Icon name="chevron_right" size={16} />
+            </button>
+
+            <ul className="space-y-2.5">
+              {QUICK_LINKS.map((link) => (
+                <li key={link.labelKey}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="text-sm font-semibold text-on-surface hover:text-brand-600"
+                  >
+                    {nav(link.labelKey)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <div className="border-t border-surface-border pt-4">
               <div className="text-[11px] font-bold text-on-surface-muted uppercase tracking-wider mb-1.5">
                 {announcement("tehsilLabel")}
               </div>
@@ -78,6 +111,8 @@ export function SiteHeader() {
             </div>
           </div>
         </Drawer>
+
+        <MegaMenu open={categoriesOpen} onOpenChange={setCategoriesOpen} />
 
         {/* min-w-0 overrides the flex-item default of min-width:auto — without
             it, this flex-1 box refuses to shrink below the Input's intrinsic
