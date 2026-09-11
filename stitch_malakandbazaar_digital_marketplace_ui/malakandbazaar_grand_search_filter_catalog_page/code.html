@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search & Explore Listings - MalakandBazaar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#1f4d3a',
+              900: '#133527',
+            },
+            earth: {
+              500: '#c89b6d',
+              600: '#b08356',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar and range styling */
+    input[type=range]::-webkit-slider-thumb {
+      background-color: #1f4d3a;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-[#F6F8F5] text-slate-900 font-sans antialiased selection:bg-brand-800 selection:text-white min-h-screen flex flex-col">
+
+  <!-- TOP UTILITY BAR (Greenvalley reference style with regional details) -->
+  <aside aria-label="Announcement" class="bg-[#183d2e] text-emerald-100 text-xs py-2 px-4 border-b border-emerald-800/40">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-4">
+        <span class="inline-flex items-center gap-1.5 font-medium text-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Direct Buyer-Seller WhatsApp Handshake • 0% Intermediary Fees
+        </span>
+        <span class="hidden md:inline text-emerald-500">•</span>
+        <span class="hidden md:inline text-emerald-300/80">Regional Hub: Batkhela, Dargai & Thana Commercial Corridors</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <!-- Store / Tehsil switcher like Greenvalley's Select Store -->
+        <div class="flex items-center gap-1.5 bg-black/20 px-2.5 py-1 rounded border border-emerald-700/50">
+          <span class="text-emerald-400 font-semibold">📍 Tehsil Zone:</span>
+          <select id="tehsilSelect" class="bg-transparent text-emerald-100 font-medium focus:outline-none cursor-pointer pr-1">
+            <option value="all" class="text-slate-900">All Malakand District (KP)</option>
+            <option value="batkhela" class="text-slate-900">Batkhela Bazaar & Suburbs</option>
+            <option value="dargai" class="text-slate-900">Dargai Commercial & Industrial</option>
+            <option value="thana" class="text-slate-900">Thana & Swat River Gateway</option>
+            <option value="totakan" class="text-slate-900">Totakan & Farm Orchards</option>
+            <option value="sakhakot" class="text-slate-900">Sakhakot Wholesale Cloth & Markets</option>
+            <option value="chakdara" class="text-slate-900">Chakdara Belt</option>
+          </select>
+        </div>
+        <a href="tel:+923166441108" class="hidden sm:flex items-center gap-1 hover:text-white transition">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.41 11.41 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.02l-2.21 2.19z"/></svg>
+          Direct Helpline
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN HEADER (Greenvalley Hypermarket layout with search & seller action) -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex-shrink-0 flex items-center gap-2 group">
+        <img src="https://lh3.googleusercontent.com/aida/AEtjO1Vy2wKQm44JogY_0e6LJcF6BUmPJbOqcCyB3luqHFYM05B34ya1cYMbYCb4IpPeY7oV0h9cy0T_un7PAWn82UYAvXMZvSvHbuauis8m3VlpoPj-xLaJiJxgBv5H7BI6sP4NRION6WWm4eWYX2GZ1bw3ucZWsZAOI2zvpHoTvDMhJsxFSNF4Vwm9eCK4I1T_G1n7isfu1eX1EqMouB2s-8TWW8EBQxYFezWVNPLuIeZygWUDGGxRbqKcGQ" alt="MalakandBazaar" class="h-10 sm:h-12 w-auto object-contain">
+      </a>
+
+      <!-- Grand Search Input Strip (Core Greenvalley Reference Feature) -->
+      <div class="flex-1 max-w-2xl mx-auto hidden md:block">
+        <form id="grandSearchForm" class="flex items-center border-2 border-brand-800 rounded-lg overflow-hidden bg-white shadow-xs focus-within:ring-2 focus-within:ring-brand-800/30">
+          <div class="relative bg-slate-50 border-r border-slate-200 flex items-center">
+            <select id="headerCategory" class="bg-transparent text-xs font-semibold text-slate-700 py-2.5 pl-3 pr-8 focus:outline-none cursor-pointer">
+              <option value="all">All Sectors</option>
+              <option value="electronics">Electronics & Solar Tech</option>
+              <option value="agriculture">Fresh Produce & Agro</option>
+              <option value="livestock">Livestock & Cattle</option>
+              <option value="vehicles">Vehicles & Motorbikes</option>
+              <option value="property">Plots & Commercial</option>
+              <option value="woodcraft">Swat Woodcraft & Home</option>
+            </select>
+          </div>
+          <div class="relative flex-1">
+            <input type="text" id="searchInput" placeholder="Search 2,400+ verified listings in Malakand (e.g. Solar Inverter, CD 70, Honey, Sahiwal Cow)..." 
+                   value="Solar Inverter"
+                   class="w-full text-sm px-3.5 py-2.5 text-slate-800 placeholder-slate-400 focus:outline-none">
+            <button type="button" id="clearSearchBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs px-1">✕</button>
+          </div>
+          <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white px-5 py-2.5 font-semibold text-sm transition flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span>Search</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- User Actions & Become a Seller (Free) -->
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <a href="#" class="hidden lg:flex items-center gap-1.5 text-slate-700 hover:text-brand-800 text-sm font-semibold px-2 py-1.5">
+          <svg class="w-4 h-4 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <span>Sign In</span>
+        </a>
+        <a href="#" class="bg-brand-800 hover:bg-brand-900 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+          <span>Become a Seller <span class="bg-emerald-500/30 text-emerald-200 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1">Free</span></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Mobile Search input bar -->
+    <div class="p-3 border-t border-slate-100 md:hidden bg-slate-50">
+      <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-white">
+        <input type="text" placeholder="Search listings across Malakand..." class="w-full text-xs px-3 py-2 text-slate-800 focus:outline-none" value="Solar Inverter">
+        <button class="bg-brand-800 text-white px-3 py-2 text-xs font-semibold">Search</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- DEPARTMENT MEGA SUB-NAV BAR (Greenvalley Department Ribbon) -->
+  <nav class="bg-white border-b border-slate-200 hidden md:block text-xs font-semibold text-slate-700">
+    <div class="max-w-7xl mx-auto px-4 flex items-center gap-1 overflow-x-auto whitespace-nowrap custom-scrollbar py-2">
+      <button class="bg-brand-800 text-white px-3 py-1.5 rounded flex items-center gap-1.5 font-bold mr-2">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        All Departments
+      </button>
+      <a href="#" class="px-2.5 py-1.5 hover:text-brand-800 hover:bg-emerald-50 rounded transition text-brand-800 font-bold bg-emerald-50/70">⚡ Solar & Electronics (410)</a>
+      <a href="#" class="px-2.5 py-1.5 hover:text-brand-800 hover:bg-emerald-50 rounded transition">🍎 Fresh Fruits & Agro (185)</a>
+      <a href="#" class="px-2.5 py-1.5 hover:text-brand-800 hover:bg-emerald-50 rounded transition">🐄 Livestock & Cattle (120)</a>
+      <a href="#" class="px-2.5 py-1.5 hover:text-brand-800 hover:bg-emerald-50 rounded transition">🏍️ Vehicles & Motorbikes (340)</a>
+      <a href="#" class="px-2.5 py-1.5 hover:text-brand-800 hover:bg-emerald-50 rounded transition">🏡 Plots & Real Estate (210)</a>
+      <a href="#" class="px-2.5 py-1.5 hover:text-brand-800 hover:bg-emerald-50 rounded transition">🪑 Swat Deodar Woodcraft</a>
+      <a href="#" class="px-2.5 py-1.5 hover:text-brand-800 hover:bg-emerald-50 rounded transition">🧣 Sakhakot Shawls & Fabrics</a>
+      <span class="ml-auto text-emerald-800 font-bold text-[11px] bg-emerald-100/70 px-2 py-0.5 rounded">Verified Local Rates</span>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMBS & COLLECTION HEADER (Like Greenvalley Collection Page) -->
+  <section class="bg-[#EEF5EF] border-b border-emerald-900/10 py-5">
+    <div class="max-w-7xl mx-auto px-4">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+        <a href="#" class="hover:text-brand-800 hover:underline">Home</a>
+        <span>/</span>
+        <a href="#" class="hover:text-brand-800 hover:underline">Malakand Marketplace</a>
+        <span>/</span>
+        <span class="text-brand-800 font-semibold">Grand Search Catalog</span>
+      </nav>
+
+      <!-- Title & Results Count banner -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
+            <span>Listings & Products in Malakand</span>
+            <span class="bg-brand-800 text-white text-xs px-2.5 py-0.5 rounded-full font-bold">128 Matches</span>
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Verified local sellers, orchard crates, tubewell machinery, solar gear, livestock & motorbikes across Batkhela, Dargai, and Thana.
+          </p>
+        </div>
+
+        <!-- Quick Tehsil Badge Pills -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-xs font-semibold text-slate-500">Popular hubs:</span>
+          <button class="text-xs font-medium bg-white hover:bg-emerald-100 text-emerald-900 px-2.5 py-1 rounded-full border border-emerald-200 transition">Batkhela Main Bazaar</button>
+          <button class="text-xs font-medium bg-white hover:bg-emerald-100 text-emerald-900 px-2.5 py-1 rounded-full border border-emerald-200 transition">Dargai Industrial Belt</button>
+          <button class="text-xs font-medium bg-white hover:bg-emerald-100 text-emerald-900 px-2.5 py-1 rounded-full border border-emerald-200 transition">Thana Swat River Entry</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN SEARCH, FILTERS & PRODUCT GRID CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-1">
+    
+    <!-- TOP FILTER CONTROL BAR (Sorting, Result Counter, Active Chips, Mobile Filter Toggle) -->
+    <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      
+      <!-- Left: Mobile Filter Button & Active Filter Tags -->
+      <div class="flex items-center flex-wrap gap-2">
+        <button id="mobileFilterToggle" class="md:hidden bg-brand-800 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          Filters (3)
+        </button>
+
+        <span class="text-xs font-bold text-slate-500 mr-1 hidden sm:inline">Active Filters:</span>
+        <span class="inline-flex items-center gap-1 text-xs bg-emerald-50 text-brand-800 font-semibold px-2.5 py-1 rounded-md border border-emerald-200">
+          Search: "Solar Inverter"
+          <button class="hover:text-red-600 font-bold ml-1">✕</button>
+        </span>
+        <span class="inline-flex items-center gap-1 text-xs bg-emerald-50 text-brand-800 font-semibold px-2.5 py-1 rounded-md border border-emerald-200">
+          Zone: Batkhela + Dargai
+          <button class="hover:text-red-600 font-bold ml-1">✕</button>
+        </span>
+        <span class="inline-flex items-center gap-1 text-xs bg-emerald-50 text-brand-800 font-semibold px-2.5 py-1 rounded-md border border-emerald-200">
+          In Stock / Available
+          <button class="hover:text-red-600 font-bold ml-1">✕</button>
+        </span>
+        <button class="text-xs font-semibold text-rose-600 hover:underline ml-1">Clear all</button>
+      </div>
+
+      <!-- Right: SORT BY (Greenvalley exact sort options: Featured, Best Selling, Price Low-to-High, Date Old to New, etc.) -->
+      <div class="flex items-center gap-3 self-end md:self-auto">
+        <label for="sortBySelect" class="text-xs font-bold text-slate-600 uppercase tracking-wider">Sort by:</label>
+        <div class="relative">
+          <select id="sortBySelect" class="bg-slate-50 border border-slate-300 text-slate-800 text-xs font-medium rounded-lg px-3 py-2 pr-8 focus:outline-none focus:border-brand-800 cursor-pointer">
+            <option value="featured">Featured First</option>
+            <option value="relevant" selected>Most Relevant</option>
+            <option value="best_selling">Verified Top Sellers</option>
+            <option value="price_low">Price, Low to High</option>
+            <option value="price_high">Price, High to Low</option>
+            <option value="date_new">Date, New to Old (Recent Ads)</option>
+            <option value="date_old">Date, Old to New</option>
+          </select>
+        </div>
+
+        <!-- View layout toggles -->
+        <div class="hidden sm:flex items-center border border-slate-200 rounded-lg overflow-hidden">
+          <button class="p-2 bg-emerald-50 text-brand-800" title="Grid View">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z"/></svg>
+          </button>
+          <button class="p-2 bg-white text-slate-400 hover:text-slate-700" title="List View">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2-COLUMN LAYOUT: SIDEBAR FILTERS (LEFT) + RESULTS GRID (RIGHT) -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+      
+      <!-- ================= SIDEBAR FILTERS (GREENVALLEY ARCHITECTURE) ================= -->
+      <aside id="filterSidebar" class="hidden md:block bg-white rounded-xl border border-slate-200 shadow-xs p-5 space-y-6">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <svg class="w-4 h-4 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            Filter Listings
+          </h2>
+          <button class="text-xs text-brand-800 font-semibold hover:underline">Reset All</button>
+        </div>
+
+        <!-- 1. CATEGORY / DEPARTMENT FILTER (Greenvalley Style with Item Counts) -->
+        <div>
+          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center justify-between">
+            <span>Shop by Category</span>
+            <span class="text-[10px] text-slate-400 font-normal">97 in view</span>
+          </h3>
+          <div class="space-y-1.5 text-xs text-slate-600 max-h-56 overflow-y-auto pr-1 custom-scrollbar">
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer group">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" checked class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span class="font-medium text-slate-900 group-hover:text-brand-800">Solar & Tubewell Inverters</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">94</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer group">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span class="group-hover:text-brand-800">Solar PV Panels (Tier 1)</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">48</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer group">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span class="group-hover:text-brand-800">Swat Honey & Akhrot</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">32</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer group">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span class="group-hover:text-brand-800">Motorbikes & CD 70</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">27</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer group">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span class="group-hover:text-brand-800">Dairy Cattle & Goats</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">19</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer group">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span class="group-hover:text-brand-800">Agricultural Tractors & Machinery</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">12</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer group">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span class="group-hover:text-brand-800">Commercial Plots & Shops</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">15</span>
+            </label>
+          </div>
+        </div>
+
+        <hr class="border-slate-100">
+
+        <!-- 2. PRICE RANGE SLIDER & INPUTS (Greenvalley Reference: "From ₨ - To ₨") -->
+        <div>
+          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Price Range (PKR)</h3>
+          <p class="text-[11px] text-slate-500 mb-2">The highest price in selection is <span class="font-semibold text-slate-700">Rs. 5,800,000</span></p>
+          
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div>
+              <label class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">From</label>
+              <div class="relative flex items-center">
+                <span class="absolute left-2.5 text-xs text-slate-400">₨</span>
+                <input type="number" value="1000" placeholder="0" class="w-full text-xs pl-6 pr-2 py-1.5 bg-slate-50 border border-slate-300 rounded font-medium focus:outline-none focus:border-brand-800">
+              </div>
+            </div>
+            <div>
+              <label class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">To</label>
+              <div class="relative flex items-center">
+                <span class="absolute left-2.5 text-xs text-slate-400">₨</span>
+                <input type="number" value="450000" placeholder="5800000" class="w-full text-xs pl-6 pr-2 py-1.5 bg-slate-50 border border-slate-300 rounded font-medium focus:outline-none focus:border-brand-800">
+              </div>
+            </div>
+          </div>
+
+          <!-- Price Slider visualization -->
+          <div class="space-y-1">
+            <input type="range" min="0" max="1000000" value="450000" class="w-full accent-brand-800 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400">
+              <span>₨0</span>
+              <span>₨450,000</span>
+              <span>₨1M+</span>
+            </div>
+          </div>
+          <button class="w-full mt-3 bg-slate-100 hover:bg-brand-800 hover:text-white text-slate-700 text-xs font-bold py-1.5 rounded transition">Apply Price Filter</button>
+        </div>
+
+        <hr class="border-slate-100">
+
+        <!-- 3. AVAILABILITY / DEAL TYPE (Greenvalley: In Stock / Out of Stock) -->
+        <div>
+          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5">Stock & Availability</h3>
+          <div class="space-y-2 text-xs text-slate-600">
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" checked class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span class="text-slate-800 font-medium">In Stock & Ready for Delivery</span>
+              </span>
+              <span class="text-[11px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">94 items</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer opacity-70">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span>Marked as Sold / Out of Stock</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">3 items</span>
+            </label>
+          </div>
+        </div>
+
+        <hr class="border-slate-100">
+
+        <!-- 4. LOCATION / TEHSIL ZONE FILTER (Malakand Specific Geo Hierarchy) -->
+        <div>
+          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5">Locality / Tehsil Corridor</h3>
+          <div class="space-y-1.5 text-xs text-slate-600 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" checked class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span>Batkhela Main Commercial Road</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">54</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" checked class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span>Dargai Industrial & Machinery Belt</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">38</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span>Thana & Swat River Gateway</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">21</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span>Totakan Orchards & Valley</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">16</span>
+            </label>
+            <label class="flex items-center justify-between hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+                <span>Sakhakot Wholesale Market</span>
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">19</span>
+            </label>
+          </div>
+        </div>
+
+        <hr class="border-slate-100">
+
+        <!-- 5. SELLER TYPE & VERIFICATION BADGE -->
+        <div>
+          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5">Verification & Seller</h3>
+          <div class="space-y-1.5 text-xs text-slate-600">
+            <label class="flex items-center gap-2 hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+              <span class="flex items-center gap-1">
+                <span class="text-emerald-600 font-bold">✓</span> Verified Shopkeeper / Farmer
+              </span>
+            </label>
+            <label class="flex items-center gap-2 hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+              <span>Direct Wholesaler / Distributor</span>
+            </label>
+            <label class="flex items-center gap-2 hover:bg-slate-50 p-1.5 rounded cursor-pointer">
+              <input type="checkbox" class="rounded text-brand-800 focus:ring-brand-800 w-3.5 h-3.5">
+              <span>Individual Valley Resident</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Direct WhatsApp Hotline Assistance Card in Sidebar -->
+        <div class="bg-gradient-to-br from-emerald-800 to-brand-900 text-white p-4 rounded-xl text-xs space-y-2">
+          <p class="font-bold flex items-center gap-1.5 text-emerald-200">
+            <svg class="w-4 h-4 text-emerald-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+            Need help finding an item?
+          </p>
+          <p class="text-emerald-100/90 leading-relaxed text-[11px]">
+            Our Batkhela Facilitation team will connect you directly with authentic verified vendors across Malakand on WhatsApp.
+          </p>
+          <a href="https://wa.me/923166441108" target="_blank" class="block text-center font-bold bg-emerald-500 hover:bg-emerald-400 text-brand-900 py-1.5 rounded shadow-sm transition">
+            Chat on WhatsApp
+          </a>
+        </div>
+
+      </aside>
+
+
+      <!-- ================= MAIN CATALOG GRID (RIGHT 3 COLUMNS) ================= -->
+      <section class="md:col-span-3 space-y-6">
+
+        <!-- Top Category Quick-Tabs Carousel (Greenvalley Collection Carousel) -->
+        <div class="bg-white rounded-xl border border-slate-200 p-3.5 shadow-xs overflow-x-auto whitespace-nowrap custom-scrollbar flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-500 pr-2 border-r border-slate-200">Quick Jump:</span>
+          <button class="bg-brand-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg">⚡ Solar Inverters (15kW - 25kW)</button>
+          <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg transition">Haier / Dawlance Inverter ACs</button>
+          <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg transition">Jinko 550W Panels</button>
+          <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg transition">Deep Cycle Batteries</button>
+          <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg transition">Solar Submersible Pumps</button>
+        </div>
+
+        <!-- THE PRODUCT / LISTING CARDS GRID (Greenvalley E-Commerce Product Cards with Malakand WhatsApp Handshake) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+
+          <!-- PRODUCT CARD 1: Solar Inverter (Flagship Machinery) -->
+          <article class="bg-white rounded-xl border border-slate-200 hover:border-brand-800/50 hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+            <div class="relative bg-slate-50 p-4 flex items-center justify-center border-b border-slate-100 h-52">
+              <span class="absolute top-2.5 left-2.5 bg-emerald-800 text-emerald-100 text-[10px] font-extrabold px-2 py-0.5 rounded shadow-xs uppercase">
+                2 Yr Warranty
+              </span>
+              <span class="absolute top-2.5 right-2.5 bg-white/90 text-slate-500 hover:text-red-500 p-1 rounded-full shadow-xs cursor-pointer" title="Save listing">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              </span>
+              <!-- Technical schematic / icon visual -->
+              <div class="w-28 h-28 rounded-2xl bg-emerald-50 flex items-center justify-center text-brand-800 group-hover:scale-105 transition duration-300">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 8h10M7 12h6m-6 4h8"/><circle cx="17" cy="16" r="1.5" fill="currentColor"/></svg>
+              </div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-1.5 text-[11px] text-slate-500 mb-1">
+                  <span class="text-brand-800 font-semibold">📍 Dargai Industrial Belt</span>
+                  <span>•</span>
+                  <span>Verified Shop</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 line-clamp-2 group-hover:text-brand-800 transition">
+                  Solar Inverter 15kW VFD Heavy Tubewell System (3-Phase Tested)
+                </h3>
+                
+                <!-- Greenvalley Price format with regular vs sale price -->
+                <div class="mt-2.5 flex items-baseline gap-2">
+                  <span class="text-lg font-black text-brand-900">PKR 240,000</span>
+                  <span class="text-xs text-slate-400 line-through">PKR 265,000</span>
+                  <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">-9%</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Direct from Authorized Dargai Machinery Depot • Tested for Malakand depth water table</p>
+              </div>
+
+              <!-- Direct WhatsApp / Call buttons -->
+              <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
+                <a href="https://wa.me/923166441108?text=Interested%20in%20Solar%20Inverter%2015kW%20from%20MalakandBazaar" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition shadow-xs">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="tel:+923166441108" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5 text-brand-800" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.41 11.41 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.02l-2.21 2.19z"/></svg>
+                  Call
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUCT CARD 2: Jinko 550W Mono Perc Solar Panels -->
+          <article class="bg-white rounded-xl border border-slate-200 hover:border-brand-800/50 hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+            <div class="relative bg-slate-50 p-4 flex items-center justify-center border-b border-slate-100 h-52">
+              <span class="absolute top-2.5 left-2.5 bg-amber-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow-xs uppercase">
+                Tier-1 Grade A
+              </span>
+              <span class="absolute top-2.5 right-2.5 bg-white/90 text-slate-500 hover:text-red-500 p-1 rounded-full shadow-xs cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              </span>
+              <div class="w-28 h-28 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-700 group-hover:scale-105 transition duration-300">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 21l3-6h12l3 6H3z"/></svg>
+              </div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-1.5 text-[11px] text-slate-500 mb-1">
+                  <span class="text-brand-800 font-semibold">📍 Batkhela Bypass Depot</span>
+                  <span>•</span>
+                  <span>Pallet Stock</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 line-clamp-2 group-hover:text-brand-800 transition">
+                  Jinko Solar 550W Mono Perc Bifacial High-Efficiency PV Panels
+                </h3>
+                
+                <div class="mt-2.5 flex items-baseline gap-2">
+                  <span class="text-lg font-black text-brand-900">PKR 34,500</span>
+                  <span class="text-xs text-slate-500 font-normal">/ per panel</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Bulk container rates for orchard tubewells & commercial roofs</p>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
+                <a href="https://wa.me/923166441108" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="tel:+923166441108" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5 text-brand-800" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.41 11.41 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.02l-2.21 2.19z"/></svg>
+                  Call
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUCT CARD 3: Haier 1.5 Ton Inverter AC -->
+          <article class="bg-white rounded-xl border border-slate-200 hover:border-brand-800/50 hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+            <div class="relative bg-slate-50 p-4 flex items-center justify-center border-b border-slate-100 h-52">
+              <span class="absolute top-2.5 left-2.5 bg-blue-700 text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow-xs uppercase">
+                T3 Compressor
+              </span>
+              <span class="absolute top-2.5 right-2.5 bg-white/90 text-slate-500 hover:text-red-500 p-1 rounded-full shadow-xs cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              </span>
+              <div class="w-28 h-28 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-700 group-hover:scale-105 transition duration-300">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v18m0-18l3 3m-3-3l-3 3m0 12l3 3 3-3M3 12h18m-18 0l3-3m-3 3l3 3m12-6l3 3-3 3"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+              </div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-1.5 text-[11px] text-slate-500 mb-1">
+                  <span class="text-brand-800 font-semibold">📍 Thana Main Chowk</span>
+                  <span>•</span>
+                  <span>Official Warranty</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 line-clamp-2 group-hover:text-brand-800 transition">
+                  Haier 1.5 Ton Thunder DC Inverter AC (Heat & Cool, Solar Capable)
+                </h3>
+                
+                <div class="mt-2.5 flex items-baseline gap-2">
+                  <span class="text-lg font-black text-brand-900">PKR 138,000</span>
+                  <span class="text-xs text-slate-400 line-through">PKR 152,000</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Authorized dealer stamp with 10-year compressor warranty</p>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
+                <a href="https://wa.me/923166441108" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="tel:+923166441108" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5 text-brand-800" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.41 11.41 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.02l-2.21 2.19z"/></svg>
+                  Call
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUCT CARD 4: Fresh Swat Valley Sidr Honey (Agricultural Star) -->
+          <article class="bg-white rounded-xl border border-slate-200 hover:border-brand-800/50 hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+            <div class="relative bg-slate-50 p-4 flex items-center justify-center border-b border-slate-100 h-52">
+              <span class="absolute top-2.5 left-2.5 bg-brand-800 text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow-xs uppercase">
+                100% Sidr Berry
+              </span>
+              <span class="absolute top-2.5 right-2.5 bg-white/90 text-slate-500 hover:text-red-500 p-1 rounded-full shadow-xs cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              </span>
+              <div class="w-28 h-28 rounded-2xl bg-amber-50/70 flex items-center justify-center text-amber-800 group-hover:scale-105 transition duration-300">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 21a9 9 0 100-18 9 9 0 000 18z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 7v5l3 3"/><circle cx="12" cy="12" r="7" stroke-dasharray="2 4" stroke-width="1.2"/></svg>
+              </div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-1.5 text-[11px] text-slate-500 mb-1">
+                  <span class="text-brand-800 font-semibold">📍 Thana Valley Apiary</span>
+                  <span>•</span>
+                  <span>Lab Tested Pure</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 line-clamp-2 group-hover:text-brand-800 transition">
+                  Fresh Swat Valley Wild Sidr (Beri) Raw Organic Honey 1kg Jar
+                </h3>
+                
+                <div class="mt-2.5 flex items-baseline gap-2">
+                  <span class="text-lg font-black text-brand-900">PKR 2,800</span>
+                  <span class="text-xs text-slate-400 line-through">PKR 3,200</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Extracted from Totakan & Batkhela wild berry groves • WhatsApp for honey comb video</p>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
+                <a href="https://wa.me/923166441108" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="tel:+923166441108" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5 text-brand-800" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.41 11.41 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.02l-2.21 2.19z"/></svg>
+                  Call
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUCT CARD 5: Honda CD 70 2024 Red -->
+          <article class="bg-white rounded-xl border border-slate-200 hover:border-brand-800/50 hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+            <div class="relative bg-slate-50 p-4 flex items-center justify-center border-b border-slate-100 h-52">
+              <span class="absolute top-2.5 left-2.5 bg-red-700 text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow-xs uppercase">
+                First Owner
+              </span>
+              <span class="absolute top-2.5 right-2.5 bg-white/90 text-slate-500 hover:text-red-500 p-1 rounded-full shadow-xs cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              </span>
+              <div class="w-28 h-28 rounded-2xl bg-red-50 flex items-center justify-center text-red-700 group-hover:scale-105 transition duration-300">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="17" r="3" stroke-width="1.8"/><circle cx="18" cy="17" r="3" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 17l4-9h4l2 4h3M10 8l3 9m-4-5h6"/></svg>
+              </div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-1.5 text-[11px] text-slate-500 mb-1">
+                  <span class="text-brand-800 font-semibold">📍 Batkhela Main Bazaar</span>
+                  <span>•</span>
+                  <span>Smart Card Available</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 line-clamp-2 group-hover:text-brand-800 transition">
+                  Honda CD 70 2024 Red (Complete Return File & Smart Card in Hand)
+                </h3>
+                
+                <div class="mt-2.5 flex items-baseline gap-2">
+                  <span class="text-lg font-black text-brand-900">PKR 132,000</span>
+                  <span class="text-xs text-slate-400 line-through">PKR 142,000</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">4,200 km driven on Batkhela-Thana highway, zero scratches</p>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
+                <a href="https://wa.me/923166441108" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="tel:+923166441108" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5 text-brand-800" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.41 11.41 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.02l-2.21 2.19z"/></svg>
+                  Call
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PRODUCT CARD 6: 20kg Batkhela Blood Red Citrus Crate -->
+          <article class="bg-white rounded-xl border border-slate-200 hover:border-brand-800/50 hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+            <div class="relative bg-slate-50 p-4 flex items-center justify-center border-b border-slate-100 h-52">
+              <span class="absolute top-2.5 left-2.5 bg-orange-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow-xs uppercase">
+                Fresh Farm Harvest
+              </span>
+              <span class="absolute top-2.5 right-2.5 bg-white/90 text-slate-500 hover:text-red-500 p-1 rounded-full shadow-xs cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              </span>
+              <div class="w-28 h-28 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-700 group-hover:scale-105 transition duration-300">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v4m0 8v4m-8-8h4m8 0h4"/><path stroke-linecap="round" stroke-width="1.5" d="M12 2c2 1 3 3 3 3s-2 1-3 1-3-1-3-1 1-2 3-3z"/></svg>
+              </div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-1.5 text-[11px] text-slate-500 mb-1">
+                  <span class="text-brand-800 font-semibold">📍 Batkhela Canal Orchards</span>
+                  <span>•</span>
+                  <span>Wholesale Crate</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 line-clamp-2 group-hover:text-brand-800 transition">
+                  Organic Batkhela Blood Red Sweet Citrus (20kg Export Wooden Crate)
+                </h3>
+                
+                <div class="mt-2.5 flex items-baseline gap-2">
+                  <span class="text-lg font-black text-brand-900">PKR 3,200</span>
+                  <span class="text-xs text-slate-400 line-through">PKR 3,600</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Hand-plucked this morning from canal feeder farms • Zero preservatives</p>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
+                <a href="https://wa.me/923166441108" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="tel:+923166441108" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 transition">
+                  <svg class="w-3.5 h-3.5 text-brand-800" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.41 11.41 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.02l-2.21 2.19z"/></svg>
+                  Call
+                </a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- PAGINATION STRIP (Greenvalley exact style: 1, 2, 3, 4 ... Next) -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span class="text-xs text-slate-500">
+            Showing <span class="font-bold text-slate-800">1 - 6</span> of <span class="font-bold text-slate-800">128</span> products in Malakand
+          </span>
+
+          <div class="flex items-center gap-1.5 text-xs font-bold">
+            <button class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-400 cursor-not-allowed">Previous</button>
+            <button class="w-8 h-8 rounded-lg bg-brand-800 text-white flex items-center justify-center">1</button>
+            <button class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 flex items-center justify-center transition">2</button>
+            <button class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 flex items-center justify-center transition">3</button>
+            <span class="px-1 text-slate-400">...</span>
+            <button class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 flex items-center justify-center transition">22</button>
+            <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 transition">Next</button>
+          </div>
+        </div>
+
+        <!-- REGIONAL VERIFICATION GUARANTEE BANNER (From Greenvalley hypermarket style) -->
+        <div class="bg-[#e9f2eb] rounded-xl border border-emerald-800/20 p-5 flex flex-col sm:flex-row items-center gap-4 text-xs text-brand-900">
+          <div class="w-12 h-12 rounded-full bg-brand-800 text-emerald-300 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <div class="flex-1 text-center sm:text-left">
+            <h4 class="font-bold text-sm text-slate-900">100% Free Regional Market Notice</h4>
+            <p class="text-slate-600 mt-0.5">
+              All listed items are sold directly by local residents, farmers, and registered shopkeepers in Batkhela, Dargai, and Thana. Verify goods upon physical handover.
+            </p>
+          </div>
+          <a href="#" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg whitespace-nowrap transition shadow-xs">
+            Seller Guidelines
+          </a>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER (Matching MalakandBazaar & Greenvalley Contact Info Structure) -->
+  <footer class="bg-white border-t border-slate-200 mt-12 text-xs text-slate-600">
+    <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+      
+      <!-- Brand & Mission -->
+      <div class="space-y-3">
+        <img src="https://lh3.googleusercontent.com/aida/AEtjO1Vy2wKQm44JogY_0e6LJcF6BUmPJbOqcCyB3luqHFYM05B34ya1cYMbYCb4IpPeY7oV0h9cy0T_un7PAWn82UYAvXMZvSvHbuauis8m3VlpoPj-xLaJiJxgBv5H7BI6sP4NRION6WWm4eWYX2GZ1bw3ucZWsZAOI2zvpHoTvDMhJsxFSNF4Vwm9eCK4I1T_G1n7isfu1eX1EqMouB2s-8TWW8EBQxYFezWVNPLuIeZygWUDGGxRbqKcGQ" alt="MalakandBazaar" class="h-10 w-auto">
+        <p class="text-xs text-slate-500 leading-relaxed">
+          The dedicated regional digital marketplace connecting consumers, farmers, and family enterprises across Batkhela, Dargai, Thana, Totakan, and Sakhakot.
+        </p>
+        <div class="text-[11px] text-emerald-800 font-semibold flex items-center gap-1.5">
+          <span>📍</span> Regional Commercial Hub: Batkhela • Dargai • Thana
+        </div>
+      </div>
+
+      <!-- Quick Contact Info (Exact Greenvalley style) -->
+      <div>
+        <h4 class="font-bold text-slate-900 uppercase tracking-wider mb-3 text-xs">Direct Contact Info</h4>
+        <ul class="space-y-2 text-xs">
+          <li>
+            <span class="text-slate-400 block text-[10px]">WhatsApp Support:</span>
+            <a href="tel:+923166441108" class="font-bold text-brand-800 hover:underline">+92 316 644 1108</a>
+          </li>
+          <li>
+            <span class="text-slate-400 block text-[10px]">Inquiries:</span>
+            <a href="mailto:support@malakandbazaar.pk" class="hover:underline">support@malakandbazaar.pk</a>
+          </li>
+          <li>
+            <span class="text-slate-400 block text-[10px]">Facilitation Center:</span>
+            <span>Main Commercial Road, Batkhela Bazaar, Malakand District, KP</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="font-bold text-slate-900 uppercase tracking-wider mb-3 text-xs">Market Sectors</h4>
+        <ul class="space-y-1.5 text-xs text-slate-600">
+          <li><a href="#" class="hover:text-brand-800">⚡ Solar Systems & Inverters</a></li>
+          <li><a href="#" class="hover:text-brand-800">🍎 Fresh Fruits & Batkhela Citrus</a></li>
+          <li><a href="#" class="hover:text-brand-800">🐄 Sahiwal Cattle & Livestock Mandi</a></li>
+          <li><a href="#" class="hover:text-brand-800">🏍️ Honda Bikes & Local Vehicles</a></li>
+          <li><a href="#" class="hover:text-brand-800">🏡 Highway Commercial Plots</a></li>
+          <li><a href="#" class="hover:text-brand-800">🧣 Sakhakot Traditional Shawls</a></li>
+        </ul>
+      </div>
+
+      <!-- Weekly Market Bulletin (Greenvalley newsletter) -->
+      <div>
+        <h4 class="font-bold text-slate-900 uppercase tracking-wider mb-3 text-xs">Weekly Valley Bulletin</h4>
+        <p class="text-slate-500 mb-3 text-[11px]">
+          Get instant WhatsApp and SMS updates regarding Batkhela market rates, seasonal citrus harvests, and cattle fairs.
+        </p>
+        <form class="flex items-center gap-1">
+          <input type="text" placeholder="Enter phone or email..." class="bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-xs w-full focus:outline-none focus:border-brand-800">
+          <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white px-3 py-1.5 rounded font-bold transition">Join</button>
+        </form>
+        <span class="text-[10px] text-slate-400 mt-1 block">Pashto & Urdu voice alerts supported.</span>
+      </div>
+
+    </div>
+
+    <!-- Bottom copyright -->
+    <div class="border-t border-slate-100 py-4 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+        <div>
+          © 2026 MalakandBazaar.pk • Dedicated Regional Marketplace for the Citizens & Enterprises of Malakand District, KP.
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="#" class="hover:underline">Privacy Policy</a>
+          <a href="#" class="hover:underline">Terms of Trade</a>
+          <a href="#" class="hover:underline">Help Center</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactivity for filter toggle on mobile -->
+  <script>
+    const mobileFilterToggle = document.getElementById('mobileFilterToggle');
+    const filterSidebar = document.getElementById('filterSidebar');
+    if (mobileFilterToggle && filterSidebar) {
+      mobileFilterToggle.addEventListener('click', () => {
+        filterSidebar.classList.toggle('hidden');
+        window.scrollTo({
+          top: filterSidebar.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      });
+    }
+
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const searchInput = document.getElementById('searchInput');
+    if (clearSearchBtn && searchInput) {
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.focus();
+      });
+    }
+  </script>
+</body>
+</html>

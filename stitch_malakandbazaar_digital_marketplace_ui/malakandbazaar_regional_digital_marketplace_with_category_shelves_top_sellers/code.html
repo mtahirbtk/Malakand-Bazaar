@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MalakandBazaar - Premium Regional Digital Marketplace &amp; Hypermarket</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .hero-slide {
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1f4d3a",
+            "primary-dark": "#16382b",
+            "primary-light": "#28664e",
+            "secondary": "#3f6b52",
+            "tertiary": "#c89b6d",
+            "tertiary-hover": "#b88755",
+            "tertiary-light": "#fdf6ed",
+            "background": "#f4f8f5",
+            "surface": "#ffffff",
+            "surface-low": "#edf5ef",
+            "surface-border": "#e1ebe4",
+            "accent-green": "#50a23e",
+            "accent-green-dark": "#418532",
+            "on-surface": "#16231d",
+            "on-surface-muted": "#52635a"
+          },
+          fontFamily: {
+            sans: ["'Plus Jakarta Sans'", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background font-sans text-on-surface antialiased min-h-screen flex flex-col">
+<!-- ========================================================================= -->
+<!-- 1. TOP ANNOUNCEMENT / UTILITY BAR                                         -->
+<!-- ========================================================================= -->
+<aside class="bg-accent-green text-white text-xs font-medium py-1.5 px-4 sm:px-8 border-b border-accent-green-dark/30">
+<div class="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+<!-- Socials & Direct WhatsApp Help -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 pr-3 border-r border-white/30">
+<a class="hover:opacity-80 transition-opacity" href="#" title="Facebook"><span class="material-symbols-outlined text-[15px]">public</span></a>
+<a class="hover:opacity-80 transition-opacity" href="#" title="WhatsApp Community"><span class="material-symbols-outlined text-[15px]">forum</span></a>
+<a class="hover:opacity-80 transition-opacity" href="#" title="Direct Phone Support"><span class="material-symbols-outlined text-[15px]">call</span></a>
+</div>
+<span class="inline-flex items-center gap-1.5 tracking-tight font-semibold">
+<span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+          Prices &amp; availability confirmed directly via WhatsApp. Zero middleman fees across Malakand District!
+        </span>
+</div>
+<!-- Tehsil & Regional Selector -->
+<div class="flex items-center gap-3 text-[11px]">
+<span class="hidden md:inline-block text-white/90">Official Regional Hub: Batkhela • Dargai • Thana</span>
+<div class="flex items-center gap-1 bg-white/15 px-2.5 py-0.5 rounded-full backdrop-blur-sm border border-white/20">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+<span class="font-bold">Tehsil:</span>
+<select class="bg-transparent text-white font-semibold text-xs border-0 py-0 pl-1 pr-5 focus:ring-0 cursor-pointer">
+<option class="text-on-surface" value="all">All Malakand District</option>
+<option class="text-on-surface" value="batkhela">Batkhela Bazaar &amp; City</option>
+<option class="text-on-surface" value="dargai">Dargai Tehsil Corridor</option>
+<option class="text-on-surface" value="thana">Thana &amp; Swat Entry</option>
+<option class="text-on-surface" value="totakan">Totakan Valley</option>
+<option class="text-on-surface" value="sakhakot">Sakhakot Cloth Market</option>
+<option class="text-on-surface" value="khar">Khar &amp; Baizai Area</option>
+</select>
+</div>
+</div>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- 2. RICH COMMERCIAL HEADER                                                 -->
+<!-- ========================================================================= -->
+<header class="bg-surface sticky top-0 z-50 border-b border-surface-border shadow-sm">
+<div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4 lg:gap-8">
+<!-- Brand Logo -->
+<a class="shrink-0 flex items-center gap-2 group" href="#">
+<svg class="h-10 sm:h-12 w-auto" fill="none" viewbox="0 0 280 64" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(4, 8)">
+<path d="M4 42L18 16L32 42H4Z" fill="#1F4D3A"></path>
+<path d="M22 42L34 22L46 42H22Z" fill="#3F6B52" opacity="0.9"></path>
+<path d="M12 42C16 34 26 34 30 42" fill="none" stroke="#C89B6D" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="34" cy="14" fill="#C89B6D" r="4"></circle>
+</g>
+<text fill="#1F4D3A" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="22" font-weight="800" letter-spacing="-0.5" x="64" y="36">Malakand<tspan fill="#C89B6D">Bazaar</tspan></text>
+<text fill="#3F6B52" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="600" letter-spacing="1.5" x="65" y="50">REGIONAL MARKETPLACE</text>
+</svg>
+</a>
+<!-- Wide Search Bar with Dropdown & Search Button -->
+<div class="flex-1 max-w-3xl hidden md:block">
+<form class="flex items-stretch border-2 border-accent-green rounded-lg overflow-hidden bg-surface shadow-xs" onsubmit="event.preventDefault();">
+<div class="relative flex items-center bg-surface-low border-r border-surface-border px-3 shrink-0">
+<span class="material-symbols-outlined text-secondary text-[18px] mr-1">category</span>
+<select class="bg-transparent text-xs font-bold text-on-surface py-2 pr-6 border-0 focus:ring-0 cursor-pointer">
+<option>All Sectors</option>
+<option>Agro &amp; Daily Fresh</option>
+<option>Livestock &amp; Cattle</option>
+<option>Vehicles &amp; CD70</option>
+<option>Property &amp; Plots</option>
+<option>Electronics &amp; Solar</option>
+<option>Traditional Crafts</option>
+</select>
+</div>
+<input class="w-full px-4 py-2.5 text-sm text-on-surface placeholder:text-on-surface-muted/70 focus:outline-none border-0 focus:ring-0" placeholder="Search in Batkhela, Dargai, Thana (e.g. Solar Inverter, Honda CD70, Swat Honey, Plots)..." type="text"/>
+<button class="bg-accent-green hover:bg-accent-green-dark text-white px-6 font-semibold flex items-center justify-center transition-colors" type="submit">
+<span class="material-symbols-outlined text-[22px]">search</span>
+</button>
+</form>
+</div>
+<!-- Action Items & Store Selector / Become a Seller Trigger -->
+<div class="flex items-center gap-3 shrink-0">
+<!-- Locality Selector -->
+<button class="hidden xl:flex items-center gap-2 border border-surface-border hover:border-secondary bg-surface-low/80 hover:bg-surface-low px-3.5 py-2 rounded-lg text-left transition-colors">
+<span class="material-symbols-outlined text-primary text-[22px]">store</span>
+<div class="leading-tight">
+<div class="text-[10px] uppercase font-bold text-on-surface-muted tracking-wider">Trading Hub</div>
+<div class="text-xs font-bold text-primary flex items-center gap-0.5">Batkhela Central <span class="material-symbols-outlined text-[14px]">expand_more</span></div>
+</div>
+</button>
+<!-- Profile / Account -->
+<a class="flex items-center gap-1.5 text-on-surface hover:text-primary font-semibold text-xs px-2 py-2 transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px] text-secondary">person</span>
+<span class="hidden sm:inline">Sign In / Join</span>
+</a>
+<!-- Free Seller Registration CTA -->
+<a class="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-dark text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-150" href="#sellers">
+<span class="material-symbols-outlined text-[18px]">storefront</span>
+<span>Become a Seller</span>
+<span class="hidden md:inline-block text-[10px] bg-white/20 text-white font-semibold px-1.5 py-0.2 rounded-full ml-0.5">Free</span>
+</a>
+</div>
+</div>
+<!-- Mobile Search input bar -->
+<div class="md:hidden px-4 pb-3">
+<form class="flex items-stretch border-2 border-accent-green rounded-lg overflow-hidden bg-surface" onsubmit="event.preventDefault();">
+<input class="w-full px-3 py-2 text-xs text-on-surface placeholder:text-on-surface-muted/70 focus:outline-none border-0" placeholder="Search items, crops, vehicles in Malakand..." type="text"/>
+<button class="bg-accent-green text-white px-4 flex items-center justify-center" type="submit">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</button>
+</form>
+</div>
+<!-- ======================================================================= -->
+<!-- 3. DEPARTMENTAL & CATEGORY NAVIGATION RIBBON                             -->
+<!-- ======================================================================= -->
+<nav class="bg-surface-low border-t border-surface-border text-on-surface overflow-x-auto no-scrollbar">
+<div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs font-bold whitespace-nowrap">
+<div class="flex items-center divide-x divide-surface-border">
+<!-- Mega Menu Trigger Button -->
+<button class="bg-primary text-white hover:bg-primary-dark flex items-center gap-2 py-2.5 px-4 font-bold uppercase tracking-wider text-[11px] shrink-0">
+<span class="material-symbols-outlined text-[18px]">menu</span>
+<span>All Categories</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<!-- Category Links -->
+<div class="flex items-center gap-1 sm:gap-2 px-2">
+<a class="px-2.5 py-2.5 hover:text-primary transition-colors flex items-center gap-1" href="#fruits-agro">
+<span class="material-symbols-outlined text-[16px] text-accent-green">agriculture</span>
+<span>Daily Fresh &amp; Agro</span>
+</a>
+<a class="px-2.5 py-2.5 hover:text-primary transition-colors flex items-center gap-1" href="#promotions">
+<span class="material-symbols-outlined text-[16px] text-secondary">cruelty_free</span>
+<span>Livestock &amp; Cattle</span>
+</a>
+<a class="px-2.5 py-2.5 hover:text-primary transition-colors flex items-center gap-1" href="#vehicles-bikes">
+<span class="material-symbols-outlined text-[16px] text-secondary">two_wheeler</span>
+<span>Vehicles &amp; Bikes</span>
+</a>
+<a class="px-2.5 py-2.5 hover:text-primary transition-colors flex items-center gap-1" href="#promotions">
+<span class="material-symbols-outlined text-[16px] text-secondary">home_pin</span>
+<span>Property &amp; Plots</span>
+</a>
+<a class="px-2.5 py-2.5 hover:text-primary transition-colors flex items-center gap-1" href="#electronics-solar">
+<span class="material-symbols-outlined text-[16px] text-secondary">solar_power</span>
+<span>Solar &amp; Electronics</span>
+</a>
+<a class="px-2.5 py-2.5 hover:text-primary transition-colors flex items-center gap-1" href="#sellers">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
+<span>Top Local Sellers</span>
+</a>
+</div>
+</div>
+<!-- Hot Mega Offers Tab -->
+<a class="hidden lg:flex items-center gap-1 text-accent-green-dark hover:text-accent-green font-extrabold uppercase tracking-wider py-2.5 pl-3" href="#promotions">
+<span class="material-symbols-outlined text-[17px] animate-bounce">local_fire_department</span>
+<span>Verified Hot Deals</span>
+</a>
+</div>
+</nav>
+</header>
+<!-- ========================================================================= -->
+<!-- 4. HERO SECTION WITH AUTOMATIC CAROUSEL (4.5s transition + controls)      -->
+<!-- ========================================================================= -->
+<main class="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-8">
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+<!-- Left Column: Auto-sliding Hero Carousel with JavaScript -->
+<div class="lg:col-span-8 rounded-2xl overflow-hidden relative shadow-md bg-primary min-h-[360px] md:min-h-[420px] flex flex-col justify-end p-6 sm:p-10 group" id="hero-slider-container">
+<!-- Slides Container -->
+<div class="absolute inset-0 w-full h-full overflow-hidden" id="hero-slides-wrapper">
+<!-- Slide 1: Malakand Alpine Pass Panorama https://lh3.googleusercontent.com/aida/AEtjO1Wv0elVvG7KXILNSPkx4cJyaW4E22kFFGVLaJyvyb_vzjNufG5OAqvraZjwuO04172tQZMC60w4LP1_p_KYoVoLQrV6CYT-AJSnT__hhnszcAr2u63FNGSN5VNe1ziv7D_1ddrsgbVGJS_6sRpDySUndUOuCpo4i0hHRxx7z5szZZUDxBQ6K6Dn6gmjBvtao5_N2S-4ED8BAMxbxegI5qxPyPkWZu0rwISOe0PMn42kC-5FI0SGJlm3aqs -->
+<div class="hero-slide absolute inset-0 w-full h-full opacity-100 transition-opacity duration-700 ease-in-out" data-slide-index="0">
+<img alt="Malakand Pass &amp; Valley Panorama" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOG-MTttEKXwEBR7uvcW_2ZQcgJXg4kg3t9qxsL3bZenSP-mPnLQxxofXvhsbg8SotW9QkdDqnhH7YndNlWijZH7zisdQITgJEueV5IPVXirOa6O25r5mVwxUM432ycmdmsaUUuC5sBmSlD62X-uALdzPDN58C5wDmugk9IETgFo4epA7O2O6Ga3pOiKj9yU7KkpgsYOmyz8PKiRdCVxQqgXB8SPJHkFbALlbDTvLj2VBtPSTSCsfk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary/80 to-primary/20"></div>
+<div class="absolute inset-0 bg-primary/25 mix-blend-multiply"></div>
+</div>
+<!-- Slide 2: Batkhela Commercial Bazaar & Agri Produce -->
+<div class="hero-slide absolute inset-0 w-full h-full opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide-index="1">
+<img alt="Batkhela Commercial Bazaar" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjnu3tUnW2rlmfYL035DvtP9lWnJyiKY6tnQm6SjOYS0_cka27RrbO7wivb_lUzhshs4dwfOzLUBVKSFwJ5dAUoPls4RNF5KzZdNVv0DLt9W9IIhmh9HSjNEfoiiZlNhsCfdhEVvlrhSvnD0nMwtuFnVCsGW2ua-ujfygh5t24WlV9thyYM7xoAcgM5RzJr5EpL_-BFX9CFIGjSJDqsUTOY5MbPA6uI20JsugZwUbX5dpOI3KqEFgJ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary/85 to-primary/30"></div>
+<div class="absolute inset-0 bg-secondary/30 mix-blend-multiply"></div>
+</div>
+<!-- Slide 3: High Alpine Swat Valley, Dairy & Solar Energy -->
+<div class="hero-slide absolute inset-0 w-full h-full opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide-index="2">
+<img alt="High Alpine Swat &amp; Malakand Valley" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN-Caj5_elFPr4nz_PspejecRwsh0zA_acNVTbA5dMzyhUY3K5u2MeiClrXyhHCEXEz5U3d6nEJ5CVKSqoSnQcHVNIWu1k8z744n4dPzNkIsroXczgK-zkbZ_F2qsTnrKqmAAoaje5t9M_FOiuFiEtMxkldei2YRQ_npaaePP1e77jBFpd9VK1noGBaiwPwtoZQ-ERPDImYHw-pnj5yMaKfOhLvlT2SoZr0O_a03XslCLITv-ze2PG"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary/80 to-primary/20"></div>
+<div class="absolute inset-0 bg-accent-green-dark/30 mix-blend-multiply"></div>
+</div>
+</div>
+<!-- Dynamic Slide Text Overlays -->
+<div class="relative z-10 max-w-xl text-white space-y-3 pb-4">
+<!-- Slide 1 Text -->
+<div class="slide-content block transition-all duration-500" data-content-index="0">
+<div class="inline-flex items-center gap-1.5 bg-accent-green px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider text-white shadow-sm mb-2">
+<span class="material-symbols-outlined text-[14px]">local_florist</span>
+<span>Malakand Seasonal Harvest &amp; Livestock Fair</span>
+</div>
+<h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight text-white">
+            The Digital Grand Bazaar of <span class="text-tertiary font-serif italic">Malakand</span>
+</h1>
+<p class="text-xs sm:text-sm text-gray-200 line-clamp-2 mt-1.5">
+            Direct farmer-to-door fresh produce, verified local motorbikes, Batkhela highway plots, and regional livestock with instant WhatsApp contact and zero mediator fees.
+          </p>
+</div>
+<!-- Slide 2 Text -->
+<div class="slide-content hidden transition-all duration-500" data-content-index="1">
+<div class="inline-flex items-center gap-1.5 bg-tertiary px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider text-white shadow-sm mb-2">
+<span class="material-symbols-outlined text-[14px]">storefront</span>
+<span>Batkhela Central &amp; Sakhakot Commercial Hub</span>
+</div>
+<h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight text-white">
+            Direct Trade from <span class="text-tertiary-light font-serif italic">Asia's Longest Bazaar</span>
+</h2>
+<p class="text-xs sm:text-sm text-gray-200 line-clamp-2 mt-1.5">
+            Explore hundreds of verified wholesale and retail deals straight from Batkhela Main Road, Dargai electronics row, and Sakhakot textile centers.
+          </p>
+</div>
+<!-- Slide 3 Text -->
+<div class="slide-content hidden transition-all duration-500" data-content-index="2">
+<div class="inline-flex items-center gap-1.5 bg-secondary px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider text-white shadow-sm mb-2">
+<span class="material-symbols-outlined text-[14px]">solar_power</span>
+<span>High Alpine Agriculture &amp; Clean Solar Power</span>
+</div>
+<h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight text-white">
+            Clean Solar Agri-Tech &amp; <span class="text-tertiary font-serif italic">Pure Organic Dairy</span>
+</h2>
+<p class="text-xs sm:text-sm text-gray-200 line-clamp-2 mt-1.5">
+            Heavy-duty 15kW tube-well inverters, high-yield Sahiwal dairy cattle, and 100% natural Totakan mountain honey directly from verified local families.
+          </p>
+</div>
+<!-- Hero Actions -->
+<div class="pt-2 flex flex-wrap items-center gap-3">
+<a class="bg-accent-green hover:bg-accent-green-dark text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow transition-transform active:scale-95 flex items-center gap-1.5" href="#promotions">
+<span>Explore Verified Deals</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+<a class="bg-white/95 hover:bg-white text-primary font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg backdrop-blur-sm transition-colors flex items-center gap-1" href="#sellers">
+<span class="material-symbols-outlined text-[16px] text-accent-green-dark">how_to_reg</span>
+<span>Become a Seller (Free)</span>
+</a>
+</div>
+</div>
+<!-- Interactive Carousel Navigation (Prev/Next & Dots with auto-indicator) -->
+<div class="absolute bottom-4 right-4 z-20 flex items-center gap-2">
+<button aria-label="Previous Slide" class="w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-md flex items-center justify-center transition-colors" id="hero-prev-btn">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<div class="flex items-center gap-1.5 px-2 py-1 bg-black/30 backdrop-blur-md rounded-full" id="hero-dots-container">
+<button class="w-2.5 h-2.5 rounded-full bg-white transition-all duration-300" data-dot="0"></button>
+<button class="w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300" data-dot="1"></button>
+<button class="w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300" data-dot="2"></button>
+</div>
+<button aria-label="Next Slide" class="w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-md flex items-center justify-center transition-colors" id="hero-next-btn">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Right Column: 2 Stacked Greenvalley Style Promo Cards -->
+<div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+<!-- Promo 1: Fresh Valley Produce & Dairy -->
+<div class="bg-gradient-to-br from-[#eaf4ed] to-[#d6ebd9] border border-accent-green/30 rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden shadow-xs">
+<div class="relative z-10 space-y-1.5">
+<span class="text-[10px] font-extrabold uppercase tracking-widest text-accent-green-dark bg-white px-2 py-0.5 rounded-md inline-block shadow-2xs">Daily Fresh &amp; Pure</span>
+<h3 class="text-lg font-bold text-primary">Sahiwal Dairy &amp; Swat Wild Honey</h3>
+<p class="text-xs text-on-surface-muted">Pure mountain organic yield from Totakan &amp; Batkhela orchards.</p>
+<div class="text-sm font-extrabold text-accent-green-dark pt-1">Starting from Rs. 850 / kg</div>
+</div>
+<div class="relative z-10 pt-3">
+<a class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-accent-green-dark transition-colors" href="#fruits-agro">
+<span>View Livestock &amp; Produce</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</a>
+</div>
+<div class="absolute -right-3 -bottom-3 opacity-15 text-accent-green pointer-events-none">
+<span class="material-symbols-outlined text-[130px]">nutrition</span>
+</div>
+</div>
+<!-- Promo 2: Solar Tubewell & Equipment -->
+<div class="bg-gradient-to-br from-[#fef5ec] to-[#fce4c8] border border-tertiary/40 rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden shadow-xs">
+<div class="relative z-10 space-y-1.5">
+<span class="text-[10px] font-extrabold uppercase tracking-widest text-[#875520] bg-white px-2 py-0.5 rounded-md inline-block shadow-2xs">Valley Agri-Tech</span>
+<h3 class="text-lg font-bold text-[#422808]">Solar Tube-well Inverters</h3>
+<p class="text-xs text-on-surface-muted">Specialized 10kW to 25kW systems tested for Malakand terrain water depth.</p>
+<div class="text-sm font-extrabold text-[#9c6328] pt-1">Direct from Authorized Dargai Dealers</div>
+</div>
+<div class="relative z-10 pt-3">
+<a class="inline-flex items-center gap-1 text-xs font-bold text-[#422808] hover:text-[#9c6328] transition-colors" href="#electronics-solar">
+<span>Inspect Machinery Listings</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</a>
+</div>
+<div class="absolute -right-3 -bottom-3 opacity-15 text-[#9c6328] pointer-events-none">
+<span class="material-symbols-outlined text-[130px]">solar_power</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 5. CIRCULAR POPULAR CATEGORIES (Greenvalley Style)                        -->
+<!-- ========================================================================= -->
+<section class="bg-surface rounded-2xl p-5 sm:p-6 border border-surface-border shadow-xs">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h2 class="text-lg sm:text-xl font-extrabold text-primary tracking-tight">Popular Marketplace Sectors</h2>
+<p class="text-xs text-on-surface-muted">Fast access to Malakand's most searched regional departments</p>
+</div>
+<a class="text-xs font-bold text-accent-green-dark hover:underline flex items-center gap-0.5" href="#">
+<span>View All</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-3 sm:gap-4 text-center">
+<a class="group flex flex-col items-center gap-2" href="#fruits-agro">
+<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f2f8f4] border-2 border-surface-border group-hover:border-accent-green group-hover:bg-[#e3f4e8] transition-all flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-primary text-[30px] sm:text-[36px] group-hover:scale-110 transition-transform">potted_plant</span>
+</div>
+<span class="text-xs font-bold text-on-surface group-hover:text-accent-green-dark leading-tight">Orchards &amp; Fruits</span>
+</a>
+<a class="group flex flex-col items-center gap-2" href="#promotions">
+<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f2f8f4] border-2 border-surface-border group-hover:border-accent-green group-hover:bg-[#e3f4e8] transition-all flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-primary text-[30px] sm:text-[36px] group-hover:scale-110 transition-transform">cruelty_free</span>
+</div>
+<span class="text-xs font-bold text-on-surface group-hover:text-accent-green-dark leading-tight">Sahiwal Cattle</span>
+</a>
+<a class="group flex flex-col items-center gap-2" href="#vehicles-bikes">
+<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f2f8f4] border-2 border-surface-border group-hover:border-accent-green group-hover:bg-[#e3f4e8] transition-all flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-primary text-[30px] sm:text-[36px] group-hover:scale-110 transition-transform">two_wheeler</span>
+</div>
+<span class="text-xs font-bold text-on-surface group-hover:text-accent-green-dark leading-tight">Honda Bikes</span>
+</a>
+<a class="group flex flex-col items-center gap-2" href="#electronics-solar">
+<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f2f8f4] border-2 border-surface-border group-hover:border-accent-green group-hover:bg-[#e3f4e8] transition-all flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-primary text-[30px] sm:text-[36px] group-hover:scale-110 transition-transform">solar_power</span>
+</div>
+<span class="text-xs font-bold text-on-surface group-hover:text-accent-green-dark leading-tight">Solar Systems</span>
+</a>
+<a class="group flex flex-col items-center gap-2" href="#promotions">
+<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f2f8f4] border-2 border-surface-border group-hover:border-accent-green group-hover:bg-[#e3f4e8] transition-all flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-primary text-[30px] sm:text-[36px] group-hover:scale-110 transition-transform">terrain</span>
+</div>
+<span class="text-xs font-bold text-on-surface group-hover:text-accent-green-dark leading-tight">Commercial Plots</span>
+</a>
+<a class="group flex flex-col items-center gap-2" href="#promotions">
+<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f2f8f4] border-2 border-surface-border group-hover:border-accent-green group-hover:bg-[#e3f4e8] transition-all flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-primary text-[30px] sm:text-[36px] group-hover:scale-110 transition-transform">carpenter</span>
+</div>
+<span class="text-xs font-bold text-on-surface group-hover:text-accent-green-dark leading-tight">Swat Woodcraft</span>
+</a>
+<a class="group flex flex-col items-center gap-2" href="#fruits-agro">
+<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f2f8f4] border-2 border-surface-border group-hover:border-accent-green group-hover:bg-[#e3f4e8] transition-all flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-primary text-[30px] sm:text-[36px] group-hover:scale-110 transition-transform">hive</span>
+</div>
+<span class="text-xs font-bold text-on-surface group-hover:text-accent-green-dark leading-tight">Honey &amp; Herbs</span>
+</a>
+<a class="group flex flex-col items-center gap-2" href="#electronics-solar">
+<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f2f8f4] border-2 border-surface-border group-hover:border-accent-green group-hover:bg-[#e3f4e8] transition-all flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-primary text-[30px] sm:text-[36px] group-hover:scale-110 transition-transform">smartphone</span>
+</div>
+<span class="text-xs font-bold text-on-surface group-hover:text-accent-green-dark leading-tight">Mobile Phones</span>
+</a>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 6. TOP CATEGORY SECTION A: ELECTRONICS & SOLAR TECH (5 Cards + View All)  -->
+<!-- ========================================================================= -->
+<section class="space-y-4" id="electronics-solar">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-[#e3f4e8] text-primary flex items-center justify-center font-bold shadow-2xs">
+<span class="material-symbols-outlined text-[24px] text-accent-green-dark">solar_power</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5 text-accent-green-dark font-extrabold text-[11px] uppercase tracking-wider">
+<span class="material-symbols-outlined text-[15px]">verified</span>
+<span>High-Output Valley Hardware &amp; Certified Tech</span>
+</div>
+<h2 class="text-xl sm:text-2xl font-extrabold text-primary tracking-tight">Electronics &amp; Solar Tech</h2>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 bg-surface hover:bg-surface-low border border-surface-border hover:border-primary text-primary font-bold text-xs px-4 py-2 rounded-lg transition-colors shadow-2xs self-start sm:self-auto" href="#">
+<span>View All Electronics (410+)</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- 5 Listing Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+<!-- Card 1: Solar Inverter 15kW VFD -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5">
+<img alt="Solar Tubewell Inverter" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN-Caj5_elFPr4nz_PspejecRwsh0zA_acNVTbA5dMzyhUY3K5u2MeiClrXyhHCEXEz5U3d6nEJ5CVKSqoSnQcHVNIWu1k8z744n4dPzNkIsroXczgK-zkbZ_F2qsTnrKqmAAoaje5t9M_FOiuFiEtMxkldei2YRQ_npaaePP1e77jBFpd9VK1noGBaiwPwtoZQ-ERPDImYHw-pnj5yMaKfOhLvlT2SoZr0O_a03XslCLITv-ze2PG"/>
+<span class="absolute top-2 left-2 bg-[#875520] text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">2 Yr Warranty</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Dargai Industrial Belt
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Solar Inverter 15kW VFD Heavy Tubewell System
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 240,000</span>
+<span class="text-[11px] text-gray-400 line-through">265,000</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Solar%20Inverter%2015kW">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 2: iPhone 14 Pro 128GB -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[72px]">phone_iphone</span>
+<span class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">PTA Approved</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Batkhela Mobile Market
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  iPhone 14 Pro 128GB Deep Purple (Physical Dual Sim)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 185,000</span>
+<span class="text-[10px] text-accent-green-dark font-bold bg-[#e3f4e8] px-1 rounded">100% Battery</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20iPhone%2014%20Pro">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 3: Haier 1.5 Ton DC Inverter AC -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[72px]">ac_unit</span>
+<span class="absolute top-2 left-2 bg-accent-green text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">T3 Compressor</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Thana Main Chowk
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Haier 1.5 Ton Thunder DC Inverter AC (Heat &amp; Cool)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 138,000</span>
+<span class="text-[11px] text-gray-400 line-through">152,000</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Haier%20Inverter%20AC">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 4: Mono Perc Solar Panels 550W Tier-1 -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#c89b6d] text-[72px]">solar_power</span>
+<span class="absolute top-2 left-2 bg-secondary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">Tier-1 Grade A</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Batkhela Bypass Depot
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Jinko 550W Mono Perc Bifacial Solar Panels (Pallet rate)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 34,500</span>
+<span class="text-[10px] text-on-surface-muted">/ panel</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Jinko%20550W%20Solar%20Panels">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 5: Samsung Galaxy S23 Ultra PTA Approved -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[72px]">devices</span>
+<span class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">Official PTA</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Dargai City Market
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Samsung Galaxy S23 Ultra 256GB Green with S-Pen &amp; Box
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 210,000</span>
+<span class="text-[11px] text-gray-400 line-through">225,000</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Samsung%20S23%20Ultra">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 7. TOP CATEGORY SECTION B: FRESH FRUITS & AGRO (5 Cards + View All)       -->
+<!-- ========================================================================= -->
+<section class="space-y-4" id="fruits-agro">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-[#fef5ec] text-[#875520] flex items-center justify-center font-bold shadow-2xs">
+<span class="material-symbols-outlined text-[24px]">nutrition</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5 text-accent-green-dark font-extrabold text-[11px] uppercase tracking-wider">
+<span class="material-symbols-outlined text-[15px]">spa</span>
+<span>100% Mountain Pure &amp; Fresh Harvest</span>
+</div>
+<h2 class="text-xl sm:text-2xl font-extrabold text-primary tracking-tight">Fresh Valley Fruits &amp; Agro Produce</h2>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 bg-surface hover:bg-surface-low border border-surface-border hover:border-primary text-primary font-bold text-xs px-4 py-2 rounded-lg transition-colors shadow-2xs self-start sm:self-auto" href="#">
+<span>View All Fruits &amp; Fresh Produce (185+)</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- 5 Listing Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+<!-- Card 1: Pure Swat Valley Sidr Honey -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-accent-green text-[72px]">honey</span>
+<span class="absolute top-2 left-2 bg-accent-green text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">100% Sidr Berry</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Thana Valley Apiary
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Fresh Swat Valley Wild Sidr (Beri) Honey 1kg Jar
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 2,800</span>
+<span class="text-[10px] text-accent-green-dark font-bold bg-[#e3f4e8] px-1 rounded">Lab Tested</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Order%20Swat%20Sidr%20Honey%201kg">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 2: Organic Batkhela Citrus Crate -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-[72px]">agriculture</span>
+<span class="absolute top-2 left-2 bg-[#875520] text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">20kg Wood Crate</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Batkhela Canal Orchards
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Organic Batkhela Blood Red Citrus crate (20kg Crate)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 3,200</span>
+<span class="text-[11px] text-gray-400 line-through">3,600</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Order%20Batkhela%20Citrus%20Crate">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 3: Fresh Malakand Walnuts (Akhrot) -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#3f6b52] text-[72px]">forest</span>
+<span class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">Paper Thin Shell</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Chakdara &amp; Thana Ridge
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Fresh Malakand Walnuts (Kaghazi Akhrot) 1kg Pack
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 1,450</span>
+<span class="text-[10px] text-accent-green-dark font-bold bg-[#e3f4e8] px-1 rounded">Sweet Kernel</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Order%20Malakand%20Walnuts">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 4: Totakan Mountain Dried Figs -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#875520] text-[72px]">grass</span>
+<span class="absolute top-2 left-2 bg-tertiary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">Sun Dried 500g</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Totakan Valley Farms
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Totakan Mountain Dried Figs (Natural Injeer) 500g
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 1,200</span>
+<span class="text-[11px] text-gray-400 line-through">1,350</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Order%20Totakan%20Dried%20Figs">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 5: Fresh Trout Fish Swat Catch -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-accent-green-dark text-[72px]">set_meal</span>
+<span class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">Fresh Morning Catch</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Swat River Fisheries
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Fresh Trout Fish Swat River Catch (1kg Cleaned Pack)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 2,400</span>
+<span class="text-[10px] text-accent-green-dark font-bold bg-[#e3f4e8] px-1 rounded">Chilled Pack</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Order%20Fresh%20Trout%20Fish">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 8. TOP CATEGORY SECTION C: VEHICLES & MOTORBIKES (5 Cards + View All)     -->
+<!-- ========================================================================= -->
+<section class="space-y-4" id="vehicles-bikes">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-[#e3f4e8] text-primary flex items-center justify-center font-bold shadow-2xs">
+<span class="material-symbols-outlined text-[24px] text-secondary">two_wheeler</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5 text-accent-green-dark font-extrabold text-[11px] uppercase tracking-wider">
+<span class="material-symbols-outlined text-[15px]">directions_car</span>
+<span>Authentic Papers &amp; Malakand Pass Checked</span>
+</div>
+<h2 class="text-xl sm:text-2xl font-extrabold text-primary tracking-tight">Vehicles &amp; Motorbikes</h2>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 bg-surface hover:bg-surface-low border border-surface-border hover:border-primary text-primary font-bold text-xs px-4 py-2 rounded-lg transition-colors shadow-2xs self-start sm:self-auto" href="#">
+<span>View All Vehicles (340+)</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- 5 Listing Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+<!-- Card 1: Honda CD 70 2024 -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5">
+<img alt="Honda CD 70 Bike" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPcToogbCHoWGfiecjRDVG7msYKvN7WLqHVD5ol5xf3I17jjPD29bT45w7oWtzbTvRDLEmyaAeXQmyohlWs0k30aEV-o6P_F-lmvI-2x-Fb9Mco1JFuVndAF9B_JQoaf8WVCPP9vKded6h1-nW2RR11WRRVKbn69HxkV1G0aYVaCgpGkI58ClPSPJmqDX9Y5m93kV0dOugqRTZY2C3a-Dc2POxN63U_5k1RQM9l-qIMeags9KL2zw9"/>
+<span class="absolute top-2 left-2 bg-accent-green text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">First Owner</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Batkhela Main Bazaar
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Honda CD 70 2024 Red (Complete File &amp; Smart Card)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 132,000</span>
+<span class="text-[11px] text-gray-400 line-through">142,000</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Honda%20CD70%202024">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 2: Toyota Hilux Revo D-4D 2021 -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5">
+<img alt="Toyota Hilux Double Cabin" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu4TCNcYpw6KDwgZvPbBSc__a5qSuHDMGP3V44o-hWRP6URaTfS8pFRdm5vkVnktMEQk4q-Yf31_sxMIMyyxrpoP2S5Z9fmet8B37Q6lqqwUiMSDiE7gIPWRY5mb1Fu4_z_i70V7_vsN8U66pO0thffDKUwXVuENMDRxMSWg46vECDCarvbLm9heuW6cZ4i_oyKTvybAY-3zyci5nWGz5KY7NF-f03yUwF52UJX-eGWJZ7C2FK8vkU"/>
+<span class="absolute top-2 left-2 bg-secondary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">NCP Border Clearance</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Dargai Border Exchange
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Toyota Hilux Revo D-4D 2021 3.0 Double Cabin 4x4
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 5,800,000</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Toyota%20Hilux%20Revo">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 3: Suzuki Alto VXR 2022 -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[72px]">directions_car</span>
+<span class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">Total Genuine</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Batkhela Central
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Suzuki Alto VXR 2022 White (Bumper to Bumper Genuine)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 2,350,000</span>
+<span class="text-[10px] text-accent-green-dark font-bold bg-[#e3f4e8] px-1 rounded">Biometric Done</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Suzuki%20Alto%202022">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 4: Yamaha YBR 125G -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#875520] text-[72px]">two_wheeler</span>
+<span class="absolute top-2 left-2 bg-tertiary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">Mint Condition</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Thana Swat Bypass
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  Yamaha YBR 125G Matte Black 2023 (Self Start &amp; Alloy Rim)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 365,000</span>
+<span class="text-[11px] text-gray-400 line-through">390,000</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Yamaha%20YBR%20125G">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+<!-- Card 5: New Holland Fiat 480 Tractor -->
+<article class="bg-surface rounded-xl border border-surface-border hover:border-accent-green hover:shadow-md transition-all p-3.5 flex flex-col justify-between group">
+<div>
+<div class="relative aspect-square w-full rounded-lg overflow-hidden bg-surface-low mb-2.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[72px]">agriculture</span>
+<span class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">Agri Registered</span>
+<span class="absolute top-2 right-2 bg-surface/90 text-primary p-1 rounded-full text-xs shadow-xs hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+</span>
+</div>
+<div class="text-[11px] font-semibold text-accent-green-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Sakhakot Machinery Row
+</div>
+<h3 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 mt-1">
+  New Holland / Fiat 480 Agri Tractor (55 HP Model 2020)
+</h3>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-sm sm:text-base font-extrabold text-primary">PKR 1,750,000</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-border flex items-center gap-1.5">
+<a class="flex-1 bg-accent-green hover:bg-accent-green-dark text-white text-[11px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition-colors" href="https://wa.me/923166441108?text=Interested%20in%20Fiat%20480%20Tractor">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>WhatsApp</span>
+</a>
+<a class="p-1.5 border border-surface-border hover:bg-surface-low rounded-lg text-primary transition-colors" href="tel:+923166441108" title="Call Seller">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</article>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 9. TOP VERIFIED LOCAL SELLERS SHOWCASE                                    -->
+<!-- ========================================================================= -->
+<section class="bg-surface rounded-2xl p-5 sm:p-7 border border-surface-border shadow-xs space-y-5" id="sellers">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-4">
+<div class="space-y-0.5">
+<div class="flex items-center gap-1.5 text-accent-green-dark font-extrabold text-xs uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">workspace_premium</span>
+<span>Malakand Verified Merchants</span>
+</div>
+<h2 class="text-xl sm:text-2xl font-extrabold text-primary tracking-tight">Top Verified Local Sellers &amp; Farms</h2>
+<p class="text-xs text-on-surface-muted">Trusted business owners with 100% verified identities and real local stores</p>
+</div>
+<a class="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors shadow-2xs self-start sm:self-auto" href="#">
+<span class="material-symbols-outlined text-[16px]">how_to_reg</span>
+<span>Register as Verified Seller</span>
+</a>
+</div>
+<!-- Sellers Cards Grid (5 merchants) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+<!-- Seller 1: Khan Solar -->
+<div class="bg-surface-low border border-surface-border rounded-xl p-4 flex flex-col justify-between hover:border-secondary hover:shadow-sm transition-all">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<div class="w-11 h-11 rounded-full bg-primary text-white flex items-center justify-center font-bold text-base shadow-xs">
+  KS
+</div>
+<span class="inline-flex items-center gap-0.5 text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[13px] text-amber-500 fill-1">star</span> 4.9 (142)
+</span>
+</div>
+<div>
+<h4 class="text-sm font-extrabold text-primary leading-snug">Khan Solar &amp; Engineering</h4>
+<p class="text-[11px] text-accent-green-dark font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Dargai Industrial Belt
+</p>
+</div>
+<div class="text-[11px] text-on-surface-muted space-y-1 pt-1 border-t border-surface-border/60">
+<div class="flex items-center justify-between">
+<span>Response:</span>
+<span class="font-bold text-accent-green-dark">&lt; 15 mins</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Deals Done:</span>
+<span class="font-bold text-on-surface">142 Systems</span>
+</div>
+<div class="text-[10px] bg-white px-2 py-1 rounded border border-surface-border text-on-surface-muted mt-1">
+  Specialty: VFD Inverters &amp; Tube-well Motors
+</div>
+</div>
+</div>
+<a class="mt-3.5 w-full bg-primary hover:bg-primary-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors" href="https://wa.me/923166441108?text=Hello%20Khan%20Solar">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>Visit Store &amp; Chat</span>
+</a>
+</div>
+<!-- Seller 2: Batkhela Fresh Orchards Collective -->
+<div class="bg-surface-low border border-surface-border rounded-xl p-4 flex flex-col justify-between hover:border-secondary hover:shadow-sm transition-all">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<div class="w-11 h-11 rounded-full bg-accent-green-dark text-white flex items-center justify-center font-bold text-base shadow-xs">
+  BO
+</div>
+<span class="inline-flex items-center gap-0.5 text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[13px] text-amber-500 fill-1">star</span> 5.0 (280)
+</span>
+</div>
+<div>
+<h4 class="text-sm font-extrabold text-primary leading-snug">Batkhela Orchards Collective</h4>
+<p class="text-[11px] text-accent-green-dark font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Batkhela Canal Belt
+</p>
+</div>
+<div class="text-[11px] text-on-surface-muted space-y-1 pt-1 border-t border-surface-border/60">
+<div class="flex items-center justify-between">
+<span>Response:</span>
+<span class="font-bold text-accent-green-dark">&lt; 10 mins</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Dispatches:</span>
+<span class="font-bold text-on-surface">280+ Crates</span>
+</div>
+<div class="text-[10px] bg-white px-2 py-1 rounded border border-surface-border text-on-surface-muted mt-1">
+  Specialty: Blood Citrus, Walnuts &amp; Peaches
+</div>
+</div>
+</div>
+<a class="mt-3.5 w-full bg-primary hover:bg-primary-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors" href="https://wa.me/923166441108?text=Hello%20Batkhela%20Orchards">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>Visit Store &amp; Chat</span>
+</a>
+</div>
+<!-- Seller 3: Malakand Motors & NCP Exchange -->
+<div class="bg-surface-low border border-surface-border rounded-xl p-4 flex flex-col justify-between hover:border-secondary hover:shadow-sm transition-all">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<div class="w-11 h-11 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-base shadow-xs">
+  MM
+</div>
+<span class="inline-flex items-center gap-0.5 text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[13px] text-amber-500 fill-1">star</span> 4.8 (89)
+</span>
+</div>
+<div>
+<h4 class="text-sm font-extrabold text-primary leading-snug">Malakand Motors Exchange</h4>
+<p class="text-[11px] text-accent-green-dark font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Malakand Pass Highway
+</p>
+</div>
+<div class="text-[11px] text-on-surface-muted space-y-1 pt-1 border-t border-surface-border/60">
+<div class="flex items-center justify-between">
+<span>Response:</span>
+<span class="font-bold text-accent-green-dark">&lt; 20 mins</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Vehicles Sold:</span>
+<span class="font-bold text-on-surface">89 Units</span>
+</div>
+<div class="text-[10px] bg-white px-2 py-1 rounded border border-surface-border text-on-surface-muted mt-1">
+  Specialty: Hilux 4x4, Alto &amp; Honda CD70
+</div>
+</div>
+</div>
+<a class="mt-3.5 w-full bg-primary hover:bg-primary-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors" href="https://wa.me/923166441108?text=Hello%20Malakand%20Motors">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>Visit Store &amp; Chat</span>
+</a>
+</div>
+<!-- Seller 4: Swat Apiaries & Pure Honey -->
+<div class="bg-surface-low border border-surface-border rounded-xl p-4 flex flex-col justify-between hover:border-secondary hover:shadow-sm transition-all">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<div class="w-11 h-11 rounded-full bg-tertiary text-white flex items-center justify-center font-bold text-base shadow-xs">
+  SA
+</div>
+<span class="inline-flex items-center gap-0.5 text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[13px] text-amber-500 fill-1">star</span> 4.9 (310)
+</span>
+</div>
+<div>
+<h4 class="text-sm font-extrabold text-primary leading-snug">Swat Apiaries &amp; Pure Honey</h4>
+<p class="text-[11px] text-accent-green-dark font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Thana Swat River Entry
+</p>
+</div>
+<div class="text-[11px] text-on-surface-muted space-y-1 pt-1 border-t border-surface-border/60">
+<div class="flex items-center justify-between">
+<span>Response:</span>
+<span class="font-bold text-accent-green-dark">&lt; 5 mins</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Orders Shipped:</span>
+<span class="font-bold text-on-surface">310+ Jars</span>
+</div>
+<div class="text-[10px] bg-white px-2 py-1 rounded border border-surface-border text-on-surface-muted mt-1">
+  Specialty: Wild Sidr, Acacia Honey &amp; Shilajit
+</div>
+</div>
+</div>
+<a class="mt-3.5 w-full bg-primary hover:bg-primary-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors" href="https://wa.me/923166441108?text=Hello%20Swat%20Apiaries">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>Visit Store &amp; Chat</span>
+</a>
+</div>
+<!-- Seller 5: Al-Madina Agro & Cattle Farm -->
+<div class="bg-surface-low border border-surface-border rounded-xl p-4 flex flex-col justify-between hover:border-secondary hover:shadow-sm transition-all">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<div class="w-11 h-11 rounded-full bg-[#50a23e] text-white flex items-center justify-center font-bold text-base shadow-xs">
+  AM
+</div>
+<span class="inline-flex items-center gap-0.5 text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[13px] text-amber-500 fill-1">star</span> 4.9 (64)
+</span>
+</div>
+<div>
+<h4 class="text-sm font-extrabold text-primary leading-snug">Al-Madina Agro &amp; Cattle</h4>
+<p class="text-[11px] text-accent-green-dark font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px]">location_on</span> Totakan Valley Farms
+</p>
+</div>
+<div class="text-[11px] text-on-surface-muted space-y-1 pt-1 border-t border-surface-border/60">
+<div class="flex items-center justify-between">
+<span>Response:</span>
+<span class="font-bold text-accent-green-dark">&lt; 15 mins</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Livestock Sold:</span>
+<span class="font-bold text-on-surface">64 Dairy Cattle</span>
+</div>
+<div class="text-[10px] bg-white px-2 py-1 rounded border border-surface-border text-on-surface-muted mt-1">
+  Specialty: Sahiwal Dairy &amp; Organic Milk
+</div>
+</div>
+</div>
+<a class="mt-3.5 w-full bg-primary hover:bg-primary-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors" href="https://wa.me/923166441108?text=Hello%20Al-Madina%20Cattle%20Farm">
+<span class="material-symbols-outlined text-[15px]">chat</span>
+<span>Visit Store &amp; Chat</span>
+</a>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 10. MID-PAGE DIRECT SELLER BANNER                                         -->
+<!-- ========================================================================= -->
+<section class="bg-gradient-to-r from-primary via-primary-light to-secondary rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-md">
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="space-y-2 text-center md:text-left max-w-2xl">
+<span class="bg-tertiary text-white font-extrabold text-[11px] uppercase tracking-wider px-3 py-1 rounded-full inline-block">
+            100% Direct Buyer-Seller Dealings
+          </span>
+<h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            Zero Brokerage Fees. Direct WhatsApp Handshake.
+          </h2>
+<p class="text-xs sm:text-sm text-surface-low/90">
+            MalakandBazaar connects buyers straight to valley producers. Register your shop, orchard, or livestock stall for free and start receiving direct inquiries immediately.
+          </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<a class="bg-white text-primary hover:bg-surface-low font-bold text-xs sm:text-sm px-5 py-3 rounded-lg shadow-sm transition-transform active:scale-95 flex items-center gap-1.5" href="#sellers">
+<span class="material-symbols-outlined text-[18px] text-accent-green-dark">verified</span>
+<span>Become a Verified Seller</span>
+</a>
+<a class="bg-accent-green hover:bg-accent-green-dark text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-lg shadow-sm transition-transform active:scale-95 flex items-center gap-1.5" href="#sellers">
+<span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+<span>Seller Registration (Free)</span>
+</a>
+</div>
+</div>
+<div class="absolute right-0 top-0 bottom-0 w-96 opacity-10 pointer-events-none flex items-center justify-end pr-6">
+<span class="material-symbols-outlined text-[240px]">landscape</span>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 11. THREE-WAY CATEGORY PROMO CARDS                                        -->
+<!-- ========================================================================= -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Promo Strip 1: Swat Woodcraft -->
+<div class="rounded-2xl p-5 bg-gradient-to-br from-[#f8f4ed] to-[#eee2d0] border border-tertiary/30 flex items-center justify-between">
+<div>
+<span class="text-[10px] uppercase font-bold text-tertiary-hover tracking-wider">Batkhela Woodcraft</span>
+<h3 class="text-base font-extrabold text-primary mt-1">Carved Deodar Beds &amp; Sofas</h3>
+<p class="text-xs text-on-surface-muted mt-0.5">Authentic artisan wood direct from workshops.</p>
+<a class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-accent-green-dark mt-3" href="#">
+<span>Browse Furniture</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<div class="w-16 h-16 rounded-full bg-white/80 flex items-center justify-center shrink-0 text-primary shadow-xs">
+<span class="material-symbols-outlined text-[32px]">chair</span>
+</div>
+</div>
+<!-- Promo Strip 2: Sakhakot Cloth Market -->
+<div class="rounded-2xl p-5 bg-gradient-to-br from-[#edf6f0] to-[#daece0] border border-accent-green/30 flex items-center justify-between">
+<div>
+<span class="text-[10px] uppercase font-bold text-accent-green-dark tracking-wider">Sakhakot Cloth Market</span>
+<h3 class="text-base font-extrabold text-primary mt-1">Wool Shawls &amp; Chappals</h3>
+<p class="text-xs text-on-surface-muted mt-0.5">Wholesale and retail prices on Pashto attire.</p>
+<a class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-accent-green-dark mt-3" href="#">
+<span>Shop Fabrics</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<div class="w-16 h-16 rounded-full bg-white/80 flex items-center justify-center shrink-0 text-accent-green-dark shadow-xs">
+<span class="material-symbols-outlined text-[32px]">apparel</span>
+</div>
+</div>
+<!-- Promo Strip 3: Batkhela Mobile Market -->
+<div class="rounded-2xl p-5 bg-gradient-to-br from-[#f2f4f8] to-[#e2e7f0] border border-surface-border flex items-center justify-between">
+<div>
+<span class="text-[10px] uppercase font-bold text-secondary tracking-wider">Batkhela Mobile Market</span>
+<h3 class="text-base font-extrabold text-primary mt-1">PTA Approved Mobiles</h3>
+<p class="text-xs text-on-surface-muted mt-0.5">Checked batteries, original warranty receipts.</p>
+<a class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-accent-green-dark mt-3" href="#electronics-solar">
+<span>Explore Electronics</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<div class="w-16 h-16 rounded-full bg-white/80 flex items-center justify-center shrink-0 text-secondary shadow-xs">
+<span class="material-symbols-outlined text-[32px]">devices</span>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================================================= -->
+<!-- 12. COMPREHENSIVE HYPERMARKET FOOTER                                      -->
+<!-- ========================================================================= -->
+<footer class="bg-surface-low border-t border-surface-border mt-12 text-on-surface">
+<div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
+<!-- Col 1: Brand & Physical Contact Desk -->
+<div class="lg:col-span-4 space-y-3.5">
+<svg class="h-10 w-auto" fill="none" viewbox="0 0 280 64" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(4, 8)">
+<path d="M4 42L18 16L32 42H4Z" fill="#1F4D3A"></path>
+<path d="M22 42L34 22L46 42H22Z" fill="#3F6B52" opacity="0.9"></path>
+<path d="M12 42C16 34 26 34 30 42" fill="none" stroke="#C89B6D" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="34" cy="14" fill="#C89B6D" r="4"></circle>
+</g>
+<text fill="#1F4D3A" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="22" font-weight="800" letter-spacing="-0.5" x="64" y="36">Malakand<tspan fill="#C89B6D">Bazaar</tspan></text>
+<text fill="#3F6B52" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="600" letter-spacing="1.5" x="65" y="50">REGIONAL MARKETPLACE</text>
+</svg>
+<p class="text-xs text-on-surface-muted leading-relaxed">
+            The dedicated digital marketplace connecting consumers, farmers, and family enterprises across Batkhela, Dargai, Thana, Totakan, and Sakhakot.
+          </p>
+<div class="pt-2 text-xs space-y-1.5 text-on-surface">
+<div class="flex items-center gap-2 font-bold text-accent-green-dark">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+<span>Regional WhatsApp Hotline: +92 316 644 1108</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-muted">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+<span>support@malakandbazaar.pk</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-muted">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span>Bazaar Facilitation Center, Main Commercial Road, Batkhela</span>
+</div>
+</div>
+</div>
+<!-- Col 2: Navigation & Market Links -->
+<div class="lg:col-span-2 space-y-3">
+<h4 class="text-xs font-extrabold uppercase tracking-wider text-primary">Market Links</h4>
+<ul class="space-y-2 text-xs text-on-surface-muted">
+<li><a class="hover:text-primary transition-colors" href="#electronics-solar">Electronics &amp; Solar</a></li>
+<li><a class="hover:text-primary transition-colors" href="#fruits-agro">Daily Fresh Produce</a></li>
+<li><a class="hover:text-primary transition-colors" href="#vehicles-bikes">Vehicles &amp; Bikes</a></li>
+<li><a class="hover:text-primary transition-colors" href="#sellers">Verified Sellers List</a></li>
+<li><a class="hover:text-primary transition-colors" href="#sellers">Seller Registration</a></li>
+</ul>
+</div>
+<!-- Col 3: Customer Care & Policies -->
+<div class="lg:col-span-3 space-y-3">
+<h4 class="text-xs font-extrabold uppercase tracking-wider text-primary">Security &amp; Policies</h4>
+<ul class="space-y-2 text-xs text-on-surface-muted">
+<li><a class="hover:text-primary transition-colors" href="#">Safe Trading Guidelines</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Verified Seller Program</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Livestock Health Verification</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Vehicle NCP &amp; Reg Guidance</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy &amp; Terms of Service</a></li>
+</ul>
+</div>
+<!-- Col 4: Newsletter & Valley Alerts -->
+<div class="lg:col-span-3 space-y-3">
+<h4 class="text-xs font-extrabold uppercase tracking-wider text-primary">Weekly Valley Bulletin</h4>
+<p class="text-xs text-on-surface-muted">
+            Get instant updates regarding Batkhela market rates, seasonal citrus harvests, and cattle fairs.
+          </p>
+<form class="space-y-2" onsubmit="event.preventDefault();">
+<div class="flex rounded-lg overflow-hidden border border-surface-border bg-surface">
+<input class="w-full px-3 py-2 text-xs text-on-surface placeholder:text-on-surface-muted/70 focus:outline-none border-0" placeholder="Enter your phone or email..." type="email"/>
+<button class="bg-primary hover:bg-primary-dark text-white px-3 font-bold text-xs transition-colors" type="submit">
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+<span class="text-[10px] text-on-surface-muted block">Direct Pashto/Urdu WhatsApp alerts supported.</span>
+</form>
+</div>
+</div>
+<!-- Footer Bottom Bar -->
+<div class="mt-8 pt-6 border-t border-surface-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-on-surface-muted">
+<p>© 2025 MalakandBazaar.pk • Dedicated Marketplace for the Citizens and Enterprises of Malakand District, KP.</p>
+<div class="flex items-center gap-4 text-xs font-semibold">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Trade</a>
+<a class="hover:text-primary transition-colors" href="#">Help Center</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- ========================================================================= -->
+<!-- FLOATING WHATSAPP BUTTON                                                  -->
+<!-- ========================================================================= -->
+<a class="fixed bottom-5 right-5 z-50 bg-[#25D366] hover:bg-[#20ba59] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95" href="https://wa.me/923166441108?text=Assalam-o-Alaikum%20MalakandBazaar" rel="noopener" target="_blank" title="Chat with MalakandBazaar Support">
+<span class="material-symbols-outlined text-[28px]">chat</span>
+</a>
+<!-- ========================================================================= -->
+<!-- JAVASCRIPT: AUTOMATIC HERO CAROUSEL WITH 4.5s AUTO-ROTATION               -->
+<!-- ========================================================================= -->
+<script>
+  (function() {
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const contents = document.querySelectorAll('.slide-content');
+    const dots = document.querySelectorAll('#hero-dots-container button');
+    const totalSlides = slides.length;
+    let autoPlayTimer = null;
+
+    function showSlide(index) {
+      currentSlide = (index + totalSlides) % totalSlides;
+
+      // Update slide images
+      slides.forEach((slide, i) => {
+        if (i === currentSlide) {
+          slide.classList.remove('opacity-0', 'pointer-events-none');
+          slide.classList.add('opacity-100');
+        } else {
+          slide.classList.remove('opacity-100');
+          slide.classList.add('opacity-0', 'pointer-events-none');
+        }
+      });
+
+      // Update slide captions
+      contents.forEach((content, i) => {
+        if (i === currentSlide) {
+          content.classList.remove('hidden');
+          content.classList.add('block');
+        } else {
+          content.classList.remove('block');
+          content.classList.add('hidden');
+        }
+      });
+
+      // Update dots
+      dots.forEach((dot, i) => {
+        if (i === currentSlide) {
+          dot.className = 'w-3 h-2.5 rounded-full bg-white transition-all duration-300';
+        } else {
+          dot.className = 'w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300';
+        }
+      });
+    }
+
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayTimer = setInterval(nextSlide, 4500);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+      }
+    }
+
+    // Controls
+    const prevBtn = document.getElementById('hero-prev-btn');
+    const nextBtn = document.getElementById('hero-next-btn');
+    const container = document.getElementById('hero-slider-container');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        prevSlide();
+        startAutoPlay();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        nextSlide();
+        startAutoPlay();
+      });
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', function() {
+        showSlide(i);
+        startAutoPlay();
+      });
+    });
+
+    // Pause on hover
+    if (container) {
+      container.addEventListener('mouseenter', stopAutoPlay);
+      container.addEventListener('mouseleave', startAutoPlay);
+    }
+
+    // Start rotation on load
+    startAutoPlay();
+  })();
+</script>
+</body></html>
