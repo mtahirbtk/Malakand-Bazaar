@@ -177,5 +177,17 @@
       "body": "چیک شدہ بیٹریاں، اصل وارنٹی رسیدیں۔",
       "link": "الیکٹرونکس دیکھیں"
     }
+  },
+  "auth": {
+    "pageTitle": "سائن ان کریں یا اکاؤنٹ بنائیں",
+    "signInTab": "سائن ان",
+    "createAccountTab": "اکاؤنٹ بنائیں",
+    "nameLabel": "آپ کا نام",
+    "phoneLabel": "فون نمبر",
+    "phonePlaceholder": "300 1234567",
+    "passwordLabel": "پاس ورڈ",
+    "passwordHint": "کم از کم 8 حروف۔",
+    "signInCta": "سائن ان",
+    "createAccountCta": "اکاؤنٹ بنائیں"
   }
 }

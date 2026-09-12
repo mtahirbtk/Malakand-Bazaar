@@ -20,13 +20,19 @@ export function FormField({
 }) {
   return (
     <div className={cn("space-y-1.5", className)}>
-      <label
-        htmlFor={htmlFor}
-        className="block text-xs font-bold uppercase tracking-wider text-on-surface-muted"
-      >
-        {label}
-        {required && <span className="ml-0.5 text-danger">*</span>}
-      </label>
+      <div className="flex items-baseline gap-0.5">
+        <label
+          htmlFor={htmlFor}
+          className="block text-xs font-bold uppercase tracking-wider text-on-surface-muted"
+        >
+          {label}
+        </label>
+        {required && (
+          <span aria-hidden="true" className="text-danger">
+            *
+          </span>
+        )}
+      </div>
       {children}
       {error ? (
         <p role="alert" className="text-[11px] font-semibold text-danger">

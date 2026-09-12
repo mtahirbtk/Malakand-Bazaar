@@ -177,5 +177,17 @@
       "body": "Checked batteries, original warranty receipts.",
       "link": "Explore Electronics"
     }
+  },
+  "auth": {
+    "pageTitle": "Sign In or Create an Account",
+    "signInTab": "Sign In",
+    "createAccountTab": "Create Account",
+    "nameLabel": "Your Name",
+    "phoneLabel": "Phone Number",
+    "phonePlaceholder": "300 1234567",
+    "passwordLabel": "Password",
+    "passwordHint": "At least 8 characters.",
+    "signInCta": "Sign In",
+    "createAccountCta": "Create Account"
   }
 }
