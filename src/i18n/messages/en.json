@@ -221,5 +221,11 @@
     "title": "Seller Dashboard",
     "listingsTab": "Listings",
     "profileTab": "Profile"
+  },
+  "sellerProfileEdit": {
+    "pending": "Pending Verification",
+    "verified": "Verified",
+    "saveCta": "Save Changes",
+    "savedMessage": "Storefront updated."
   }
 }

@@ -221,5 +221,11 @@
     "title": "فروخت کنندہ ڈیش بورڈ",
     "listingsTab": "اشیاء",
     "profileTab": "پروفائل"
+  },
+  "sellerProfileEdit": {
+    "pending": "توثیق زیر التوا",
+    "verified": "تصدیق شدہ",
+    "saveCta": "تبدیلیاں محفوظ کریں",
+    "savedMessage": "دکان اپ ڈیٹ ہو گئی۔"
   }
 }
