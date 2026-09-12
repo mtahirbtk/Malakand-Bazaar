@@ -227,5 +227,18 @@
     "verified": "Verified",
     "saveCta": "Save Changes",
     "savedMessage": "Storefront updated."
+  },
+  "sellerListings": {
+    "activeTab": "Active",
+    "reservedTab": "Reserved",
+    "soldTab": "Sold",
+    "removedTab": "Removed",
+    "addListingCta": "Add Listing",
+    "emptyTitle": "Nothing here yet",
+    "emptyBody": "Listings in this status will show up here.",
+    "editCta": "Edit",
+    "markReservedCta": "Mark Reserved",
+    "markSoldCta": "Mark Sold",
+    "removeCta": "Remove"
   }
 }

@@ -227,5 +227,18 @@
     "verified": "تصدیق شدہ",
     "saveCta": "تبدیلیاں محفوظ کریں",
     "savedMessage": "دکان اپ ڈیٹ ہو گئی۔"
+  },
+  "sellerListings": {
+    "activeTab": "فعال",
+    "reservedTab": "محفوظ شدہ",
+    "soldTab": "فروخت شدہ",
+    "removedTab": "ہٹائی گئیں",
+    "addListingCta": "اشتہار شامل کریں",
+    "emptyTitle": "ابھی کچھ نہیں",
+    "emptyBody": "اس حالت میں موجود اشیاء یہاں دکھائی دیں گی۔",
+    "editCta": "ترمیم کریں",
+    "markReservedCta": "محفوظ کریں",
+    "markSoldCta": "فروخت شدہ کریں",
+    "removeCta": "ہٹا دیں"
   }
 }
