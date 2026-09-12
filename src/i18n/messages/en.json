@@ -255,5 +255,12 @@
     "imagesLabel": "Photos",
     "imagesHint": "Up to 6 photos.",
     "addPhotoCta": "Add Photo"
+  },
+  "sellerListingForm": {
+    "newPageTitle": "Add Listing",
+    "editPageTitle": "Edit Listing",
+    "createCta": "Publish Listing",
+    "saveCta": "Save Changes",
+    "invalidPriceError": "Enter a title and a valid price."
   }
 }

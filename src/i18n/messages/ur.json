@@ -255,5 +255,12 @@
     "imagesLabel": "تصاویر",
     "imagesHint": "زیادہ سے زیادہ 6 تصاویر۔",
     "addPhotoCta": "تصویر شامل کریں"
+  },
+  "sellerListingForm": {
+    "newPageTitle": "اشتہار شامل کریں",
+    "editPageTitle": "اشتہار میں ترمیم کریں",
+    "createCta": "اشتہار شائع کریں",
+    "saveCta": "تبدیلیاں محفوظ کریں",
+    "invalidPriceError": "عنوان اور درست قیمت درج کریں۔"
   }
 }
