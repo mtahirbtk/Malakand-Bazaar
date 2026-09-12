@@ -1,0 +1,69 @@
+"use client";
+
+import "leaflet/dist/leaflet.css";
+import * as React from "react";
+import L from "leaflet";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+const pinIcon = L.icon({
+  iconUrl: markerIcon.src,
+  iconRetinaUrl: markerIcon2x.src,
+  shadowUrl: markerShadow.src,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
+
+function ClickToMove({ onMove }: { onMove: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e) {
+      onMove(e.latlng.lat, e.latlng.lng);
+    },
+  });
+  return null;
+}
+
+export function MapPinPicker({
+  value,
+  onChange,
+  ariaLabel,
+}: {
+  value: { lat: number; lng: number };
+  onChange: (coordinates: { lat: number; lng: number }) => void;
+  ariaLabel: string;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label={ariaLabel}
+      className="overflow-hidden rounded-xl border border-surface-border"
+    >
+      <MapContainer
+        center={[value.lat, value.lng]}
+        zoom={14}
+        scrollWheelZoom={false}
+        className="h-56 w-full sm:h-72"
+      >
+        <TileLayer
+          attribution="&copy; OpenStreetMap contributors"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker
+          position={[value.lat, value.lng]}
+          icon={pinIcon}
+          draggable
+          eventHandlers={{
+            dragend: (e) => {
+              const marker = e.target as L.Marker;
+              const { lat, lng } = marker.getLatLng();
+              onChange({ lat, lng });
+            },
+          }}
+        />
+        <ClickToMove onMove={(lat, lng) => onChange({ lat, lng })} />
+      </MapContainer>
+    </div>
+  );
+}
