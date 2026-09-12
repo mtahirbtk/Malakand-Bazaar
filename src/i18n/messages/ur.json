@@ -206,5 +206,15 @@
     "avatarUploadCta": "لوگو اپ لوڈ کریں",
     "bannerLabel": "دکان کا بینر",
     "bannerUploadCta": "بینر اپ لوڈ کریں"
+  },
+  "sellerRegistration": {
+    "pageTitle": "اپنی دکان رجسٹر کریں",
+    "phoneLabel": "فون نمبر",
+    "passwordLabel": "پاس ورڈ",
+    "passwordHint": "کم از کم 8 حروف۔",
+    "submitCta": "میری دکان بنائیں",
+    "alreadySellerTitle": "آپ کی دکان پہلے سے موجود ہے",
+    "alreadySellerBody": "یہ اکاؤنٹ پہلے سے بطور فروخت کنندہ رجسٹرڈ ہے۔",
+    "goToDashboardCta": "ڈیش بورڈ پر جائیں"
   }
 }

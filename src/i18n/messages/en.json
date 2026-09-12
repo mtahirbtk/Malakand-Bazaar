@@ -206,5 +206,15 @@
     "avatarUploadCta": "Upload Logo",
     "bannerLabel": "Storefront Banner",
     "bannerUploadCta": "Upload Banner"
+  },
+  "sellerRegistration": {
+    "pageTitle": "Register Your Store",
+    "phoneLabel": "Phone Number",
+    "passwordLabel": "Password",
+    "passwordHint": "At least 8 characters.",
+    "submitCta": "Create My Storefront",
+    "alreadySellerTitle": "You already have a storefront",
+    "alreadySellerBody": "This account is already registered as a seller.",
+    "goToDashboardCta": "Go to Dashboard"
   }
 }
