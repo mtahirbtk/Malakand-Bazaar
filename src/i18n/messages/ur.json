@@ -26,7 +26,10 @@
     "sectorAria": "شعبہ",
     "sectorPlaceholder": "تمام شعبے",
     "menuAria": "مینو",
-    "menuTitle": "مینو"
+    "menuTitle": "مینو",
+    "accountMenuAria": "اکاؤنٹ مینو",
+    "myDashboard": "میری دکان",
+    "logout": "لاگ آؤٹ"
   },
   "nav": {
     "allCategories": "تمام زمرہ جات",

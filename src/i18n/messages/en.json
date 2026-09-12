@@ -26,7 +26,10 @@
     "sectorAria": "Sector",
     "sectorPlaceholder": "All Sectors",
     "menuAria": "Menu",
-    "menuTitle": "Menu"
+    "menuTitle": "Menu",
+    "accountMenuAria": "Account menu",
+    "myDashboard": "My Storefront",
+    "logout": "Log Out"
   },
   "nav": {
     "allCategories": "All Categories",

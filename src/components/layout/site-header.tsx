@@ -1,13 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { Select } from "@/components/ui/select";
 import { Drawer } from "@/components/ui/drawer";
+import { Avatar } from "@/components/ui/avatar";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { BrandLogo } from "./brand-logo";
 import { CategoryRibbon } from "./category-ribbon";
 import { LocaleSwitcher } from "./locale-switcher";
@@ -16,6 +18,7 @@ import { CATEGORY_OPTIONS } from "@/data/categories";
 import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { QUICK_LINKS } from "@/data/quick-links";
 import { Link } from "@/i18n/routing";
+import { useAuth } from "@/lib/mock-db/auth-context";
 
 /**
  * Ported from code.html:93-161. The mockup's category dropdown listed six
@@ -29,6 +32,8 @@ export function SiteHeader() {
   const announcement = useTranslations("announcement");
   const locale = useTranslations("locale");
   const nav = useTranslations("nav");
+  const { user, logout } = useAuth();
+  const currentLocale = useLocale();
   const [sector, setSector] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -152,26 +157,50 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          <Link
-            className="flex items-center gap-1.5 text-on-surface hover:text-brand-600 font-semibold text-xs px-2 py-2 transition-colors"
-            href="/sign-in"
-          >
-            <Icon name="person" size={24} className="text-secondary" />
-            <span className="hidden sm:inline">{common("signIn")}</span>
-          </Link>
-
-          <Button asChild size="md" className="px-3 sm:px-4 sm:text-sm">
-            {/* Below 375px even the tightened button can't fit logo + sign-in +
-                "Become a Seller" without horizontal scroll, so the label
-                collapses to icon-only; aria-label keeps it announced. */}
-            <Link href="/sell" aria-label={common("becomeSeller")}>
-              <Icon name="storefront" size={18} />
-              <span className="hidden min-[375px]:inline">{common("becomeSeller")}</span>
-              <span className="hidden md:inline-block text-[10px] bg-white/20 text-white font-semibold px-1.5 py-0.5 rounded-full ml-0.5">
-                {common("free")}
-              </span>
+          {user ? (
+            <DropdownMenu
+              ariaLabel={t("accountMenuAria")}
+              align="end"
+              trigger={
+                <button
+                  type="button"
+                  aria-label={t("accountMenuAria")}
+                  className="flex items-center gap-1.5 rounded-full p-0.5 transition-colors hover:bg-surface-low"
+                >
+                  <Avatar initials={user.displayName.slice(0, 2).toUpperCase()} alt={user.displayName} size="sm" />
+                </button>
+              }
+              items={[
+                ...(user.role === "seller"
+                  ? [{ label: t("myDashboard"), icon: "storefront", href: `/${currentLocale}/seller/dashboard/listings` }]
+                  : []),
+                { label: t("logout"), icon: "logout", onSelect: () => logout() },
+              ]}
+            />
+          ) : (
+            <Link
+              className="flex items-center gap-1.5 text-on-surface hover:text-brand-600 font-semibold text-xs px-2 py-2 transition-colors"
+              href="/sign-in"
+            >
+              <Icon name="person" size={24} className="text-secondary" />
+              <span className="hidden sm:inline">{common("signIn")}</span>
             </Link>
-          </Button>
+          )}
+
+          {user?.role !== "seller" && (
+            <Button asChild size="md" className="px-3 sm:px-4 sm:text-sm">
+              {/* Below 375px even the tightened button can't fit logo + sign-in +
+                  "Become a Seller" without horizontal scroll, so the label
+                  collapses to icon-only; aria-label keeps it announced. */}
+              <Link href="/sell" aria-label={common("becomeSeller")}>
+                <Icon name="storefront" size={18} />
+                <span className="hidden min-[375px]:inline">{common("becomeSeller")}</span>
+                <span className="hidden md:inline-block text-[10px] bg-white/20 text-white font-semibold px-1.5 py-0.5 rounded-full ml-0.5">
+                  {common("free")}
+                </span>
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 
