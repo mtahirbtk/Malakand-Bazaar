@@ -58,4 +58,16 @@ describe("SellerProfileFields", () => {
     render(<Wrapper onChange={() => {}} />);
     expect(await screen.findByRole("group", { name: "Store Location" })).toBeInTheDocument();
   });
+
+  it("stores the uploaded avatar as a persistable data: URL, not a blob: URL", async () => {
+    const onChange = vi.fn();
+    render(<Wrapper onChange={onChange} />);
+    const file = new File(["avatar-bytes"], "avatar.png", { type: "image/png" });
+    await userEvent.upload(screen.getByLabelText("Upload Logo"), file);
+    await vi.waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ avatarUrl: expect.stringMatching(/^data:/) }));
+    });
+    const call = onChange.mock.calls.find((c) => typeof c[0].avatarUrl === "string" && c[0].avatarUrl);
+    expect(call?.[0].avatarUrl).not.toMatch(/^blob:/);
+  });
 });

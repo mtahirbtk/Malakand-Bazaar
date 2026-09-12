@@ -5,6 +5,21 @@ function getStoredReviews(): Review[] {
   return readStore<Review[]>("mb.reviews", []);
 }
 
+type ReviewListener = () => void;
+const listeners = new Map<string, Set<ReviewListener>>();
+
+export function subscribeToReviewChanges(sellerId: string, listener: ReviewListener): () => void {
+  if (!listeners.has(sellerId)) listeners.set(sellerId, new Set());
+  listeners.get(sellerId)!.add(listener);
+  return () => {
+    listeners.get(sellerId)?.delete(listener);
+  };
+}
+
+function notifyReviewChanges(sellerId: string): void {
+  listeners.get(sellerId)?.forEach((listener) => listener());
+}
+
 export function getReviewsForSeller(sellerId: string): Review[] {
   return getStoredReviews()
     .filter((r) => r.sellerId === sellerId)
@@ -36,6 +51,7 @@ export function upsertReview(input: {
   if (index === -1) reviews.push(review);
   else reviews[index] = review;
   writeStore("mb.reviews", reviews);
+  notifyReviewChanges(input.sellerId);
   return review;
 }
 

@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { MultiFileUpload } from "@/components/ui/multi-file-upload";
 import { Button } from "@/components/ui/button";
+import { fileToDataUrl } from "@/lib/file-to-data-url";
 import { CATEGORY_OPTIONS, findCategory } from "@/data/categories";
 import { TEHSIL_OPTIONS, findTehsil } from "@/data/tehsils";
 import type { TehsilSlug } from "@/types";
@@ -144,7 +145,7 @@ export function ListingForm({
         <MultiFileUpload
           label={t("addPhotoCta")}
           urls={value.images}
-          onAdd={(file) => onChange({ ...value, images: [...value.images, URL.createObjectURL(file)] })}
+          onAdd={async (file) => onChange({ ...value, images: [...value.images, await fileToDataUrl(file)] })}
           onRemove={(index) => onChange({ ...value, images: value.images.filter((_, i) => i !== index) })}
         />
       </FormField>

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { upsertReview } from "@/lib/mock-db/reviews";
 import { SellerRatingSummary } from "./seller-rating-summary";
 import type { Seller } from "@/types";
@@ -34,6 +34,17 @@ describe("SellerRatingSummary", () => {
   it("blends in a stored review after mount", async () => {
     upsertReview({ sellerId: "s1", buyerId: "u1", buyerName: "Bilal", rating: 5, comment: "Great!" });
     render(<SellerRatingSummary seller={SELLER} />);
+    expect(await screen.findByText("(143)")).toBeInTheDocument();
+  });
+
+  it("updates the count when a review is posted after mount, without remounting", async () => {
+    render(<SellerRatingSummary seller={SELLER} />);
+    expect(await screen.findByText("(142)")).toBeInTheDocument();
+
+    act(() => {
+      upsertReview({ sellerId: "s1", buyerId: "u2", buyerName: "Ayesha", rating: 5, comment: "Great!" });
+    });
+
     expect(await screen.findByText("(143)")).toBeInTheDocument();
   });
 });

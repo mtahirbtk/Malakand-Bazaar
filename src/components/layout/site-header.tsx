@@ -19,6 +19,7 @@ import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { QUICK_LINKS } from "@/data/quick-links";
 import { Link } from "@/i18n/routing";
 import { useAuth } from "@/lib/mock-db/auth-context";
+import { getSellerByIdOverlay } from "@/lib/mock-db/sellers";
 
 /**
  * Ported from code.html:93-161. The mockup's category dropdown listed six
@@ -39,6 +40,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [categoriesOpen, setCategoriesOpen] = React.useState(false);
   const [tehsil, setTehsil] = React.useState("all");
+  const sellerSlug = user?.sellerId ? getSellerByIdOverlay(user.sellerId)?.slug : undefined;
 
   return (
     <header className="bg-surface sticky top-0 z-50 border-b border-surface-border shadow-sm">
@@ -171,8 +173,11 @@ export function SiteHeader() {
                 </button>
               }
               items={[
+                ...(user.role === "seller" && sellerSlug
+                  ? [{ label: t("myStorefront"), icon: "storefront", href: `/${currentLocale}/seller/${sellerSlug}` }]
+                  : []),
                 ...(user.role === "seller"
-                  ? [{ label: t("myDashboard"), icon: "storefront", href: `/${currentLocale}/seller/dashboard/listings` }]
+                  ? [{ label: t("myDashboard"), icon: "dashboard", href: `/${currentLocale}/seller/dashboard/listings` }]
                   : []),
                 { label: t("logout"), icon: "logout", onSelect: () => logout() },
               ]}

@@ -10,6 +10,7 @@ export function FileUpload({
   onFileSelected,
   onClear,
   accept = "image/*",
+  removeLabel = "Remove",
   className,
 }: {
   label: string;
@@ -17,6 +18,7 @@ export function FileUpload({
   onFileSelected: (file: File) => void;
   onClear?: () => void;
   accept?: string;
+  removeLabel?: string;
   className?: string;
 }) {
   const inputId = React.useId();
@@ -55,7 +57,7 @@ export function FileUpload({
         />
         {previewUrl && onClear && (
           <button type="button" onClick={onClear} className="text-xs font-bold text-danger hover:underline">
-            Remove
+            {removeLabel}
           </button>
         )}
       </div>

@@ -13,7 +13,7 @@ import type { Review, Seller } from "@/types";
 
 export function SellerReviews({ seller }: { seller: Seller }) {
   const t = useTranslations("reviews");
-  const { user } = useAuth();
+  const { user, ready } = useAuth();
   const pathname = usePathname();
   const [reviews, setReviews] = React.useState<Review[]>([]);
   const [showSignInPrompt, setShowSignInPrompt] = React.useState(false);
@@ -61,7 +61,7 @@ export function SellerReviews({ seller }: { seller: Seller }) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-extrabold tracking-tight text-on-surface">{t("title")}</h2>
-        {user?.role !== "admin" && !isOwnStore && (
+        {ready && user?.role !== "admin" && !isOwnStore && (
           <Button variant="subtle" size="sm" onClick={handleWriteReviewClick}>
             {t("writeReviewCta")}
           </Button>

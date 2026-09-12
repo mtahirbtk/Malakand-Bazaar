@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { FileUpload } from "@/components/ui/file-upload";
+import { fileToDataUrl } from "@/lib/file-to-data-url";
 import { TEHSIL_OPTIONS, findTehsil } from "@/data/tehsils";
 import type { TehsilSlug } from "@/types";
 
@@ -105,16 +106,18 @@ export function SellerProfileFields({
           <FileUpload
             label={t("avatarUploadCta")}
             previewUrl={value.avatarUrl || undefined}
-            onFileSelected={(file) => onChange({ ...value, avatarUrl: URL.createObjectURL(file) })}
+            onFileSelected={async (file) => onChange({ ...value, avatarUrl: await fileToDataUrl(file) })}
             onClear={() => onChange({ ...value, avatarUrl: "" })}
+            removeLabel={t("removeCta")}
           />
         </FormField>
         <FormField label={t("bannerLabel")}>
           <FileUpload
             label={t("bannerUploadCta")}
             previewUrl={value.storefrontBanner || undefined}
-            onFileSelected={(file) => onChange({ ...value, storefrontBanner: URL.createObjectURL(file) })}
+            onFileSelected={async (file) => onChange({ ...value, storefrontBanner: await fileToDataUrl(file) })}
             onClear={() => onChange({ ...value, storefrontBanner: "" })}
+            removeLabel={t("removeCta")}
           />
         </FormField>
       </div>

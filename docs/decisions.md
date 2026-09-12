@@ -83,3 +83,22 @@ Source: https://lgkp.gov.pk/page/city-tehsil-local-governments
 ## Not now
 Admin panel · payments · chat/messaging · listing boosts · SMS ·
 transactional email · password reset.
+
+## Known limitations (mock/no-backend layer)
+- **Soft 404s for mock-db-only records.** `/seller/[slug]` and `/listing/[slug]`
+  try a server-side fixture lookup first; when a slug exists only in a
+  visitor's own `localStorage` (a seller/listing created after this mock layer
+  shipped), the page falls back to a client-side check after mount. The
+  initial server response for an unknown slug is already sent as HTTP 200
+  before that client check runs, so an unknown URL currently serves a 200
+  with a "not found" message rather than a real 404 — search engines can
+  index empty not-found pages. Accepted for this mock/no-backend round;
+  resolving it needs the record to be known server-side (a real backend +
+  server-rendered lookup), at which point this reverts to a normal `notFound()`.
+- **No CI pipeline configured yet.** This branch introduces the repo's first
+  static asset import (`leaflet`'s marker `.png` files in
+  `map-pin-picker.tsx`), which requires the auto-generated, gitignored
+  `next-env.d.ts` to exist for `tsc --noEmit` to type-check cleanly. That
+  file is normally created by `next dev`/`next build`. When CI is set up, it
+  must run one of those (or otherwise ensure `next-env.d.ts` exists) before
+  any `tsc --noEmit` step, or a cold checkout's typecheck will fail.

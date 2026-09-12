@@ -28,7 +28,8 @@
     "menuAria": "مینو",
     "menuTitle": "مینو",
     "accountMenuAria": "اکاؤنٹ مینو",
-    "myDashboard": "میری دکان",
+    "myDashboard": "ڈیش بورڈ",
+    "myStorefront": "میری دکان",
     "logout": "لاگ آؤٹ"
   },
   "nav": {
@@ -207,7 +208,8 @@
     "avatarLabel": "دکان کا لوگو",
     "avatarUploadCta": "لوگو اپ لوڈ کریں",
     "bannerLabel": "دکان کا بینر",
-    "bannerUploadCta": "بینر اپ لوڈ کریں"
+    "bannerUploadCta": "بینر اپ لوڈ کریں",
+    "removeCta": "ہٹا دیں"
   },
   "sellerRegistration": {
     "pageTitle": "اپنی دکان رجسٹر کریں",

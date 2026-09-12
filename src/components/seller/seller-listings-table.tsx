@@ -19,6 +19,13 @@ const STATUS_TONE: Record<ListingStatus, BadgeTone> = {
   removed: "danger",
 };
 
+const STATUS_LABEL_KEY: Record<ListingStatus, string> = {
+  active: "activeTab",
+  reserved: "reservedTab",
+  sold: "soldTab",
+  removed: "removedTab",
+};
+
 export function SellerListingsTable() {
   const t = useTranslations("sellerListings");
   const { user } = useAuth();
@@ -72,7 +79,7 @@ export function SellerListingsTable() {
                 <p className="truncate text-sm font-bold text-on-surface">{listing.title}</p>
                 <div className="mt-1 flex items-center gap-2">
                   <Price value={listing.price} size="sm" />
-                  <Badge tone={STATUS_TONE[listing.status]}>{listing.status}</Badge>
+                  <Badge tone={STATUS_TONE[listing.status]}>{t(STATUS_LABEL_KEY[listing.status])}</Badge>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2">

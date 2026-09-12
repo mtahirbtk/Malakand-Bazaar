@@ -28,7 +28,8 @@
     "menuAria": "Menu",
     "menuTitle": "Menu",
     "accountMenuAria": "Account menu",
-    "myDashboard": "My Storefront",
+    "myDashboard": "Dashboard",
+    "myStorefront": "My Storefront",
     "logout": "Log Out"
   },
   "nav": {
@@ -207,7 +208,8 @@
     "avatarLabel": "Store Logo",
     "avatarUploadCta": "Upload Logo",
     "bannerLabel": "Storefront Banner",
-    "bannerUploadCta": "Upload Banner"
+    "bannerUploadCta": "Upload Banner",
+    "removeCta": "Remove"
   },
   "sellerRegistration": {
     "pageTitle": "Register Your Store",

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
 import { AuthProvider } from "@/lib/mock-db/auth-context";
@@ -74,5 +75,42 @@ describe("SiteHeader", () => {
     renderHeader();
     await screen.findByRole("button", { name: "Account menu" });
     expect(screen.queryByRole("link", { name: /Become a Seller/ })).toBeNull();
+  });
+
+  it("links My Storefront to the seller's own public storefront page", async () => {
+    window.localStorage.setItem(
+      "mb.sellers",
+      JSON.stringify([
+        {
+          id: "s_teststore1",
+          slug: "test-store",
+          name: "Test Store",
+          initials: "TS",
+          tehsilSlug: "batkhela",
+          localityLabel: "X",
+          rating: 0,
+          reviewCount: 0,
+          verified: false,
+          responseMinutes: 30,
+          specialty: "X",
+          statLabel: "X",
+          statValue: "0",
+          phone: "+923001234567",
+        },
+      ])
+    );
+    window.localStorage.setItem(
+      "mb.users",
+      JSON.stringify([
+        { id: "u3", phone: "+923001234567", password: "password1", role: "seller", displayName: "Test Store", sellerId: "s_teststore1" },
+      ])
+    );
+    window.localStorage.setItem("mb.session", JSON.stringify("u3"));
+    renderHeader();
+    await userEvent.click(await screen.findByRole("button", { name: "Account menu" }));
+    expect(await screen.findByRole("menuitem", { name: "My Storefront" })).toHaveAttribute(
+      "href",
+      expect.stringContaining("/seller/test-store")
+    );
   });
 });
