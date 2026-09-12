@@ -32,6 +32,8 @@ import { Tabs, TabPanel } from "@/components/ui/tabs";
 import { Accordion } from "@/components/ui/accordion";
 import { Carousel } from "@/components/ui/carousel";
 import { ToastProvider, useToast } from "@/components/ui/toast";
+import { FileUpload } from "@/components/ui/file-upload";
+import { MultiFileUpload } from "@/components/ui/multi-file-upload";
 import { cn } from "@/lib/cn";
 import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { CATEGORY_OPTIONS, allSubcategoryOptions } from "@/data/categories";
@@ -160,6 +162,8 @@ export default function GalleryPage() {
   >(null);
   const [lightboxOpen, setLightboxOpen] = React.useState(false);
   const [lightboxIndex, setLightboxIndex] = React.useState(0);
+  const [filePreview, setFilePreview] = React.useState<string>("");
+  const [multiFileUrls, setMultiFileUrls] = React.useState<string[]>([]);
 
   const subOptions = React.useMemo(() => allSubcategoryOptions(), []);
 
@@ -331,6 +335,35 @@ export default function GalleryPage() {
             </Row>
             <Row label="Switch">
               <Switch checked={mapOn} onCheckedChange={setMapOn} label="Show map view" />
+            </Row>
+          </Section>
+
+          <Section title="File uploads">
+            <Row label="Single file">
+              <FileUpload
+                label="Upload Photo"
+                previewUrl={filePreview}
+                onFileSelected={(file) => {
+                  const url = URL.createObjectURL(file);
+                  setFilePreview(url);
+                }}
+                onClear={() => setFilePreview("")}
+              />
+            </Row>
+            <Row label="Multiple files">
+              <div className="w-full max-w-lg">
+                <MultiFileUpload
+                  label="Add"
+                  urls={multiFileUrls}
+                  onAdd={(file) => {
+                    const url = URL.createObjectURL(file);
+                    setMultiFileUrls((prev) => [...prev, url]);
+                  }}
+                  onRemove={(index) => {
+                    setMultiFileUrls((prev) => prev.filter((_, i) => i !== index));
+                  }}
+                />
+              </div>
             </Row>
           </Section>
 
