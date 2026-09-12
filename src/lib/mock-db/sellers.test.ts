@@ -59,7 +59,7 @@ describe("mock-db sellers", () => {
   });
 
   it("derives initials from a store name", () => {
-    expect(initialsFrom("Green Valley Traders")).toBe("GT");
+    expect(initialsFrom("Green Valley Traders")).toBe("GV");
     expect(initialsFrom("Solo")).toBe("S");
   });
 
@@ -79,7 +79,7 @@ describe("mock-db sellers", () => {
     expect(updated.slug).toBe(NEW_SELLER.slug);
     expect(updated.rating).toBe(NEW_SELLER.rating);
     expect(updated.name).toBe("Green Valley Traders Co.");
-    expect(updated.initials).toBe("GT");
+    expect(updated.initials).toBe("GV");
     expect(updated.tehsilSlug).toBe("dargai");
   });
 });

@@ -15,10 +15,7 @@ export type ProfileFieldsPatch = {
 
 export function initialsFrom(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
-  if (words.length === 1) {
-    return (words[0]?.[0] ?? "").toUpperCase() || "SL";
-  }
-  return ((words[0]?.[0] ?? "") + (words[2]?.[0] ?? words[1]?.[0] ?? "")).toUpperCase() || "SL";
+  return ((words[0]?.[0] ?? "") + (words[1]?.[0] ?? "")).toUpperCase() || "SL";
 }
 
 export function applyProfileFields(seller: Seller, fields: ProfileFieldsPatch): Seller {
