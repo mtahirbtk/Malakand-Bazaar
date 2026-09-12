@@ -94,7 +94,9 @@
     "allListingsBy": "{seller} کی تمام اشیاء",
     "noListingsYet": "ابھی کوئی دوسری اشیاء نہیں۔",
     "storeLocation": "دکان کا مقام",
-    "getDirections": "راستہ دیکھیں"
+    "getDirections": "راستہ دیکھیں",
+    "storeNotFoundTitle": "دکان نہیں ملی",
+    "storeNotFoundBody": "یہ دکان موجود نہیں یا ابھی اس ڈیوائس پر لوڈ نہیں ہوئی۔"
   },
   "home": {
     "hero": {

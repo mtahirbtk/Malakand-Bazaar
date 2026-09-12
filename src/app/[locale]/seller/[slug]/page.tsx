@@ -1,8 +1,8 @@
 import { setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
 import { getSellerBySlug } from "@/lib/sellers";
 import { getListingsBySeller } from "@/lib/listings";
 import { SellerStorefront } from "@/components/marketplace/seller-storefront";
+import { ClientSellerStorefront } from "@/components/marketplace/client-seller-storefront";
 
 export default async function SellerStorefrontPage({
   params,
@@ -13,13 +13,14 @@ export default async function SellerStorefrontPage({
   setRequestLocale(locale);
 
   const seller = getSellerBySlug(slug);
-  if (!seller) notFound();
-
-  const listings = getListingsBySeller(seller.id);
 
   return (
     <main className="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <SellerStorefront seller={seller} listings={listings} />
+      {seller ? (
+        <SellerStorefront seller={seller} listings={getListingsBySeller(seller.id)} />
+      ) : (
+        <ClientSellerStorefront slug={slug} />
+      )}
     </main>
   );
 }

@@ -94,7 +94,9 @@
     "allListingsBy": "All listings by {seller}",
     "noListingsYet": "No other listings yet.",
     "storeLocation": "Store Location",
-    "getDirections": "Get Directions"
+    "getDirections": "Get Directions",
+    "storeNotFoundTitle": "Store Not Found",
+    "storeNotFoundBody": "This storefront doesn't exist or hasn't loaded on this device yet."
   },
   "home": {
     "hero": {
