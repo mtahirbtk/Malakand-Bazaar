@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { routing, dirForLocale } from "@/i18n/routing";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
+import { AuthProvider } from "@/lib/mock-db/auth-context";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -57,11 +58,13 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <TooltipProvider>
             <ToastProvider>
-              <AnnouncementBar />
-              <SiteHeader />
-              {children}
-              <SiteFooter />
-              <FloatingWhatsapp />
+              <AuthProvider>
+                <AnnouncementBar />
+                <SiteHeader />
+                {children}
+                <SiteFooter />
+                <FloatingWhatsapp />
+              </AuthProvider>
             </ToastProvider>
           </TooltipProvider>
         </NextIntlClientProvider>
