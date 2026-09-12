@@ -61,10 +61,12 @@ export type Review = {
 // three manual seller actions; only "removed" was missing from the enum.
 export type ListingStatus = "active" | "reserved" | "sold" | "removed";
 
-// Seller: add fields the registration form now collects.
+// Seller: add fields the registration form now collects. Both optional —
+// the 5 existing fixture sellers aren't backfilled; UI shows an empty
+// state (no bio paragraph / initials-only avatar) when absent.
 export type Seller = {
   // ...existing fields
-  description: string;
+  description?: string;
   avatarUrl?: string;
 };
 ```
