@@ -192,5 +192,19 @@
     "passwordHint": "کم از کم 8 حروف۔",
     "signInCta": "سائن ان",
     "createAccountCta": "اکاؤنٹ بنائیں"
+  },
+  "sellerProfile": {
+    "storeNameLabel": "دکان کا نام",
+    "descriptionLabel": "دکان کی تفصیل",
+    "storePhoneLabel": "دکان کا رابطہ نمبر",
+    "storePhoneHint": "خریداروں کو دکھایا جائے گا — لاگ ان نمبر سے مختلف ہو سکتا ہے۔",
+    "tehsilLabel": "تحصیل",
+    "localityLabel": "علاقہ",
+    "mapLabel": "دکان کا مقام",
+    "mapHint": "پن کو گھسیٹیں یا نقشے پر ٹیپ کریں تاکہ صحیح مقام مقرر ہو۔",
+    "avatarLabel": "دکان کا لوگو",
+    "avatarUploadCta": "لوگو اپ لوڈ کریں",
+    "bannerLabel": "دکان کا بینر",
+    "bannerUploadCta": "بینر اپ لوڈ کریں"
   }
 }

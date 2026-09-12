@@ -192,5 +192,19 @@
     "passwordHint": "At least 8 characters.",
     "signInCta": "Sign In",
     "createAccountCta": "Create Account"
+  },
+  "sellerProfile": {
+    "storeNameLabel": "Store Name",
+    "descriptionLabel": "Store Description",
+    "storePhoneLabel": "Store Contact Number",
+    "storePhoneHint": "Shown to buyers — can differ from your login number.",
+    "tehsilLabel": "Tehsil",
+    "localityLabel": "Locality",
+    "mapLabel": "Store Location",
+    "mapHint": "Drag the pin, or tap the map, to set your exact location.",
+    "avatarLabel": "Store Logo",
+    "avatarUploadCta": "Upload Logo",
+    "bannerLabel": "Storefront Banner",
+    "bannerUploadCta": "Upload Banner"
   }
 }
