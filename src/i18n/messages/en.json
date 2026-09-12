@@ -240,5 +240,20 @@
     "markReservedCta": "Mark Reserved",
     "markSoldCta": "Mark Sold",
     "removeCta": "Remove"
+  },
+  "listingForm": {
+    "titleLabel": "Title",
+    "descriptionLabel": "Description",
+    "priceLabel": "Price (PKR)",
+    "compareAtPriceLabel": "Original Price (PKR)",
+    "compareAtPriceHint": "Optional — shown struck through next to the price.",
+    "categoryLabel": "Category",
+    "subcategoryLabel": "Subcategory",
+    "tehsilLabel": "Tehsil",
+    "localityLabel": "Locality",
+    "contactPhoneLabel": "Contact Number",
+    "imagesLabel": "Photos",
+    "imagesHint": "Up to 6 photos.",
+    "addPhotoCta": "Add Photo"
   }
 }

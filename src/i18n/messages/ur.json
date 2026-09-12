@@ -240,5 +240,20 @@
     "markReservedCta": "محفوظ کریں",
     "markSoldCta": "فروخت شدہ کریں",
     "removeCta": "ہٹا دیں"
+  },
+  "listingForm": {
+    "titleLabel": "عنوان",
+    "descriptionLabel": "تفصیل",
+    "priceLabel": "قیمت (روپے)",
+    "compareAtPriceLabel": "اصل قیمت (روپے)",
+    "compareAtPriceHint": "اختیاری — قیمت کے ساتھ کٹی ہوئی دکھائی جائے گی۔",
+    "categoryLabel": "قسم",
+    "subcategoryLabel": "ذیلی قسم",
+    "tehsilLabel": "تحصیل",
+    "localityLabel": "علاقہ",
+    "contactPhoneLabel": "رابطہ نمبر",
+    "imagesLabel": "تصاویر",
+    "imagesHint": "زیادہ سے زیادہ 6 تصاویر۔",
+    "addPhotoCta": "تصویر شامل کریں"
   }
 }
