@@ -216,5 +216,10 @@
     "alreadySellerTitle": "آپ کی دکان پہلے سے موجود ہے",
     "alreadySellerBody": "یہ اکاؤنٹ پہلے سے بطور فروخت کنندہ رجسٹرڈ ہے۔",
     "goToDashboardCta": "ڈیش بورڈ پر جائیں"
+  },
+  "sellerDashboard": {
+    "title": "فروخت کنندہ ڈیش بورڈ",
+    "listingsTab": "اشیاء",
+    "profileTab": "پروفائل"
   }
 }

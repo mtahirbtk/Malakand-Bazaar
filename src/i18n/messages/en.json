@@ -216,5 +216,10 @@
     "alreadySellerTitle": "You already have a storefront",
     "alreadySellerBody": "This account is already registered as a seller.",
     "goToDashboardCta": "Go to Dashboard"
+  },
+  "sellerDashboard": {
+    "title": "Seller Dashboard",
+    "listingsTab": "Listings",
+    "profileTab": "Profile"
   }
 }
