@@ -31,7 +31,7 @@ export type Category = {
   subcategories: Subcategory[];
 };
 
-export type ListingStatus = "active" | "reserved" | "sold";
+export type ListingStatus = "active" | "reserved" | "sold" | "removed";
 
 export type BadgeTone = "primary" | "sand" | "green" | "neutral" | "danger";
 
@@ -73,8 +73,33 @@ export type Seller = {
   statLabel: string;
   statValue: string;
   phone: string;
-  /** Storefront banner shown atop the seller's page. */
   storefrontBanner?: string;
-  /** Store location, shown on the listing detail page's map. */
   coordinates?: { lat: number; lng: number };
+  /** Storefront bio, set at registration. Absent on the 5 seed fixtures. */
+  description?: string;
+  avatarUrl?: string;
+};
+
+export type UserRole = "customer" | "seller" | "admin";
+
+export type User = {
+  id: string;
+  /** E.164, e.g. "+923001234567" — the login identity. */
+  phone: string;
+  /** Mock only: plain text, never a real security boundary. */
+  password: string;
+  role: UserRole;
+  displayName: string;
+  /** Present once role === "seller". */
+  sellerId?: string;
+};
+
+export type Review = {
+  id: string;
+  sellerId: string;
+  buyerId: string;
+  buyerName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
 };
