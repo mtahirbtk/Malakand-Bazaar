@@ -11,5 +11,14 @@ export default defineConfig({
     include: ["src/**/*.test.{ts,tsx}", "tests/**/*.test.{ts,tsx}"],
   },
   esbuild: { jsx: "automatic" },
-  resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      // `server-only` throws on import outside a React Server Component, which
+      // is exactly its job — but it makes server modules untestable. Point it
+      // at the package's own empty build, the same file the react-server
+      // condition resolves to.
+      "server-only": path.resolve(__dirname, "./node_modules/server-only/empty.js"),
+    },
+  },
 });
