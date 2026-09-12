@@ -1,7 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
+import { AuthProvider } from "@/lib/mock-db/auth-context";
 import { SellerStorefront } from "./seller-storefront";
 import { getSellerBySlug } from "@/lib/sellers";
 import { getListingsBySeller } from "@/lib/listings";
@@ -12,12 +13,18 @@ const listings = getListingsBySeller(seller.id);
 function renderStorefront() {
   render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <SellerStorefront seller={seller} listings={listings} />
+      <AuthProvider>
+        <SellerStorefront seller={seller} listings={listings} />
+      </AuthProvider>
     </NextIntlClientProvider>
   );
 }
 
 describe("SellerStorefront", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
   it("renders the seller name and rating", () => {
     renderStorefront();
     expect(screen.getByRole("heading", { name: seller.name })).toBeInTheDocument();

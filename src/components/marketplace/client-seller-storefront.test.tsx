@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
 import { saveSeller } from "@/lib/mock-db/sellers";
 import { saveListing } from "@/lib/mock-db/listings";
+import { AuthProvider } from "@/lib/mock-db/auth-context";
 import { ClientSellerStorefront } from "./client-seller-storefront";
 import type { Seller, Listing } from "@/types";
 
@@ -45,7 +46,9 @@ const LISTING: Listing = {
 function renderStorefront(slug: string) {
   render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <ClientSellerStorefront slug={slug} />
+      <AuthProvider>
+        <ClientSellerStorefront slug={slug} />
+      </AuthProvider>
     </NextIntlClientProvider>
   );
 }

@@ -264,5 +264,16 @@
     "createCta": "Publish Listing",
     "saveCta": "Save Changes",
     "invalidPriceError": "Enter a title and a valid price."
+  },
+  "reviews": {
+    "title": "Reviews",
+    "writeReviewCta": "Write a Review",
+    "yourRatingAria": "Your rating",
+    "commentPlaceholder": "Share your experience with this seller...",
+    "submitReviewCta": "Submit Review",
+    "noReviewsYet": "No reviews yet — be the first to leave one.",
+    "signInPromptTitle": "Sign In to Review",
+    "signInPromptBody": "Create a free account or sign in to rate and review this seller.",
+    "signInPromptCta": "Sign In / Create Account"
   }
 }

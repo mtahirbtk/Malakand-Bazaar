@@ -1,11 +1,12 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Avatar } from "@/components/ui/avatar";
-import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/ui/icon";
 import { PhoneReveal } from "./phone-reveal";
 import { ListingCard } from "./listing-card";
+import { SellerRatingSummary } from "./seller-rating-summary";
+import { SellerReviews } from "./seller-reviews";
 import type { Listing, Seller } from "@/types";
 
 export function SellerStorefront({ seller, listings }: { seller: Seller; listings: Listing[] }) {
@@ -21,13 +22,13 @@ export function SellerStorefront({ seller, listings }: { seller: Seller; listing
         )}
         <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
           <div className="flex items-center gap-3.5">
-            <Avatar initials={seller.initials} alt={seller.name} size="lg" />
+            <Avatar initials={seller.initials} src={seller.avatarUrl} alt={seller.name} size="lg" />
             <div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
                 {seller.name}
               </h1>
               <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                <Rating value={seller.rating} count={seller.reviewCount} />
+                <SellerRatingSummary seller={seller} />
                 {seller.verified && (
                   <Badge tone="green" icon="check_circle">
                     {t("verified")}
@@ -38,6 +39,7 @@ export function SellerStorefront({ seller, listings }: { seller: Seller; listing
                 <Icon name="location_on" size={13} />
                 {seller.localityLabel} · {seller.specialty}
               </p>
+              {seller.description && <p className="mt-1.5 text-sm text-on-surface">{seller.description}</p>}
             </div>
           </div>
           <PhoneReveal phone={seller.phone} listingTitle={seller.name} />
@@ -58,6 +60,8 @@ export function SellerStorefront({ seller, listings }: { seller: Seller; listing
           </div>
         )}
       </div>
+
+      <SellerReviews seller={seller} />
     </div>
   );
 }
