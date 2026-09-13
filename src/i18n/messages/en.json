@@ -285,7 +285,25 @@
   "sellerDashboard": {
     "title": "Seller Dashboard",
     "listingsTab": "Listings",
+    "analyticsTab": "Analytics",
     "profileTab": "Profile"
+  },
+  "sellerAnalytics": {
+    "last30Days": "Last 30 Days",
+    "last90Days": "Last 90 Days",
+    "periodViewsLabel": "Views",
+    "periodContactsLabel": "Contact Clicks",
+    "storefrontViewsLabel": "Storefront Views",
+    "listingCountLabel": "Live Listings",
+    "viewsChartTitle": "Views per Day",
+    "contactsChartTitle": "Contact Clicks per Day",
+    "perListingTitle": "By Listing",
+    "listingColumn": "Listing",
+    "viewsColumn": "Views",
+    "contactsColumn": "Contacts",
+    "emptyTitle": "No activity yet",
+    "emptyBody": "Once buyers start viewing your listings, the numbers will show up here.",
+    "genericError": "Could not load your analytics. Please try again."
   },
   "sellerProfileEdit": {
     "pending": "Pending Verification",

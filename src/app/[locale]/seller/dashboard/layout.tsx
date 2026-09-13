@@ -35,7 +35,11 @@ export default function SellerDashboardLayout({ children }: { children: React.Re
     return <FullscreenLoader label={common("loading")} />;
   }
 
-  const activeTab = pathname?.includes("/profile") ? "profile" : "listings";
+  const activeTab = pathname?.includes("/profile")
+    ? "profile"
+    : pathname?.includes("/analytics")
+      ? "analytics"
+      : "listings";
 
   return (
     <main className="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -45,6 +49,7 @@ export default function SellerDashboardLayout({ children }: { children: React.Re
         onValueChange={(value) => router.push(`/seller/dashboard/${value}`)}
         tabs={[
           { value: "listings", label: t("listingsTab"), icon: "storefront" },
+          { value: "analytics", label: t("analyticsTab"), icon: "query_stats" },
           { value: "profile", label: t("profileTab"), icon: "person" },
         ]}
       />

@@ -47,6 +47,7 @@ describe("SellerDashboardLayout", () => {
     renderLayout();
     await waitFor(() => expect(screen.getByText("Route content")).toBeInTheDocument());
     expect(screen.getByRole("tab", { name: /Listings/ })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Analytics/ })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /Profile/ })).toBeInTheDocument();
   });
 

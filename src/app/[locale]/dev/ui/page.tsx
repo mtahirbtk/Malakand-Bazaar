@@ -36,6 +36,7 @@ import { ToastProvider, useToast } from "@/components/ui/toast";
 import { FileUpload } from "@/components/ui/file-upload";
 import { MultiFileUpload } from "@/components/ui/multi-file-upload";
 import { Spinner } from "@/components/ui/spinner";
+import { BarChart } from "@/components/ui/bar-chart";
 import { FullscreenLoader } from "@/components/ui/fullscreen-loader";
 import { cn } from "@/lib/cn";
 import { TEHSIL_OPTIONS } from "@/data/tehsils";
@@ -664,6 +665,27 @@ export default function GalleryPage() {
                   Fullscreen overlay (shown inline here)
                 </p>
                 <FullscreenLoader inline label="Loading your storefront…" />
+              </div>
+            </div>
+          </Section>
+
+          <Section title="Bar Chart">
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-xl border border-surface-border bg-surface p-4">
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider text-on-surface-muted">Views per day</p>
+                <BarChart
+                  data={[3, 7, 2, 0, 9, 5, 6].map((value, i) => ({ label: `Day ${i + 1}`, value }))}
+                  color="bg-brand-600"
+                />
+              </div>
+              <div className="rounded-xl border border-surface-border bg-surface p-4">
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider text-on-surface-muted">
+                  Contacts per day
+                </p>
+                <BarChart
+                  data={[1, 2, 0, 0, 3, 1, 2].map((value, i) => ({ label: `Day ${i + 1}`, value }))}
+                  color="bg-tertiary"
+                />
               </div>
             </div>
           </Section>

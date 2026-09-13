@@ -285,7 +285,25 @@
   "sellerDashboard": {
     "title": "فروخت کنندہ ڈیش بورڈ",
     "listingsTab": "اشیاء",
+    "analyticsTab": "اعداد و شمار",
     "profileTab": "پروفائل"
+  },
+  "sellerAnalytics": {
+    "last30Days": "پچھلے 30 دن",
+    "last90Days": "پچھلے 90 دن",
+    "periodViewsLabel": "ویوز",
+    "periodContactsLabel": "رابطہ کلکس",
+    "storefrontViewsLabel": "دکان کے وزٹس",
+    "listingCountLabel": "فعال اشیاء",
+    "viewsChartTitle": "روزانہ ویوز",
+    "contactsChartTitle": "روزانہ رابطہ کلکس",
+    "perListingTitle": "فی اشتہار",
+    "listingColumn": "اشتہار",
+    "viewsColumn": "ویوز",
+    "contactsColumn": "رابطے",
+    "emptyTitle": "ابھی کوئی سرگرمی نہیں",
+    "emptyBody": "جیسے ہی خریدار آپ کی اشیاء دیکھنا شروع کریں گے، اعداد و شمار یہاں ظاہر ہوں گے۔",
+    "genericError": "اعداد و شمار لوڈ نہیں ہو سکے۔ دوبارہ کوشش کریں۔"
   },
   "sellerProfileEdit": {
     "pending": "توثیق زیر التوا",
