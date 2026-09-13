@@ -3,7 +3,9 @@ import { db, PG } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
 import { hashPassword } from "../auth/password";
+import { deleteStorageObjects, forgetPendingUpload } from "./uploads";
 import type { RegisterSellerInput } from "../schemas/auth";
+import type { UpdateSellerInput } from "../schemas/seller";
 import type { PublicUser } from "./auth";
 
 /**
@@ -63,7 +65,7 @@ export function toSellerSummary(row: SellerRow): SellerSummary {
 }
 
 /** Resolves a locality slug to its display label, and checks it belongs to the tehsil. */
-async function resolveLocality(tehsilSlug: string, localitySlug: string): Promise<string> {
+export async function resolveLocality(tehsilSlug: string, localitySlug: string): Promise<string> {
   const { data } = await db
     .from("localities")
     .select("name_en, tehsil_slug")
@@ -175,4 +177,94 @@ export async function registerSeller(
 export async function getSellerById(sellerId: string): Promise<SellerSummary | null> {
   const { data } = await db.from("sellers").select(SELLER_COLUMNS).eq("id", sellerId).maybeSingle();
   return data ? toSellerSummary(data as SellerRow) : null;
+}
+
+/**
+ * Confirms a photo path is one this seller uploaded and committed, and that
+ * it is the kind the caller says it is — a customer cannot set their avatar
+ * to a path lifted from someone else's committed upload, and a "listing"
+ * upload cannot be slipped in as an avatar. Empty string means "clear it".
+ */
+async function resolveProfilePhotoPath(
+  sellerId: string,
+  kind: "avatar" | "banner",
+  path: string | undefined
+): Promise<string | null | undefined> {
+  if (path === undefined) return undefined;
+  if (path === "") return null;
+
+  const { data } = await db
+    .from("pending_uploads")
+    .select("kind, committed_at")
+    .eq("path", path)
+    .eq("seller_id", sellerId)
+    .maybeSingle();
+
+  if (!data || data.kind !== kind || !data.committed_at) {
+    throw ApiError.validation("Upload that photo before saving.", {
+      [kind === "avatar" ? "avatarPath" : "bannerPath"]: "Upload that photo before saving.",
+    });
+  }
+  return path;
+}
+
+/**
+ * Profile edit. §1.4 / Phase 6 endpoint 41 — everything except the slug
+ * (immutable after creation, and simply not accepted by the schema).
+ */
+export async function updateSeller(sellerId: string, input: UpdateSellerInput): Promise<SellerSummary> {
+  const current = await getSellerById(sellerId);
+  if (!current) throw ApiError.notFound("Your storefront");
+
+  const patch: Record<string, unknown> = {};
+  if (input.storeName !== undefined) patch.name = input.storeName;
+  if (input.description !== undefined) patch.description = input.description ?? null;
+  if (input.storePhone !== undefined) patch.phone = input.storePhone;
+
+  // The schema's refine() guarantees localitySlug is present whenever
+  // tehsilSlug is, so this narrows rather than defaults.
+  if (input.tehsilSlug !== undefined && input.localitySlug !== undefined) {
+    const localityLabel = await resolveLocality(input.tehsilSlug, input.localitySlug);
+    patch.tehsil_slug = input.tehsilSlug;
+    patch.locality_slug = input.localitySlug;
+    patch.locality_label = localityLabel;
+  }
+
+  if (input.coordinates !== undefined) {
+    patch.coordinates = `SRID=4326;POINT(${input.coordinates.lng} ${input.coordinates.lat})`;
+  }
+
+  const nextAvatarPath = await resolveProfilePhotoPath(sellerId, "avatar", input.avatarPath);
+  if (nextAvatarPath !== undefined) patch.avatar_path = nextAvatarPath;
+
+  const nextBannerPath = await resolveProfilePhotoPath(sellerId, "banner", input.bannerPath);
+  if (nextBannerPath !== undefined) patch.banner_path = nextBannerPath;
+
+  const { data, error } = await db
+    .from("sellers")
+    .update(patch)
+    .eq("id", sellerId)
+    .select(SELLER_COLUMNS)
+    .single();
+
+  if (error) {
+    log.error("seller update failed", { sellerId, code: error.code, message: error.message });
+    throw new ApiError("INTERNAL", "Could not save your storefront. Please try again.");
+  }
+
+  // Only now that the row points at the new photo (or none) is the old
+  // object safe to delete, and only if it actually changed.
+  const cleanup: string[] = [];
+  if (nextAvatarPath !== undefined && current.avatarPath && current.avatarPath !== nextAvatarPath) {
+    cleanup.push(current.avatarPath);
+  }
+  if (nextBannerPath !== undefined && current.bannerPath && current.bannerPath !== nextBannerPath) {
+    cleanup.push(current.bannerPath);
+  }
+  if (cleanup.length) await deleteStorageObjects(cleanup);
+
+  if (nextAvatarPath) await forgetPendingUpload(nextAvatarPath);
+  if (nextBannerPath) await forgetPendingUpload(nextBannerPath);
+
+  return toSellerSummary(data as SellerRow);
 }

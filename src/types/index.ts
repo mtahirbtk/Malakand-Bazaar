@@ -94,6 +94,19 @@ export type Seller = {
  */
 export type ListingSellerCard = Pick<Seller, "slug" | "name" | "coordinates">;
 
+/**
+ * One photo, as the seller dashboard needs it (id + sort for drag-reorder and
+ * delete-by-id). Public reads only ever see `Listing.images: string[]` — this
+ * shape exists for the owner-only endpoints in Phase 6.
+ */
+export type ListingImage = {
+  id: string;
+  url: string;
+  width: number | null;
+  height: number | null;
+  sort: number;
+};
+
 export type UserRole = "customer" | "seller" | "admin";
 
 export type User = {
