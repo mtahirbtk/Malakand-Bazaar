@@ -371,5 +371,19 @@
     "cancelCta": "Cancel",
     "saveCta": "Save",
     "loadMoreCta": "Load more reviews"
+  },
+  "sellers": {
+    "title": "Sellers Directory",
+    "searchPlaceholder": "Search sellers by name...",
+    "verifiedOnlyLabel": "Verified only",
+    "sortAriaLabel": "Sort sellers by",
+    "sortRating": "Top rated",
+    "sortNewest": "Newest",
+    "sortListings": "Most listings",
+    "emptyTitle": "No sellers match your filters",
+    "emptyBody": "Try clearing a filter or searching a different name.",
+    "paginationPrevious": "Previous",
+    "paginationNext": "Next",
+    "paginationPage": "Page"
   }
 }

@@ -371,5 +371,19 @@
     "cancelCta": "منسوخ کریں",
     "saveCta": "محفوظ کریں",
     "loadMoreCta": "مزید جائزے لوڈ کریں"
+  },
+  "sellers": {
+    "title": "فروخت کنندگان کی ڈائریکٹری",
+    "searchPlaceholder": "نام سے فروخت کنندہ تلاش کریں...",
+    "verifiedOnlyLabel": "صرف تصدیق شدہ",
+    "sortAriaLabel": "فروخت کنندگان کو ترتیب دیں",
+    "sortRating": "سب سے زیادہ درجہ بند",
+    "sortNewest": "تازہ ترین",
+    "sortListings": "سب سے زیادہ اشیاء",
+    "emptyTitle": "آپ کے فلٹرز سے کوئی فروخت کنندہ میل نہیں کھاتا",
+    "emptyBody": "کوئی فلٹر ہٹا کر دیکھیں یا مختلف نام تلاش کریں۔",
+    "paginationPrevious": "پچھلا",
+    "paginationNext": "اگلا",
+    "paginationPage": "صفحہ"
   }
 }
