@@ -742,14 +742,21 @@ export async function listSellers(query: SellersDirectoryQuery): Promise<{ items
   if (query.q) builder = builder.ilike("name", `%${query.q}%`);
   if (query.category) {
     // A seller has no category of its own — "sells in this category" means
-    // "has at least one live listing in it". A subquery keeps this to one
-    // round trip instead of fetching every seller id first.
-    const { data: sellerIds } = await db
+    // "has at least one publicly-visible listing in it". Same visibility
+    // definition as the `listings_active_idx` partial index (0004_marketplace.sql):
+    // active + approved + not deleted, not just active + not deleted — a
+    // listing still pending moderation must not surface its seller here.
+    const { data: sellerIds, error: categoryError } = await db
       .from("listings")
       .select("seller_id")
       .eq("category_slug", query.category)
       .eq("status", "active")
+      .eq("moderation_status", "approved")
       .is("deleted_at", null);
+    if (categoryError) {
+      log.error("listSellers category filter failed", { category: query.category, message: categoryError.message });
+      throw new ApiError("INTERNAL", "Could not load sellers. Please try again.");
+    }
     const ids = [...new Set((sellerIds ?? []).map((r) => r.seller_id))];
     if (ids.length === 0) return { items: [], total: 0 };
     builder = builder.in("id", ids);
