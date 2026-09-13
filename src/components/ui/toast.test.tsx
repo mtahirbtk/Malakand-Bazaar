@@ -1,87 +1,57 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { ToastProvider, useToast, type ToastPosition } from "./toast";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const POSITIONS: ToastPosition[] = ["top-right", "top-left", "bottom-right", "bottom-left", "center"];
+// vi.mock factories are hoisted above the rest of the file, above a plain
+// `const fire = vi.fn()` too — vi.hoisted is what makes `fire` exist by the
+// time the factory (and toast.tsx's module-level Swal.mixin(...) call) runs.
+const { fire } = vi.hoisted(() => ({ fire: vi.fn() }));
+vi.mock("sweetalert2", () => ({
+  default: { mixin: () => ({ fire }), stopTimer: vi.fn(), resumeTimer: vi.fn() },
+}));
 
-function Trigger() {
-  const { show } = useToast();
-  return (
-    <div>
-      <button onClick={() => show("Account created")}>string form</button>
-      <button onClick={() => show({ title: "Custom", position: "bottom-left", tone: "error" })}>
-        bottom-left error
-      </button>
-      {POSITIONS.map((position) => (
-        <button key={position} onClick={() => show({ title: `at ${position}`, position })}>
-          {position}
-        </button>
-      ))}
-    </div>
-  );
-}
+import { useToast } from "./toast";
 
-describe("useToast / ToastProvider", () => {
-  it("throws when used outside a provider", () => {
-    // Suppress the expected console.error from React's error boundary noise.
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
-    function Bare() {
-      useToast();
-      return null;
-    }
-    expect(() => render(<Bare />)).toThrow(/must be used within a ToastProvider/);
-    spy.mockRestore();
+/**
+ * Confirms this file is a thin, correct pass-through to SweetAlert2's toast
+ * mixin — the mapping from our props to its `fire()` call — not a
+ * reimplementation of any toast behaviour.
+ */
+describe("useToast", () => {
+  beforeEach(() => {
+    fire.mockClear();
   });
 
-  it("defaults a string call to top-right", async () => {
-    render(
-      <ToastProvider>
-        <Trigger />
-      </ToastProvider>
+  it("defaults a string call to a top-right success toast", () => {
+    useToast().show("Account created");
+    expect(fire).toHaveBeenCalledWith(
+      expect.objectContaining({ title: "Account created", icon: "success", position: "top-end", timer: 3000 })
     );
-    await userEvent.click(screen.getByText("string form"));
-    expect(await screen.findByText("Account created")).toBeInTheDocument();
   });
 
-  it("renders each position in its own viewport, independent of the others", async () => {
-    render(
-      <ToastProvider>
-        <Trigger />
-      </ToastProvider>
+  it("passes the description through as SweetAlert2's `text`", () => {
+    useToast().show({ title: "Welcome back, Usama!", description: "Signed in to MalakandBazaar." });
+    expect(fire).toHaveBeenCalledWith(
+      expect.objectContaining({ title: "Welcome back, Usama!", text: "Signed in to MalakandBazaar." })
     );
-
-    for (const position of POSITIONS) {
-      await userEvent.click(screen.getByRole("button", { name: position }));
-    }
-
-    // Five distinct toasts, all live at once — positions do not share a queue,
-    // so triggering one never displaces or replaces another.
-    for (const position of POSITIONS) {
-      expect(await screen.findByText(`at ${position}`)).toBeInTheDocument();
-    }
   });
 
-  it("shows a title and description together", async () => {
-    render(
-      <ToastProvider>
-        <Trigger />
-      </ToastProvider>
-    );
-    await userEvent.click(screen.getByText("bottom-left error"));
-    const toast = await screen.findByText("Custom");
-    expect(toast).toBeInTheDocument();
+  it.each([
+    ["top-right", "top-end"],
+    ["top-left", "top-start"],
+    ["bottom-right", "bottom-end"],
+    ["bottom-left", "bottom-start"],
+    ["center", "center"],
+  ] as const)("maps position %s to SweetAlert2's %s", (position, expected) => {
+    useToast().show({ title: "x", position });
+    expect(fire).toHaveBeenCalledWith(expect.objectContaining({ position: expected }));
   });
 
-  it("can be dismissed by its close button", async () => {
-    render(
-      <ToastProvider>
-        <Trigger />
-      </ToastProvider>
-    );
-    await userEvent.click(screen.getByText("string form"));
-    await screen.findByText("Account created");
-    await userEvent.click(screen.getByRole("button", { name: /dismiss/i }));
-    await waitFor(() => expect(screen.queryByText("Account created")).not.toBeInTheDocument());
+  it.each(["success", "error", "info", "warning"] as const)("passes tone %s through as `icon`", (tone) => {
+    useToast().show({ title: "x", tone });
+    expect(fire).toHaveBeenCalledWith(expect.objectContaining({ icon: tone }));
+  });
+
+  it("honours a custom duration as SweetAlert2's `timer`", () => {
+    useToast().show({ title: "x", duration: 6000 });
+    expect(fire).toHaveBeenCalledWith(expect.objectContaining({ timer: 6000 }));
   });
 });
