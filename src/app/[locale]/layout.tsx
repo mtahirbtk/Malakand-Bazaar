@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -60,6 +61,11 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="bg-background font-sans text-on-surface antialiased min-h-screen flex flex-col">
+        {/* Route transitions (search -> listing -> profile) hit the server for
+            data with no client-side fallback UI, so without this the nav feels
+            stuck. Bar fires on every push/replace, incl. the wait on server
+            component data fetches. */}
+        <NextTopLoader color="#2d7659" height={3} showSpinner={false} shadow={false} />
         <NextIntlClientProvider messages={messages}>
           <TooltipProvider>
             <ToastProvider>
