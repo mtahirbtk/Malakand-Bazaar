@@ -135,7 +135,7 @@ export async function listSellerReviews(
   const from = (page - 1) * query.limit;
   const to = from + query.limit - 1;
 
-  const [{ data, error, count }, { data: allRatings }] = await Promise.all([
+  const [{ data, error, count }, { data: allRatings, error: histogramError }] = await Promise.all([
     db
       .from("reviews")
       .select("id, buyer_id, rating, comment, created_at, updated_at", { count: "exact" })
@@ -152,6 +152,11 @@ export async function listSellerReviews(
 
   if (error) {
     log.error("listSellerReviews failed", { sellerId, message: error.message });
+    throw new ApiError("INTERNAL", "Could not load reviews. Please try again.");
+  }
+
+  if (histogramError) {
+    log.error("listSellerReviews failed", { sellerId, message: histogramError.message });
     throw new ApiError("INTERNAL", "Could not load reviews. Please try again.");
   }
 
