@@ -85,6 +85,8 @@
   },
   "marketplace": {
     "saveListing": "اشتہار محفوظ کریں",
+    "unsaveListing": "محفوظ شدہ سے ہٹائیں",
+    "savedCta": "محفوظ شدہ",
     "sold": "فروخت شدہ",
     "reserved": "محفوظ شدہ",
     "verified": "تصدیق شدہ",
@@ -385,5 +387,13 @@
     "paginationPrevious": "پچھلا",
     "paginationNext": "اگلا",
     "paginationPage": "صفحہ"
+  },
+  "account": {
+    "navFavorites": "محفوظ شدہ اشتہارات",
+    "navReviews": "میرے جائزے",
+    "favoritesEmptyTitle": "ابھی کچھ بھی محفوظ نہیں",
+    "favoritesEmptyBody": "اشتہار کو یہاں رکھنے کے لیے محفوظ کریں کا آئیکن دبائیں۔",
+    "reviewsEmptyTitle": "آپ نے ابھی تک کسی کا جائزہ نہیں لیا",
+    "reviewsEmptyBody": "آپ فروخت کنندگان کے لیے جو جائزے لکھیں گے وہ یہاں نظر آئیں گے۔"
   }
 }

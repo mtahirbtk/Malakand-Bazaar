@@ -85,6 +85,8 @@
   },
   "marketplace": {
     "saveListing": "Save listing",
+    "unsaveListing": "Remove from saved",
+    "savedCta": "Saved",
     "sold": "Sold",
     "reserved": "Reserved",
     "verified": "Verified",
@@ -385,5 +387,13 @@
     "paginationPrevious": "Previous",
     "paginationNext": "Next",
     "paginationPage": "Page"
+  },
+  "account": {
+    "navFavorites": "Saved Listings",
+    "navReviews": "My Reviews",
+    "favoritesEmptyTitle": "Nothing saved yet",
+    "favoritesEmptyBody": "Tap the save icon on a listing to keep it here.",
+    "reviewsEmptyTitle": "You haven't reviewed anyone yet",
+    "reviewsEmptyBody": "Reviews you write for sellers show up here."
   }
 }

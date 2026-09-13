@@ -88,6 +88,20 @@ describe("SiteHeader", () => {
     expect(screen.queryByRole("link", { name: /Become a Seller/ })).toBeNull();
   });
 
+  it("links the account menu's Saved Listings and My Reviews entries to /account", async () => {
+    signedIn = makeUser({ displayName: "Ayesha" });
+    renderHeader();
+    await userEvent.click(await screen.findByRole("button", { name: "Account menu" }));
+    expect(await screen.findByRole("menuitem", { name: "Saved Listings" })).toHaveAttribute(
+      "href",
+      expect.stringContaining("/account/favorites")
+    );
+    expect(screen.getByRole("menuitem", { name: "My Reviews" })).toHaveAttribute(
+      "href",
+      expect.stringContaining("/account/reviews")
+    );
+  });
+
   it("links My Storefront to the seller's own public storefront page", async () => {
     window.localStorage.setItem(
       "mb.sellers",

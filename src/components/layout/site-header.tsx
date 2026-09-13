@@ -28,6 +28,7 @@ import { useAuth } from "@/lib/auth/auth-context";
  */
 export function SiteHeader() {
   const t = useTranslations("header");
+  const account = useTranslations("account");
   const common = useTranslations("common");
   const announcement = useTranslations("announcement");
   const locale = useTranslations("locale");
@@ -193,6 +194,8 @@ export function SiteHeader() {
                 ...(user.role === "seller"
                   ? [{ label: t("myDashboard"), icon: "dashboard", href: `/${currentLocale}/seller/dashboard/listings` }]
                   : []),
+                { label: account("navFavorites"), icon: "bookmark", href: `/${currentLocale}/account/favorites` },
+                { label: account("navReviews"), icon: "star", href: `/${currentLocale}/account/reviews` },
                 { label: t("logout"), icon: "logout", onSelect: () => { void signOut(); } },
               ]}
             />
