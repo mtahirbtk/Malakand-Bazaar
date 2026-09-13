@@ -218,7 +218,10 @@ export async function updateSeller(sellerId: string, input: UpdateSellerInput): 
 
   const patch: Record<string, unknown> = {};
   if (input.storeName !== undefined) patch.name = input.storeName;
-  if (input.description !== undefined) patch.description = input.description ?? null;
+  // "" clears it — optionalPatchText keeps an empty string as "" rather than
+  // collapsing it to undefined, exactly so this can tell "not sent" from
+  // "cleared" apart. || null (not ??) turns that "" into a real null.
+  if (input.description !== undefined) patch.description = input.description || null;
   if (input.storePhone !== undefined) patch.phone = input.storePhone;
 
   // The schema's refine() guarantees localitySlug is present whenever

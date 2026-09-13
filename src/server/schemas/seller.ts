@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { numeric, optionalText, paginationSchema, slugSchema, text } from "../http/validate";
+import { numeric, paginationSchema, sanitizeText, slugSchema, text } from "../http/validate";
 import { phoneSchema } from "./auth";
 
 /**
@@ -18,6 +18,20 @@ const coordinatesSchema = z.object({
 });
 
 /**
+ * Unlike `optionalText` in validate.ts (used by create-only forms, where an
+ * absent key and an empty string mean the same thing), a PATCH has to tell
+ * "field not sent" apart from "field cleared" — so this keeps an empty string
+ * as `""` instead of collapsing it to `undefined`, and only `.optional()` at
+ * the very end lets the *key* be missing.
+ */
+const optionalPatchText = (max: number) =>
+  z
+    .string()
+    .transform(sanitizeText)
+    .pipe(z.string().max(max, `Keep this under ${max} characters.`))
+    .optional();
+
+/**
  * Deliberately has no `slug` field. §1.4: the slug is not user-editable after
  * creation because storefront URLs must not rot. If a client sends one
  * anyway, `readJson` drops it silently (zod strips unknown-to-schema keys by
@@ -26,7 +40,7 @@ const coordinatesSchema = z.object({
 export const updateSellerSchema = z
   .object({
     storeName: text(2, 80).optional(),
-    description: optionalText(2000),
+    description: optionalPatchText(2000),
     storePhone: phoneSchema.optional(),
     tehsilSlug: slugSchema.optional(),
     localitySlug: slugSchema.optional(),
