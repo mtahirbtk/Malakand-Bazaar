@@ -38,7 +38,12 @@ export function MapPinPicker({
     <div
       role="group"
       aria-label={ariaLabel}
-      className="overflow-hidden rounded-xl border border-surface-border"
+      // isolate: Leaflet's panes/controls carry z-index up to 1000. Its own
+      // container is position:relative with z-index:auto, which per spec
+      // does NOT create a stacking context — so those z-indexes escape past
+      // this box and render above app overlays like Select (z-[110]).
+      // isolate contains them so they can never outrank anything outside.
+      className="isolate overflow-hidden rounded-xl border border-surface-border"
     >
       <MapContainer
         center={[value.lat, value.lng]}

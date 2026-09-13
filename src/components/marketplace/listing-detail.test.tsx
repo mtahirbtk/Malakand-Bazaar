@@ -3,6 +3,7 @@ import { screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { renderWithAuth, mockApi, makeUser } from "@tests/auth-harness";
 import { ListingDetail } from "./listing-detail";
+import { ListingCard } from "./listing-card";
 import type { Listing, Seller } from "@/types";
 
 const seller: Seller = {
@@ -41,11 +42,22 @@ const otherListings: Listing[] = [
   { ...listing, id: "l2", slug: "solar-battery-100ah", title: "Solar Battery 100Ah" },
 ];
 
+// `otherListingsSlot` is rendered by the caller (see seller-other-listings.tsx,
+// behind its own <Suspense>) — ListingDetail just places whatever it's given.
+const otherListingsSlot = (
+  <div>
+    {otherListings.map((l) => (
+      <ListingCard key={l.id} listing={l} />
+    ))}
+  </div>
+);
+
 function renderDetail() {
   // Signed out by default (SaveListingButton renders nothing for a
   // signed-out visitor) so the existing assertions below are unaffected by
-  // its presence next to PhoneReveal.
-  renderWithAuth(<ListingDetail listing={listing} seller={seller} otherListings={otherListings} />, null);
+  // its presence next to PhoneReveal. renderWithAuth already wraps with
+  // NextIntlClientProvider, so no separate provider is needed here.
+  renderWithAuth(<ListingDetail listing={listing} seller={seller} otherListingsSlot={otherListingsSlot} />, null);
 }
 
 describe("ListingDetail", () => {
@@ -76,7 +88,7 @@ describe("ListingDetail", () => {
 
   it("mounts the save listing button next to PhoneReveal for a signed-in visitor", async () => {
     mockApi({ "POST /api/me/favorites": { data: { saved: true }, status: 201 } });
-    renderWithAuth(<ListingDetail listing={listing} seller={seller} otherListings={otherListings} />, makeUser());
+    renderWithAuth(<ListingDetail listing={listing} seller={seller} otherListingsSlot={otherListingsSlot} />, makeUser());
     const saveButton = screen.getByRole("button", { name: "Save listing" });
     await userEvent.click(saveButton);
     expect(await screen.findByRole("button", { name: "Remove from saved" })).toBeInTheDocument();

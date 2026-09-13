@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Price } from "@/components/ui/price";
@@ -6,7 +7,6 @@ import { Link } from "@/i18n/routing";
 import { ImageGallery } from "./image-gallery";
 import { PhoneReveal } from "./phone-reveal";
 import { SaveListingButton } from "./save-listing-button";
-import { ListingCard } from "./listing-card";
 import { LocationMap } from "./location-map";
 import { CATEGORIES } from "@/data/categories";
 import type { Listing, ListingSellerCard } from "@/types";
@@ -14,11 +14,16 @@ import type { Listing, ListingSellerCard } from "@/types";
 export function ListingDetail({
   listing,
   seller,
-  otherListings,
+  otherListingsSlot,
 }: {
   listing: Listing;
   seller: ListingSellerCard | undefined;
-  otherListings: Listing[];
+  /**
+   * The "more from this seller" strip, rendered by the caller behind its own
+   * `<Suspense>` — see `seller-other-listings.tsx`. Kept as a slot rather
+   * than a `Listing[]` prop so this component doesn't gate on that fetch.
+   */
+  otherListingsSlot: ReactNode;
 }) {
   const t = useTranslations("marketplace");
   const isSold = listing.status !== "active";
@@ -95,23 +100,7 @@ export function ListingDetail({
         )}
       </div>
 
-      {seller && otherListings.length > 0 && (
-        <div className="lg:col-span-2 space-y-4 pt-4 border-t border-surface-border">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-on-surface tracking-tight">
-              {t("moreFromSeller", { seller: seller.name })}
-            </h2>
-            <Link href={`/seller/${seller.slug}`} className="text-xs font-bold text-brand-700 hover:underline">
-              {t("visitStorefront")}
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-            {otherListings.map((l) => (
-              <ListingCard key={l.id} listing={l} />
-            ))}
-          </div>
-        </div>
-      )}
+      {seller && otherListingsSlot}
     </div>
   );
 }

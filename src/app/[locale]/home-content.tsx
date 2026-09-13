@@ -115,31 +115,10 @@ export default function HomeContent({ payload }: { payload: HomePayload }) {
     <main className="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-8">
       {/* 1. Hero grid */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-        <div className="lg:col-span-8">
+        <div className="lg:col-span-12">
           <HeroCarousel ariaLabel="Highlights" slides={heroSlides} />
         </div>
-        <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-          <PromoCard
-            tone="green"
-            eyebrow={t("promo1.eyebrow")}
-            title={t("promo1.title")}
-            body={t("promo1.body")}
-            highlight={t("promo1.highlight")}
-            linkLabel={t("promo1.link")}
-            href="/search?category=fresh-produce-food"
-            icon="nutrition"
-          />
-          <PromoCard
-            tone="sand"
-            eyebrow={t("promo2.eyebrow")}
-            title={t("promo2.title")}
-            body={t("promo2.body")}
-            highlight={t("promo2.highlight")}
-            linkLabel={t("promo2.link")}
-            href="/search?category=solar-energy"
-            icon="solar_power"
-          />
-        </div>
+       
       </section>
 
       {/* 2. Popular Marketplace Sectors — genuine navigation, valid with zero listings */}

@@ -51,11 +51,26 @@ export function ClientSearch({
   const [queryDraft, setQueryDraft] = React.useState(query.q ?? "");
   const [mobileFiltersOpen, setMobileFiltersOpen] = React.useState(false);
 
+  /**
+   * Every filter control below reads this, not the `query` prop directly.
+   *
+   * `query` is server-confirmed state: it only changes once the navigation
+   * a control triggers has round-tripped (middleware -> layout -> the
+   * `searchListings` DB call). Reading controls straight off it means a
+   * checkbox, the sort <Select>, or a chip's remove button shows *no visual
+   * change at all* — not even its own checked/selected state — until that
+   * finishes, which is the "even the component itself doesn't load" feel.
+   * `navigate()` updates this immediately; the effect below reconciles it
+   * once the real navigation lands (or on back/forward).
+   */
+  const [optimisticQuery, setOptimisticQuery] = React.useState<SearchListingsQuery>(query);
+
   React.useEffect(() => {
     setQueryDraft(query.q ?? "");
-  }, [query.q]);
+    setOptimisticQuery(query);
+  }, [query]);
 
-  const tehsils = (query.tehsil ?? []) as TehsilSlug[];
+  const tehsils = (optimisticQuery.tehsil ?? []) as TehsilSlug[];
 
   type Patch = Partial<{
     q: string;
@@ -73,18 +88,34 @@ export function ClientSearch({
   function navigate(patch: Patch) {
     const params = new URLSearchParams();
     const next = {
-      q: patch.q !== undefined ? patch.q : query.q ?? "",
-      category: patch.category !== undefined ? patch.category : query.category ?? "",
-      subcategory: patch.subcategory !== undefined ? patch.subcategory : query.subcategory ?? "",
+      q: patch.q !== undefined ? patch.q : optimisticQuery.q ?? "",
+      category: patch.category !== undefined ? patch.category : optimisticQuery.category ?? "",
+      subcategory: patch.subcategory !== undefined ? patch.subcategory : optimisticQuery.subcategory ?? "",
       tehsils: patch.tehsils !== undefined ? patch.tehsils : tehsils,
-      minPrice: patch.minPrice !== undefined ? patch.minPrice : query.minPrice ?? null,
-      maxPrice: patch.maxPrice !== undefined ? patch.maxPrice : query.maxPrice ?? null,
-      availability: patch.availability !== undefined ? patch.availability : query.availability,
-      verifiedOnly: patch.verifiedOnly !== undefined ? patch.verifiedOnly : query.verifiedOnly,
-      sort: patch.sort !== undefined ? patch.sort : (query.sort as SortOption),
+      minPrice: patch.minPrice !== undefined ? patch.minPrice : optimisticQuery.minPrice ?? null,
+      maxPrice: patch.maxPrice !== undefined ? patch.maxPrice : optimisticQuery.maxPrice ?? null,
+      availability: patch.availability !== undefined ? patch.availability : optimisticQuery.availability,
+      verifiedOnly: patch.verifiedOnly !== undefined ? patch.verifiedOnly : optimisticQuery.verifiedOnly,
+      sort: patch.sort !== undefined ? patch.sort : (optimisticQuery.sort as SortOption),
       // Any filter change resets to page 1; an explicit page patch (the pager) doesn't.
       page: patch.page !== undefined ? patch.page : 1,
     };
+
+    // Flip every control to its new value now — the server round trip below
+    // updates the result grid, not whether the checkbox looks checked.
+    setOptimisticQuery((prev) => ({
+      ...prev,
+      q: next.q || undefined,
+      category: next.category || undefined,
+      subcategory: next.subcategory || undefined,
+      tehsil: next.tehsils.length ? next.tehsils : undefined,
+      minPrice: next.minPrice ?? undefined,
+      maxPrice: next.maxPrice ?? undefined,
+      availability: next.availability,
+      verifiedOnly: next.verifiedOnly,
+      sort: next.sort,
+      page: next.page,
+    }));
 
     if (next.q) params.set("q", next.q);
     if (next.category) params.set("category", next.category);
@@ -108,33 +139,48 @@ export function ClientSearch({
 
   function resetAll() {
     setQueryDraft("");
+    setOptimisticQuery((prev) => ({
+      ...prev,
+      q: undefined,
+      category: undefined,
+      subcategory: undefined,
+      tehsil: undefined,
+      minPrice: undefined,
+      maxPrice: undefined,
+      availability: "active",
+      verifiedOnly: false,
+      sort: "relevant" as SortOption,
+      page: 1,
+    }));
     router.push(pathname, { scroll: false });
   }
 
   const sortOptions: SelectOption[] = SORT_OPTIONS.map((value) => ({ value, label: t(`sort.${value}`) }));
 
   const activeChips: { key: string; label: string; onRemove: () => void }[] = [];
-  if (query.q) {
+  if (optimisticQuery.q) {
     activeChips.push({
       key: "q",
-      label: t("searchFilterChip", { query: query.q }),
+      label: t("searchFilterChip", { query: optimisticQuery.q }),
       onRemove: () => {
         setQueryDraft("");
         navigate({ q: "" });
       },
     });
   }
-  if (query.category) {
+  if (optimisticQuery.category) {
     activeChips.push({
       key: "category",
-      label: t("categoryFilterChip", { category: categoryLabel(query.category) ?? query.category }),
+      label: t("categoryFilterChip", {
+        category: categoryLabel(optimisticQuery.category) ?? optimisticQuery.category,
+      }),
       onRemove: () => navigate({ category: "", subcategory: "" }),
     });
   }
-  if (query.subcategory) {
+  if (optimisticQuery.subcategory) {
     activeChips.push({
       key: "subcategory",
-      label: subcategoryLabel(query.subcategory) ?? query.subcategory,
+      label: subcategoryLabel(optimisticQuery.subcategory) ?? optimisticQuery.subcategory,
       onRemove: () => navigate({ subcategory: "" }),
     });
   }
@@ -145,32 +191,32 @@ export function ClientSearch({
       onRemove: () => navigate({ tehsils: tehsils.filter((s) => s !== tehsilSlug) }),
     });
   }
-  if (query.verifiedOnly) {
+  if (optimisticQuery.verifiedOnly) {
     activeChips.push({
       key: "verified",
       label: t("verifiedFilterChip"),
       onRemove: () => navigate({ verifiedOnly: false }),
     });
   }
-  if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+  if (optimisticQuery.minPrice !== undefined || optimisticQuery.maxPrice !== undefined) {
     activeChips.push({
       key: "price",
       label: t("priceFilterChip", {
-        from: (query.minPrice ?? 0).toLocaleString("en-US"),
-        to: (query.maxPrice ?? 0).toLocaleString("en-US"),
+        from: (optimisticQuery.minPrice ?? 0).toLocaleString("en-US"),
+        to: (optimisticQuery.maxPrice ?? 0).toLocaleString("en-US"),
       }),
       onRemove: () => navigate({ minPrice: null, maxPrice: null }),
     });
   }
 
   const filtersValue: SearchFiltersValue = {
-    category: query.category ?? "",
-    subcategory: query.subcategory ?? "",
+    category: optimisticQuery.category ?? "",
+    subcategory: optimisticQuery.subcategory ?? "",
     tehsils,
-    minPrice: query.minPrice ?? null,
-    maxPrice: query.maxPrice ?? null,
-    availability: query.availability,
-    verifiedOnly: query.verifiedOnly,
+    minPrice: optimisticQuery.minPrice ?? null,
+    maxPrice: optimisticQuery.maxPrice ?? null,
+    availability: optimisticQuery.availability,
+    verifiedOnly: optimisticQuery.verifiedOnly,
   };
 
   const priceMax = Math.max(result.facets.maxPrice ?? 0, filtersValue.maxPrice ?? 0, 100_000);
@@ -200,7 +246,7 @@ export function ClientSearch({
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="flex flex-wrap items-center gap-2.5 text-2xl font-extrabold tracking-tight text-on-surface sm:text-3xl">
-            <span>{query.q ? t("resultsFor", { query: query.q }) : t("title")}</span>
+            <span>{optimisticQuery.q ? t("resultsFor", { query: optimisticQuery.q }) : t("title")}</span>
             <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-white">
               {t("matches", { count: result.total })}
             </span>
@@ -259,7 +305,7 @@ export function ClientSearch({
           </label>
           <Select
             ariaLabel={t("sortLabel")}
-            value={query.sort}
+            value={optimisticQuery.sort}
             onValueChange={(value) => navigate({ sort: value as SortOption })}
             options={sortOptions}
             selectSize="sm"

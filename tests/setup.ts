@@ -18,6 +18,14 @@ vi.mock("sweetalert2", () => ({
   },
 }));
 
+// jsdom's URL has no createObjectURL/revokeObjectURL at all — anything that
+// previews a locally-picked file (FileUpload's crop flow, dev/ui's gallery)
+// needs a stand-in, not real blob semantics.
+if (!("createObjectURL" in URL)) {
+  URL.createObjectURL = vi.fn(() => "blob:mock-object-url");
+  URL.revokeObjectURL = vi.fn();
+}
+
 // Radix primitives rely on browser APIs jsdom does not implement.
 globalThis.ResizeObserver =
   globalThis.ResizeObserver ??

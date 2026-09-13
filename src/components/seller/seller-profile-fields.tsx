@@ -62,19 +62,32 @@ export function SellerProfileFields({
 }) {
   const t = useTranslations("sellerProfile");
   const [uploadError, setUploadError] = React.useState<string | null>(null);
+  const [uploadingKind, setUploadingKind] = React.useState<"avatar" | "banner" | null>(null);
   const localityOptions = (findTehsil(value.tehsilSlug)?.localities ?? []).map((l) => ({
     value: l.slug,
     label: l.nameEn,
   }));
 
+  const cropLabels = {
+    title: t("cropTitle"),
+    description: t("cropDescription"),
+    zoomAria: t("cropZoomAria"),
+    cancel: t("cropCancel"),
+    save: t("cropSave"),
+    error: t("cropError"),
+  };
+
   async function handlePhotoSelected(kind: "avatar" | "banner", file: File) {
     setUploadError(null);
+    setUploadingKind(kind);
     try {
       const uploaded = await uploadSellerImage(file, kind);
       if (kind === "avatar") onChange({ ...value, avatarUrl: uploaded.url, avatarPath: uploaded.path });
       else onChange({ ...value, storefrontBanner: uploaded.url, bannerPath: uploaded.path });
     } catch (err) {
       setUploadError(err instanceof UploadValidationError ? err.message : t("uploadFailedError"));
+    } finally {
+      setUploadingKind(null);
     }
   }
 
@@ -134,22 +147,28 @@ export function SellerProfileFields({
 
       {showImages && (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <FormField label={t("avatarLabel")} error={uploadError ?? undefined}>
+        <FormField label={t("avatarLabel")} hint={t("avatarHint")} error={uploadError ?? undefined}>
           <FileUpload
             label={t("avatarUploadCta")}
+            description={t("avatarDropHint")}
             previewUrl={value.avatarUrl || undefined}
             onFileSelected={(file) => handlePhotoSelected("avatar", file)}
             onClear={() => onChange({ ...value, avatarUrl: "", avatarPath: "" })}
             removeLabel={t("removeCta")}
+            uploading={uploadingKind === "avatar"}
+            crop={{ aspect: 1, shape: "circle", labels: cropLabels }}
           />
         </FormField>
-        <FormField label={t("bannerLabel")}>
+        <FormField label={t("bannerLabel")} hint={t("bannerHint")}>
           <FileUpload
             label={t("bannerUploadCta")}
+            description={t("bannerDropHint")}
             previewUrl={value.storefrontBanner || undefined}
             onFileSelected={(file) => handlePhotoSelected("banner", file)}
             onClear={() => onChange({ ...value, storefrontBanner: "", bannerPath: "" })}
             removeLabel={t("removeCta")}
+            uploading={uploadingKind === "banner"}
+            crop={{ aspect: 3, shape: "rect", labels: cropLabels }}
           />
         </FormField>
       </div>

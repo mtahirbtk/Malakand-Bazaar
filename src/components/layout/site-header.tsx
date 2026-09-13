@@ -6,7 +6,6 @@ import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { Select } from "@/components/ui/select";
 import { Drawer } from "@/components/ui/drawer";
 import { Avatar } from "@/components/ui/avatar";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -15,7 +14,6 @@ import { CategoryRibbon } from "./category-ribbon";
 import { LocaleSwitcher } from "./locale-switcher";
 import { MegaMenu } from "./mega-menu";
 import { CATEGORY_OPTIONS } from "@/data/categories";
-import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { QUICK_LINKS } from "@/data/quick-links";
 import { Link, useRouter } from "@/i18n/routing";
 import { useAuth } from "@/lib/auth/auth-context";
@@ -30,7 +28,6 @@ export function SiteHeader() {
   const t = useTranslations("header");
   const account = useTranslations("account");
   const common = useTranslations("common");
-  const announcement = useTranslations("announcement");
   const locale = useTranslations("locale");
   const nav = useTranslations("nav");
   const { user, signOut } = useAuth();
@@ -41,7 +38,6 @@ export function SiteHeader() {
   const [mobileQuery, setMobileQuery] = React.useState("");
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [categoriesOpen, setCategoriesOpen] = React.useState(false);
-  const [tehsil, setTehsil] = React.useState("all");
   // The session already carries the storefront slug, so the header needs no
   // lookup of its own.
   const sellerSlug = user?.sellerSlug;
@@ -110,19 +106,6 @@ export function SiteHeader() {
             </ul>
 
             <div className="border-t border-surface-border pt-4">
-              <div className="text-[11px] font-bold text-on-surface-muted uppercase tracking-wider mb-1.5">
-                {announcement("tehsilLabel")}
-              </div>
-              <Select
-                ariaLabel={announcement("tehsilAria")}
-                selectSize="sm"
-                value={tehsil}
-                onValueChange={setTehsil}
-                options={TEHSIL_OPTIONS}
-                className="w-full"
-              />
-            </div>
-            <div>
               <div className="text-[11px] font-bold text-on-surface-muted uppercase tracking-wider mb-1.5">
                 {locale("aria")}
               </div>
