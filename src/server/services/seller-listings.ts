@@ -2,6 +2,7 @@ import "server-only";
 import { db, PG } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
+import { boundedRange } from "../http/validate";
 import { cloudinaryUrl } from "../storage";
 import { assertOwnCommittedListingUpload, attachListingImage, deleteStorageObjects } from "./uploads";
 import { resolveLocality } from "./sellers";
@@ -86,14 +87,21 @@ export type SellerListingsResult = { items: SellerListingRow[]; total: number; p
 
 export async function listSellerListings(sellerId: string, query: SellerListingsQuery): Promise<SellerListingsResult> {
   const page = query.page ?? 1;
-  const from = (page - 1) * query.limit;
-  const to = from + query.limit - 1;
 
-  let builder = db
-    .from("listings")
-    .select(LISTING_ROW_COLUMNS, { count: "exact" })
-    .eq("seller_id", sellerId)
-    .is("deleted_at", null);
+  let countBuilder = db.from("listings").select("id", { count: "exact", head: true }).eq("seller_id", sellerId).is("deleted_at", null);
+  if (query.status) countBuilder = countBuilder.eq("status", query.status);
+  if (query.q) countBuilder = countBuilder.ilike("title", `%${query.q}%`);
+
+  const { count: total, error: countError } = await countBuilder;
+  if (countError) {
+    log.error("listSellerListings count failed", { sellerId, message: countError.message });
+    throw new ApiError("INTERNAL", "Could not load your listings. Please try again.");
+  }
+
+  const range = boundedRange(page, query.limit, total ?? 0);
+  if (!range) return { items: [], total: total ?? 0, page, limit: query.limit };
+
+  let builder = db.from("listings").select(LISTING_ROW_COLUMNS).eq("seller_id", sellerId).is("deleted_at", null);
 
   if (query.status) builder = builder.eq("status", query.status);
   if (query.q) builder = builder.ilike("title", `%${query.q}%`);
@@ -108,7 +116,7 @@ export async function listSellerListings(sellerId: string, query: SellerListings
     } as const
   )[query.sort];
 
-  const { data, error, count } = await builder.order(column, { ascending }).range(from, to);
+  const { data, error } = await builder.order(column, { ascending }).range(range.from, range.to);
   if (error) {
     log.error("listSellerListings failed", { sellerId, message: error.message });
     throw new ApiError("INTERNAL", "Could not load your listings. Please try again.");
@@ -119,7 +127,7 @@ export async function listSellerListings(sellerId: string, query: SellerListings
 
   return {
     items: rows.map((row) => toSellerListing(row, imageMap.get(row.id) ?? [])),
-    total: count ?? 0,
+    total: total ?? 0,
     page,
     limit: query.limit,
   };

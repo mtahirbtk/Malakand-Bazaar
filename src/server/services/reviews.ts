@@ -3,6 +3,7 @@ import "server-only";
 import { db, PG } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
+import { boundedRange } from "../http/validate";
 import type { CreateReviewInput, MyReviewsQuery, SellerReviewsQuery, UpdateReviewInput } from "../schemas/reviews";
 
 /**
@@ -132,17 +133,12 @@ export async function listSellerReviews(
   query: SellerReviewsQuery
 ): Promise<{ items: ReviewItem[]; total: number; histogram: ReviewHistogram }> {
   const page = query.page ?? 1;
-  const from = (page - 1) * query.limit;
-  const to = from + query.limit - 1;
 
-  const [{ data, error, count }, { data: allRatings, error: histogramError }] = await Promise.all([
-    db
-      .from("reviews")
-      .select("id, buyer_id, rating, comment, created_at, updated_at", { count: "exact" })
-      .eq("seller_id", sellerId)
-      .eq("status", "visible")
-      .order("created_at", { ascending: false })
-      .range(from, to),
+  // `total` (for the range guard below) and the histogram are both needed
+  // regardless of which page was asked for, so both run up front, in
+  // parallel, ahead of the page's own ranged read.
+  const [{ count: total, error: countError }, { data: allRatings, error: histogramError }] = await Promise.all([
+    db.from("reviews").select("id", { count: "exact", head: true }).eq("seller_id", sellerId).eq("status", "visible"),
     // Histogram over every visible review, not just this page. Fine at
     // marketplace scale (a seller's total review count, not every review's
     // text) — revisit with a SQL group-by if a storefront ever has
@@ -150,8 +146,8 @@ export async function listSellerReviews(
     db.from("reviews").select("rating").eq("seller_id", sellerId).eq("status", "visible"),
   ]);
 
-  if (error) {
-    log.error("listSellerReviews failed", { sellerId, message: error.message });
+  if (countError) {
+    log.error("listSellerReviews failed", { sellerId, message: countError.message });
     throw new ApiError("INTERNAL", "Could not load reviews. Please try again.");
   }
 
@@ -160,17 +156,35 @@ export async function listSellerReviews(
     throw new ApiError("INTERNAL", "Could not load reviews. Please try again.");
   }
 
-  const rows = (data ?? []) as ReviewRow[];
-  const names = await buyerNames(rows.map((r) => r.buyer_id));
-
   const histogram: ReviewHistogram = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
   for (const r of allRatings ?? []) {
     histogram[r.rating as 1 | 2 | 3 | 4 | 5]++;
   }
 
+  // A page past the end still owes the caller an accurate total and
+  // histogram (§2.4 #29) — only the item list short-circuits to empty.
+  const range = boundedRange(page, query.limit, total ?? 0);
+  if (!range) return { items: [], total: total ?? 0, histogram };
+
+  const { data, error } = await db
+    .from("reviews")
+    .select("id, buyer_id, rating, comment, created_at, updated_at")
+    .eq("seller_id", sellerId)
+    .eq("status", "visible")
+    .order("created_at", { ascending: false })
+    .range(range.from, range.to);
+
+  if (error) {
+    log.error("listSellerReviews failed", { sellerId, message: error.message });
+    throw new ApiError("INTERNAL", "Could not load reviews. Please try again.");
+  }
+
+  const rows = (data ?? []) as ReviewRow[];
+  const names = await buyerNames(rows.map((r) => r.buyer_id));
+
   return {
     items: rows.map((row) => toReviewItem(row, names.get(row.buyer_id) ?? "")),
-    total: count ?? 0,
+    total: total ?? 0,
     histogram,
   };
 }
@@ -182,15 +196,26 @@ export async function listMyReviews(
   query: MyReviewsQuery
 ): Promise<{ items: MyReviewItem[]; total: number }> {
   const page = query.page ?? 1;
-  const from = (page - 1) * query.limit;
-  const to = from + query.limit - 1;
 
-  const { data, error, count } = await db
+  const { count: total, error: countError } = await db
     .from("reviews")
-    .select("id, buyer_id, seller_id, rating, comment, created_at, updated_at", { count: "exact" })
+    .select("id", { count: "exact", head: true })
+    .eq("buyer_id", buyerId);
+
+  if (countError) {
+    log.error("listMyReviews failed", { buyerId, message: countError.message });
+    throw new ApiError("INTERNAL", "Could not load your reviews. Please try again.");
+  }
+
+  const range = boundedRange(page, query.limit, total ?? 0);
+  if (!range) return { items: [], total: total ?? 0 };
+
+  const { data, error } = await db
+    .from("reviews")
+    .select("id, buyer_id, seller_id, rating, comment, created_at, updated_at")
     .eq("buyer_id", buyerId)
     .order("created_at", { ascending: false })
-    .range(from, to);
+    .range(range.from, range.to);
 
   if (error) {
     log.error("listMyReviews failed", { buyerId, message: error.message });
@@ -211,6 +236,6 @@ export async function listMyReviews(
       sellerName: sellers.get(row.seller_id)?.name ?? "",
       sellerSlug: sellers.get(row.seller_id)?.slug ?? "",
     })),
-    total: count ?? 0,
+    total: total ?? 0,
   };
 }

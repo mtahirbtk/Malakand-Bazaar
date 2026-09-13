@@ -2,6 +2,7 @@ import "server-only";
 import { db } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
+import { boundedRange } from "../http/validate";
 import { getListingsByIds } from "./listings";
 import type { Listing } from "@/types";
 
@@ -44,15 +45,26 @@ export async function listFavorites(
   pagination: { limit: number; page?: number }
 ): Promise<{ items: Listing[]; total: number }> {
   const page = pagination.page ?? 1;
-  const from = (page - 1) * pagination.limit;
-  const to = from + pagination.limit - 1;
 
-  const { data, error, count } = await db
+  const { count: total, error: countError } = await db
     .from("favorites")
-    .select("listing_id", { count: "exact" })
+    .select("listing_id", { count: "exact", head: true })
+    .eq("user_id", userId);
+
+  if (countError) {
+    log.error("listFavorites count failed", { userId, message: countError.message });
+    throw new ApiError("INTERNAL", "Could not load your saved listings. Please try again.");
+  }
+
+  const range = boundedRange(page, pagination.limit, total ?? 0);
+  if (!range) return { items: [], total: total ?? 0 };
+
+  const { data, error } = await db
+    .from("favorites")
+    .select("listing_id")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
-    .range(from, to);
+    .range(range.from, range.to);
 
   if (error) {
     log.error("listFavorites failed", { userId, message: error.message });
@@ -67,5 +79,5 @@ export async function listFavorites(
   // preserve.
   const items = ids.map((id) => byId.get(id)).filter((l): l is Listing => l !== undefined);
 
-  return { items, total: count ?? 0 };
+  return { items, total: total ?? 0 };
 }

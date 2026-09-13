@@ -2,6 +2,7 @@ import "server-only";
 import { db, PG } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
+import { boundedRange } from "../http/validate";
 import { hashPassword } from "../auth/password";
 import { cloudinaryUrl } from "../storage";
 import { initialsFromName } from "@/lib/seller-display";
@@ -228,12 +229,17 @@ export async function getSellerById(sellerId: string): Promise<SellerSummary | n
  * matches what `listSellers`/`topSellers` return.
  */
 export async function getSellerDetail(slug: string): Promise<Seller | null> {
-  const { data } = await db
+  const { data, error } = await db
     .from("sellers")
     .select(PUBLIC_SELLER_COLUMNS)
     .eq("slug", slug)
     .eq("status", "active")
     .maybeSingle();
+
+  if (error) {
+    log.error("getSellerDetail failed", { slug, message: error.message });
+    throw new ApiError("INTERNAL", "Could not load this seller. Please try again.");
+  }
 
   return data ? toPublicSeller(data as PublicSellerRow) : null;
 }
@@ -267,20 +273,14 @@ export async function getSellerPrivate(sellerId: string): Promise<SellerPrivateS
  */
 export async function listSellers(query: SellersDirectoryQuery): Promise<{ items: Seller[]; total: number }> {
   const page = query.page ?? 1;
-  const from = (page - 1) * query.limit;
-  const to = from + query.limit - 1;
 
-  let builder = db.from("sellers").select(PUBLIC_SELLER_COLUMNS, { count: "exact" }).eq("status", "active");
-
-  if (query.tehsil) builder = builder.eq("tehsil_slug", query.tehsil);
-  if (query.verifiedOnly) builder = builder.eq("verified", true);
-  if (query.q) builder = builder.ilike("name", `%${query.q}%`);
+  // A seller has no category of its own — "sells in this category" means
+  // "has at least one publicly-visible listing in it". Same visibility
+  // definition as the `listings_active_idx` partial index (0004_marketplace.sql):
+  // active + approved + not deleted, not just active + not deleted — a
+  // listing still pending moderation must not surface its seller here.
+  let categoryIds: string[] | null = null;
   if (query.category) {
-    // A seller has no category of its own — "sells in this category" means
-    // "has at least one publicly-visible listing in it". Same visibility
-    // definition as the `listings_active_idx` partial index (0004_marketplace.sql):
-    // active + approved + not deleted, not just active + not deleted — a
-    // listing still pending moderation must not surface its seller here.
     const { data: sellerIds, error: categoryError } = await db
       .from("listings")
       .select("seller_id")
@@ -292,22 +292,46 @@ export async function listSellers(query: SellersDirectoryQuery): Promise<{ items
       log.error("listSellers category filter failed", { category: query.category, message: categoryError.message });
       throw new ApiError("INTERNAL", "Could not load sellers. Please try again.");
     }
-    const ids = [...new Set((sellerIds ?? []).map((r) => r.seller_id))];
-    if (ids.length === 0) return { items: [], total: 0 };
-    builder = builder.in("id", ids);
+    categoryIds = [...new Set((sellerIds ?? []).map((r) => r.seller_id))];
+    if (categoryIds.length === 0) return { items: [], total: 0 };
   }
+
+  // `total` has to be known before a `.range()` is attempted — PostgREST 416s
+  // an out-of-range offset instead of returning an empty page (§ Finding 2) —
+  // so it's fetched with its own head-only request first, ahead of the real
+  // ranged read below.
+  let countBuilder = db.from("sellers").select("id", { count: "exact", head: true }).eq("status", "active");
+  if (query.tehsil) countBuilder = countBuilder.eq("tehsil_slug", query.tehsil);
+  if (query.verifiedOnly) countBuilder = countBuilder.eq("verified", true);
+  if (query.q) countBuilder = countBuilder.ilike("name", `%${query.q}%`);
+  if (categoryIds) countBuilder = countBuilder.in("id", categoryIds);
+
+  const { count: total, error: countError } = await countBuilder;
+  if (countError) {
+    log.error("listSellers count failed", { message: countError.message });
+    throw new ApiError("INTERNAL", "Could not load sellers. Please try again.");
+  }
+
+  const range = boundedRange(page, query.limit, total ?? 0);
+  if (!range) return { items: [], total: total ?? 0 };
+
+  let builder = db.from("sellers").select(PUBLIC_SELLER_COLUMNS).eq("status", "active");
+  if (query.tehsil) builder = builder.eq("tehsil_slug", query.tehsil);
+  if (query.verifiedOnly) builder = builder.eq("verified", true);
+  if (query.q) builder = builder.ilike("name", `%${query.q}%`);
+  if (categoryIds) builder = builder.in("id", categoryIds);
 
   const [column, ascending] = (
     { rating: ["rating_score", false], newest: ["created_at", false], listings: ["listing_count", false] } as const
   )[query.sort];
 
-  const { data, error, count } = await builder.order(column, { ascending }).range(from, to);
+  const { data, error } = await builder.order(column, { ascending }).range(range.from, range.to);
   if (error) {
     log.error("listSellers failed", { message: error.message });
     throw new ApiError("INTERNAL", "Could not load sellers. Please try again.");
   }
 
-  return { items: (data as PublicSellerRow[] ?? []).map(toPublicSeller), total: count ?? 0 };
+  return { items: (data as PublicSellerRow[] ?? []).map(toPublicSeller), total: total ?? 0 };
 }
 
 /**

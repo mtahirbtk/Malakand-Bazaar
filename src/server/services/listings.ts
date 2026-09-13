@@ -2,6 +2,7 @@ import "server-only";
 import { db, rpc } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
+import { boundedRange } from "../http/validate";
 import { cloudinaryUrl } from "../storage";
 import type { Listing, ListingSellerCard } from "@/types";
 import type { SearchListingsQuery } from "../schemas/listings";
@@ -222,22 +223,36 @@ export async function listPublicSellerListings(
   query: PublicSellerListingsQuery
 ): Promise<{ items: Listing[]; total: number }> {
   const page = query.page ?? 1;
-  const from = (page - 1) * query.limit;
-  const to = from + query.limit - 1;
+
+  const { count: total, error: countError } = await db
+    .from("listings")
+    .select("id", { count: "exact", head: true })
+    .eq("seller_id", sellerId)
+    .eq("status", query.status)
+    .eq("moderation_status", "approved")
+    .is("deleted_at", null);
+
+  if (countError) {
+    log.error("listPublicSellerListings count failed", { sellerId, message: countError.message });
+    throw new ApiError("INTERNAL", "Could not load this seller's listings. Please try again.");
+  }
+
+  const range = boundedRange(page, query.limit, total ?? 0);
+  if (!range) return { items: [], total: total ?? 0 };
 
   const [column, ascending] = (
     { newest: ["created_at", false], price_low: ["price", true], price_high: ["price", false] } as const
   )[query.sort];
 
-  const { data, error, count } = await db
+  const { data, error } = await db
     .from("listings")
-    .select(SELLER_LISTING_COLUMNS, { count: "exact" })
+    .select(SELLER_LISTING_COLUMNS)
     .eq("seller_id", sellerId)
     .eq("status", query.status)
     .eq("moderation_status", "approved")
     .is("deleted_at", null)
     .order(column, { ascending })
-    .range(from, to);
+    .range(range.from, range.to);
 
   if (error) {
     log.error("listPublicSellerListings failed", { sellerId, message: error.message });
@@ -246,7 +261,7 @@ export async function listPublicSellerListings(
 
   const rows = (data ?? []) as PlainListingRow[];
   const images = await imagesFor(rows.map((r) => r.id));
-  return { items: rows.map((row) => toListing(plainRowToItem(row, images.get(row.id) ?? []))), total: count ?? 0 };
+  return { items: rows.map((row) => toListing(plainRowToItem(row, images.get(row.id) ?? []))), total: total ?? 0 };
 }
 
 /**
