@@ -4,6 +4,7 @@ import { render, type RenderResult } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
 import { AuthProvider, type AuthUser } from "@/lib/auth/auth-context";
+import { ToastProvider } from "@/components/ui/toast";
 
 /**
  * Test seam for anything that renders behind AuthProvider.
@@ -41,7 +42,9 @@ export function makeSeller(overrides: Partial<AuthUser> = {}): AuthUser {
 export function withAuth(ui: React.ReactNode, user: AuthUser | null = null) {
   return (
     <NextIntlClientProvider locale="en" messages={messages}>
-      <AuthProvider initialUser={user}>{ui}</AuthProvider>
+      <ToastProvider>
+        <AuthProvider initialUser={user}>{ui}</AuthProvider>
+      </ToastProvider>
     </NextIntlClientProvider>
   );
 }

@@ -74,17 +74,58 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
+const TOAST_POSITIONS = ["top-right", "top-left", "bottom-right", "bottom-left", "center"] as const;
+
 function ToastButtons() {
   const { show } = useToast();
   return (
-    <>
-      <Button size="sm" onClick={() => show("Listing published")}>
-        Success toast
-      </Button>
-      <Button size="sm" variant="ghost" onClick={() => show("Could not save", "error")}>
-        Error toast
-      </Button>
-    </>
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        <Button size="sm" onClick={() => show("Listing published")}>
+          Success
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => show({ title: "Could not save", tone: "error" })}>
+          Error
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => show({ title: "New message from a buyer", tone: "info" })}
+        >
+          Info
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => show({ title: "This listing is missing photos", tone: "warning" })}
+        >
+          Warning
+        </Button>
+      </div>
+      <div>
+        <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-on-surface-muted">
+          Positions (default: top-right)
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {TOAST_POSITIONS.map((position) => (
+            <Button
+              key={position}
+              size="sm"
+              variant="ghost"
+              onClick={() =>
+                show({
+                  title: "Welcome back, Usama!",
+                  description: "Signed in to MalakandBazaar.",
+                  position,
+                })
+              }
+            >
+              {position}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

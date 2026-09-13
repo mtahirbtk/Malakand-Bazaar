@@ -247,7 +247,11 @@
     "signInCta": "Sign In",
     "createAccountCta": "Create Account",
     "signingIn": "Signing in…",
-    "creatingAccount": "Creating your account…"
+    "creatingAccount": "Creating your account…",
+    "welcomeBackTitle": "Welcome back, {name}!",
+    "welcomeBackDescription": "You're signed in to MalakandBazaar.",
+    "accountCreatedTitle": "Account created",
+    "accountCreatedDescription": "Welcome, {name} — your account is ready."
   },
   "sellerProfile": {
     "storeNameLabel": "Store Name",
@@ -274,7 +278,9 @@
     "alreadySellerBody": "This account is already registered as a seller.",
     "goToDashboardCta": "Go to Dashboard",
     "submitting": "Creating your storefront…",
-    "genericError": "Something went wrong. Please try again."
+    "genericError": "Something went wrong. Please try again.",
+    "storefrontCreatedTitle": "Storefront created",
+    "storefrontCreatedDescription": "{storeName} is live on MalakandBazaar."
   },
   "sellerDashboard": {
     "title": "Seller Dashboard",

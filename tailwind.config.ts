@@ -31,6 +31,10 @@ export default {
         tertiary: "#c89b6d",
         "tertiary-hover": "#b88755",
         "tertiary-light": "#fdf6ed",
+        /** White text on sand fails WCAG AA (2.51:1) — this darker tone is
+         *  6.27:1, the one sand-family ground safe for white text.
+         *  docs/palette.md, "Accent roles". */
+        "tertiary-dark": "#875520",
         background: "#f4f8f5",
         surface: "#ffffff",
         "surface-low": "#edf5ef",

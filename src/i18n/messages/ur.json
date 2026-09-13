@@ -247,7 +247,11 @@
     "signInCta": "سائن ان",
     "createAccountCta": "اکاؤنٹ بنائیں",
     "signingIn": "سائن ان ہو رہا ہے…",
-    "creatingAccount": "آپ کا اکاؤنٹ بن رہا ہے…"
+    "creatingAccount": "آپ کا اکاؤنٹ بن رہا ہے…",
+    "welcomeBackTitle": "خوش آمدید, {name}!",
+    "welcomeBackDescription": "آپ ملاکنڈ بازار میں سائن ان ہو گئے ہیں۔",
+    "accountCreatedTitle": "اکاؤنٹ بن گیا",
+    "accountCreatedDescription": "خوش آمدید, {name} — آپ کا اکاؤنٹ تیار ہے۔"
   },
   "sellerProfile": {
     "storeNameLabel": "دکان کا نام",
@@ -274,7 +278,9 @@
     "alreadySellerBody": "یہ اکاؤنٹ پہلے سے بطور فروخت کنندہ رجسٹرڈ ہے۔",
     "goToDashboardCta": "ڈیش بورڈ پر جائیں",
     "submitting": "آپ کا اسٹور بن رہا ہے…",
-    "genericError": "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔"
+    "genericError": "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔",
+    "storefrontCreatedTitle": "اسٹور بن گیا",
+    "storefrontCreatedDescription": "{storeName} ملاکنڈ بازار پر لائیو ہے۔"
   },
   "sellerDashboard": {
     "title": "فروخت کنندہ ڈیش بورڈ",

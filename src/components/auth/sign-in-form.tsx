@@ -11,7 +11,8 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { FullscreenLoader } from "@/components/ui/fullscreen-loader";
+import { useToast } from "@/components/ui/toast";
 import { TurnstileWidget, turnstileEnabled } from "./turnstile-widget";
 
 /**
@@ -24,6 +25,7 @@ export function SignInForm() {
   const t = useTranslations("auth");
   const locale = useLocale();
   const { signIn, signUp } = useAuth();
+  const { show } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [tab, setTab] = React.useState("sign-in");
@@ -54,6 +56,14 @@ export function SignInForm() {
     event.preventDefault();
     await signInState.run(async () => {
       const user = await signIn({ phone: signInPhone, password: signInPassword });
+      // Fired before the navigation, not after: the toast lives in the root
+      // layout's provider, so it survives the client-side route change and
+      // is what greets the user on the page they land on.
+      show({
+        title: t("welcomeBackTitle", { name: user.displayName }),
+        description: t("welcomeBackDescription"),
+        tone: "success",
+      });
       router.push(destinationFor(user));
     });
   }
@@ -67,12 +77,20 @@ export function SignInForm() {
         displayName: name,
         turnstileToken: turnstileToken ?? undefined,
       });
+      show({
+        title: t("accountCreatedTitle"),
+        description: t("accountCreatedDescription", { name: user.displayName }),
+        tone: "success",
+      });
       router.push(destinationFor(user));
     });
   }
 
   return (
     <div className="mx-auto max-w-md space-y-6">
+      {(signInState.pending || signUpState.pending) && (
+        <FullscreenLoader label={signInState.pending ? t("signingIn") : t("creatingAccount")} />
+      )}
       <Tabs
         value={tab}
         onValueChange={setTab}
@@ -116,8 +134,7 @@ export function SignInForm() {
 
             <FormError message={signInState.error} />
 
-            <Button type="submit" className="w-full" disabled={signInState.pending}>
-              {signInState.pending ? <Spinner size="sm" tone="onBrand" /> : null}
+            <Button type="submit" className="w-full" disabled={signInState.pending} aria-busy={signInState.pending}>
               {signInState.pending ? t("signingIn") : t("signInCta")}
             </Button>
           </form>
@@ -177,8 +194,8 @@ export function SignInForm() {
               // disabled until it does avoids a guaranteed round trip that
               // could only fail.
               disabled={signUpState.pending || (turnstileEnabled() && !turnstileToken)}
+              aria-busy={signUpState.pending}
             >
-              {signUpState.pending ? <Spinner size="sm" tone="onBrand" /> : null}
               {signUpState.pending ? t("creatingAccount") : t("createAccountCta")}
             </Button>
           </form>

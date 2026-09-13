@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Spinner } from "@/components/ui/spinner";
+import { FullscreenLoader } from "@/components/ui/fullscreen-loader";
+import { useToast } from "@/components/ui/toast";
 import { TurnstileWidget, turnstileEnabled } from "@/components/auth/turnstile-widget";
 import { SellerProfileFields, MALAKAND_CENTER, type SellerProfileFieldsValue } from "./seller-profile-fields";
 
@@ -40,6 +41,7 @@ export function SellerRegistrationForm() {
   const t = useTranslations("sellerRegistration");
   const locale = useLocale();
   const { user, registerSeller } = useAuth();
+  const { show } = useToast();
   const router = useRouter();
 
   const [phone, setPhone] = React.useState("");
@@ -83,6 +85,11 @@ export function SellerRegistrationForm() {
         localitySlug: fields.localitySlug,
         coordinates: fields.coordinates,
       });
+      show({
+        title: t("storefrontCreatedTitle"),
+        description: t("storefrontCreatedDescription", { storeName: fields.storeName }),
+        tone: "success",
+      });
       router.push("/seller/dashboard/listings");
     } catch (caught) {
       if (caught instanceof ApiClientError) {
@@ -97,6 +104,7 @@ export function SellerRegistrationForm() {
 
   return (
     <form className="mx-auto max-w-2xl space-y-6" onSubmit={handleSubmit} noValidate>
+      {pending && <FullscreenLoader label={t("submitting")} />}
       {needsAccountFields && (
         <div className="space-y-4 rounded-xl border border-surface-border bg-surface-low p-4">
           <FormField label={t("phoneLabel")} htmlFor="reg-phone" required error={fieldErrors.phone}>
@@ -141,8 +149,8 @@ export function SellerRegistrationForm() {
         size="lg"
         className="w-full"
         disabled={pending || (needsAccountFields && turnstileEnabled() && !turnstileToken)}
+        aria-busy={pending}
       >
-        {pending ? <Spinner size="sm" tone="onBrand" /> : null}
         {pending ? t("submitting") : t("submitCta")}
       </Button>
     </form>

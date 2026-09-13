@@ -127,7 +127,23 @@ describe("SignInForm", () => {
     const pending = new Promise<Response>((r) => {
       resolve = r;
     });
-    vi.stubGlobal("fetch", vi.fn(() => pending));
+    // Only the login call hangs — the bootstrap GET /api/auth/me still
+    // answers immediately, otherwise it would consume the same Response
+    // this test resolves at the end and the login call would find its body
+    // already read.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo | URL) => {
+        const url = typeof input === "string" ? input : input.toString();
+        if (url.includes("/api/auth/login")) return pending;
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({ ok: false, error: { code: "AUTH_REQUIRED", message: "Sign in to continue." } }),
+            { status: 401, headers: { "content-type": "application/json" } }
+          )
+        );
+      })
+    );
 
     renderWithAuth(<SignInForm />);
     await userEvent.type(screen.getByLabelText(/Phone Number/), "3001234567");
@@ -144,5 +160,9 @@ describe("SignInForm", () => {
         headers: { "content-type": "application/json" },
       })
     );
+
+    // Let the resolution finish settling (the toast, the redirect) before the
+    // test ends, so React never warns about an update outside of act().
+    await waitFor(() => expect(pushMock).toHaveBeenCalled());
   });
 });
