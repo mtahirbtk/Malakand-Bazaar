@@ -72,4 +72,20 @@ describe("SellerStorefront", () => {
     renderStorefront();
     expect(screen.getByRole("button", { name: /Show WhatsApp Number/ })).toBeInTheDocument();
   });
+
+  it("shows member-since copy when the seller has a memberSince date", () => {
+    render(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <AuthProvider>
+          <SellerStorefront seller={{ ...seller, memberSince: "2023-05-01T00:00:00.000Z" }} listings={listings} />
+        </AuthProvider>
+      </NextIntlClientProvider>
+    );
+    expect(screen.getByText(/Member since 2023/)).toBeInTheDocument();
+  });
+
+  it("omits member-since copy when the seller has no memberSince date", () => {
+    renderStorefront();
+    expect(screen.queryByText(/Member since/)).not.toBeInTheDocument();
+  });
 });

@@ -98,6 +98,7 @@
     "moreFromSeller": "More from {seller}",
     "allListingsBy": "All listings by {seller}",
     "noListingsYet": "No other listings yet.",
+    "memberSince": "Member since {date}",
     "storeLocation": "Store Location",
     "getDirections": "Get Directions",
     "storeNotFoundTitle": "Store Not Found",

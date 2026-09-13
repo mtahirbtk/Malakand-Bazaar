@@ -37,7 +37,13 @@ export function SellerStorefront({ seller, listings }: { seller: Seller; listing
               </div>
               <p className="text-xs text-on-surface-muted flex items-center gap-1 mt-1">
                 <Icon name="location_on" size={13} />
-                {seller.localityLabel} · {seller.specialty}
+                {seller.localityLabel}
+                {seller.memberSince && (
+                  <>
+                    {" · "}
+                    {t("memberSince", { date: new Date(seller.memberSince).getFullYear() })}
+                  </>
+                )}
               </p>
               {seller.description && <p className="mt-1.5 text-sm text-on-surface">{seller.description}</p>}
             </div>

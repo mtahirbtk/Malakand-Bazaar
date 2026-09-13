@@ -238,9 +238,6 @@ export async function getSellerDetail(slug: string): Promise<Seller | null> {
   return data ? toPublicSeller(data as PublicSellerRow) : null;
 }
 
-/** @deprecated Use getSellerDetail — this alias exists only until Task 11 updates its one caller. */
-export const getPublicSellerBySlug = getSellerDetail;
-
 /**
  * GET/PATCH /api/seller/me. Unlike getSellerById (used for anything read
  * generically), this goes through fn_seller_private (0019) because a plain
