@@ -80,6 +80,13 @@ export type Seller = {
   avatarUrl?: string;
 };
 
+/**
+ * What a listing detail page's seller card actually renders — a subset of
+ * `Seller`, satisfied by both the full fixture `Seller` and the smaller
+ * real-data shape `fn_get_listing_by_slug` returns.
+ */
+export type ListingSellerCard = Pick<Seller, "slug" | "name" | "coordinates">;
+
 export type UserRole = "customer" | "seller" | "admin";
 
 export type User = {

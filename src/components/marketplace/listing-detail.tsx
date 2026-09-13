@@ -8,7 +8,7 @@ import { PhoneReveal } from "./phone-reveal";
 import { ListingCard } from "./listing-card";
 import { LocationMap } from "./location-map";
 import { CATEGORIES } from "@/data/categories";
-import type { Listing, Seller } from "@/types";
+import type { Listing, ListingSellerCard } from "@/types";
 
 export function ListingDetail({
   listing,
@@ -16,7 +16,7 @@ export function ListingDetail({
   otherListings,
 }: {
   listing: Listing;
-  seller: Seller | undefined;
+  seller: ListingSellerCard | undefined;
   otherListings: Listing[];
 }) {
   const t = useTranslations("marketplace");
