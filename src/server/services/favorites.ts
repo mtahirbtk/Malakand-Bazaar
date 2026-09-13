@@ -8,7 +8,16 @@ import type { Listing } from "@/types";
 /** Saved listings — §2.6 #35-37. */
 
 export async function addFavorite(userId: string, listingId: string): Promise<void> {
-  const { data: listing } = await db.from("listings").select("id").eq("id", listingId).is("deleted_at", null).maybeSingle();
+  const { data: listing, error: lookupError } = await db
+    .from("listings")
+    .select("id")
+    .eq("id", listingId)
+    .is("deleted_at", null)
+    .maybeSingle();
+  if (lookupError) {
+    log.error("addFavorite lookup failed", { userId, listingId, message: lookupError.message });
+    throw new ApiError("INTERNAL", "Could not save this listing. Please try again.");
+  }
   if (!listing) throw ApiError.notFound("That listing");
 
   // Idempotent per §2.6 #36: a repeat POST is not an error.
