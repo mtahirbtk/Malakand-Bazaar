@@ -95,7 +95,17 @@ export function ImageCropModal({
               image={imageSrc}
               crop={crop}
               zoom={zoom}
+              rotation={0}
               aspect={aspect}
+              minZoom={1}
+              maxZoom={3}
+              zoomSpeed={1}
+              restrictPosition
+              keyboardStep={1}
+              style={{}}
+              classes={{}}
+              mediaProps={{}}
+              cropperProps={{}}
               cropShape={shape === "circle" ? "round" : "rect"}
               showGrid={shape !== "circle"}
               onCropChange={setCrop}

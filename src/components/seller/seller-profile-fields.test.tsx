@@ -18,6 +18,20 @@ vi.mock("react-leaflet", () => ({
   Marker: () => null,
 }));
 
+// The real crop modal needs an actual browser image-decode + canvas pipeline
+// (image-crop-modal.test.tsx and crop-image.test.ts cover that); here it'd
+// just hang forever waiting for an <img> load event jsdom never fires. Stand
+// in with a button that fires onConfirm straight away, same trick as the
+// leaflet mocks above for the map picker.
+vi.mock("@/components/ui/image-crop-modal", () => ({
+  ImageCropModal: ({ open, onConfirm }: { open: boolean; onConfirm: (blob: Blob) => void }) =>
+    open ? (
+      <button type="button" onClick={() => onConfirm(new Blob(["cropped"], { type: "image/jpeg" }))}>
+        Confirm crop
+      </button>
+    ) : null,
+}));
+
 const BASE_VALUE: SellerProfileFieldsValue = {
   storeName: "",
   description: "",
@@ -84,7 +98,8 @@ describe("SellerProfileFields", () => {
     const onChange = vi.fn();
     render(<Wrapper onChange={onChange} />);
     const file = new File(["avatar-bytes"], "avatar.png", { type: "image/png" });
-    await userEvent.upload(screen.getByLabelText("Upload Logo"), file);
+    await userEvent.upload(screen.getByLabelText("Upload Photo"), file);
+    await userEvent.click(await screen.findByRole("button", { name: "Confirm crop" }));
 
     await vi.waitFor(() => {
       expect(onChange).toHaveBeenCalledWith(

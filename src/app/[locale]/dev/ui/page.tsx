@@ -35,6 +35,7 @@ import { Carousel } from "@/components/ui/carousel";
 import { ToastProvider, useToast } from "@/components/ui/toast";
 import { FileUpload } from "@/components/ui/file-upload";
 import { MultiFileUpload } from "@/components/ui/multi-file-upload";
+import { ImageCropModal } from "@/components/ui/image-crop-modal";
 import { Spinner } from "@/components/ui/spinner";
 import { BarChart } from "@/components/ui/bar-chart";
 import { FullscreenLoader } from "@/components/ui/fullscreen-loader";
@@ -210,6 +211,17 @@ export default function GalleryPage() {
   const [lightboxIndex, setLightboxIndex] = React.useState(0);
   const [filePreview, setFilePreview] = React.useState<string>("");
   const [multiFileUrls, setMultiFileUrls] = React.useState<string[]>([]);
+  const [avatarPreview, setAvatarPreview] = React.useState<string>("");
+  const [bannerPreview, setBannerPreview] = React.useState<string>("");
+  const [cropModalOpen, setCropModalOpen] = React.useState(false);
+  const CROP_LABELS = {
+    title: "Adjust your photo",
+    description: "Drag to reposition, use the slider to zoom in or out.",
+    zoomAria: "Zoom",
+    cancel: "Cancel",
+    save: "Save",
+    error: "Could not process that image. Please try again.",
+  };
 
   const subOptions = React.useMemo(() => allSubcategoryOptions(), []);
 
@@ -410,6 +422,43 @@ export default function GalleryPage() {
                   }}
                 />
               </div>
+            </Row>
+            <Row label="With crop (profile picture)">
+              <div className="w-40">
+                <FileUpload
+                  label="Upload Photo"
+                  description="PNG, JPG or WebP, up to 5MB"
+                  previewUrl={avatarPreview}
+                  onFileSelected={(file) => setAvatarPreview(URL.createObjectURL(file))}
+                  onClear={() => setAvatarPreview("")}
+                  crop={{ aspect: 1, shape: "circle", labels: CROP_LABELS }}
+                />
+              </div>
+            </Row>
+            <Row label="With crop (storefront banner)">
+              <div className="w-full max-w-md">
+                <FileUpload
+                  label="Upload Banner"
+                  description="PNG, JPG or WebP, up to 5MB"
+                  previewUrl={bannerPreview}
+                  onFileSelected={(file) => setBannerPreview(URL.createObjectURL(file))}
+                  onClear={() => setBannerPreview("")}
+                  crop={{ aspect: 3, shape: "rect", labels: CROP_LABELS }}
+                />
+              </div>
+            </Row>
+            <Row label="Crop modal (standalone)">
+              <Button variant="subtle" size="sm" onClick={() => setCropModalOpen(true)} disabled={!filePreview}>
+                Open crop modal
+              </Button>
+              <ImageCropModal
+                open={cropModalOpen}
+                onOpenChange={setCropModalOpen}
+                imageSrc={filePreview || null}
+                aspect={1}
+                onConfirm={(blob) => setFilePreview(URL.createObjectURL(blob))}
+                labels={CROP_LABELS}
+              />
             </Row>
           </Section>
 
