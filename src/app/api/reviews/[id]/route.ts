@@ -3,7 +3,7 @@ import { readJson } from "@/server/http/validate";
 import { uuidSchema } from "@/server/http/validate";
 import { enforceRateLimit } from "@/server/http/rate-limit";
 import { enforceCsrf } from "@/server/auth/csrf";
-import { requireUser } from "@/server/auth/guard";
+import { requireFreshUser, requireUser } from "@/server/auth/guard";
 import { updateReviewSchema } from "@/server/schemas/reviews";
 import { deleteReview, updateReview } from "@/server/services/reviews";
 
@@ -32,7 +32,14 @@ export const DELETE = handler(async (request, context: { params: Promise<{ id: s
 
   const { id } = await context.params;
   const reviewId = uuidSchema.parse(id);
-  await deleteReview(reviewId, { id: user.sub, role: user.role });
+
+  // The cached JWT claim lives for 15 minutes (guard.ts) — fine for
+  // identifying the caller, but not to grant delete-any-review. Only a
+  // freshly-reverified admin role is trusted for that branch, so a demoted
+  // or suspended admin loses the privilege immediately rather than at the
+  // next token refresh.
+  const role = user.role === "admin" ? (await requireFreshUser()).role : user.role;
+  await deleteReview(reviewId, { id: user.sub, role });
 
   return ok({ deleted: true });
 });
