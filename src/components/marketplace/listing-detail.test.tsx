@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { NextIntlClientProvider } from "next-intl";
-import messages from "@/i18n/messages/en.json";
+import { screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { renderWithAuth, mockApi, makeUser } from "@tests/auth-harness";
 import { ListingDetail } from "./listing-detail";
 import type { Listing, Seller } from "@/types";
 
@@ -42,11 +42,10 @@ const otherListings: Listing[] = [
 ];
 
 function renderDetail() {
-  render(
-    <NextIntlClientProvider locale="en" messages={messages}>
-      <ListingDetail listing={listing} seller={seller} otherListings={otherListings} />
-    </NextIntlClientProvider>
-  );
+  // Signed out by default (SaveListingButton renders nothing for a
+  // signed-out visitor) so the existing assertions below are unaffected by
+  // its presence next to PhoneReveal.
+  renderWithAuth(<ListingDetail listing={listing} seller={seller} otherListings={otherListings} />, null);
 }
 
 describe("ListingDetail", () => {
@@ -73,5 +72,13 @@ describe("ListingDetail", () => {
     for (const other of otherListings) {
       expect(screen.getByRole("heading", { name: other.title })).toBeInTheDocument();
     }
+  });
+
+  it("mounts the save listing button next to PhoneReveal for a signed-in visitor", async () => {
+    mockApi({ "POST /api/me/favorites": { data: { saved: true }, status: 201 } });
+    renderWithAuth(<ListingDetail listing={listing} seller={seller} otherListings={otherListings} />, makeUser());
+    const saveButton = screen.getByRole("button", { name: "Save listing" });
+    await userEvent.click(saveButton);
+    expect(await screen.findByRole("button", { name: "Remove from saved" })).toBeInTheDocument();
   });
 });

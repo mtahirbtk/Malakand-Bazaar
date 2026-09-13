@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { Link } from "@/i18n/routing";
 import { ImageGallery } from "./image-gallery";
 import { PhoneReveal } from "./phone-reveal";
+import { SaveListingButton } from "./save-listing-button";
 import { ListingCard } from "./listing-card";
 import { LocationMap } from "./location-map";
 import { CATEGORIES } from "@/data/categories";
@@ -66,7 +67,10 @@ export function ListingDetail({
 
         <p className="text-sm text-on-surface leading-relaxed">{listing.description}</p>
 
-        <PhoneReveal phone={listing.contactPhone} listingTitle={listing.title} className="mt-2" />
+        <div className="flex items-center gap-2 mt-2">
+          <PhoneReveal phone={listing.contactPhone} listingTitle={listing.title} />
+          <SaveListingButton listingId={listing.id} />
+        </div>
 
         {seller && (
           <Link

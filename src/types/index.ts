@@ -85,6 +85,8 @@ export type Seller = {
   /** Storefront bio, set at registration. Absent on the 5 seed fixtures. */
   description?: string;
   avatarUrl?: string;
+  /** ISO date the storefront was created. Absent only for the 5 seed fixtures. */
+  memberSince?: string;
 };
 
 /**

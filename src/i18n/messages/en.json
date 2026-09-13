@@ -85,6 +85,8 @@
   },
   "marketplace": {
     "saveListing": "Save listing",
+    "unsaveListing": "Remove from saved",
+    "savedCta": "Saved",
     "sold": "Sold",
     "reserved": "Reserved",
     "verified": "Verified",
@@ -98,6 +100,7 @@
     "moreFromSeller": "More from {seller}",
     "allListingsBy": "All listings by {seller}",
     "noListingsYet": "No other listings yet.",
+    "memberSince": "Member since {date}",
     "storeLocation": "Store Location",
     "getDirections": "Get Directions",
     "storeNotFoundTitle": "Store Not Found",
@@ -361,6 +364,36 @@
     "noReviewsYet": "No reviews yet — be the first to leave one.",
     "signInPromptTitle": "Sign In to Review",
     "signInPromptBody": "Create a free account or sign in to rate and review this seller.",
-    "signInPromptCta": "Sign In / Create Account"
+    "signInPromptCta": "Sign In / Create Account",
+    "editReviewCta": "Edit",
+    "deleteReviewCta": "Delete",
+    "deleteConfirmTitle": "Delete this review?",
+    "deleteConfirmBody": "This can't be undone.",
+    "deleteConfirmCta": "Delete",
+    "cancelCta": "Cancel",
+    "saveCta": "Save",
+    "loadMoreCta": "Load more reviews"
+  },
+  "sellers": {
+    "title": "Sellers Directory",
+    "searchPlaceholder": "Search sellers by name...",
+    "verifiedOnlyLabel": "Verified only",
+    "sortAriaLabel": "Sort sellers by",
+    "sortRating": "Top rated",
+    "sortNewest": "Newest",
+    "sortListings": "Most listings",
+    "emptyTitle": "No sellers match your filters",
+    "emptyBody": "Try clearing a filter or searching a different name.",
+    "paginationPrevious": "Previous",
+    "paginationNext": "Next",
+    "paginationPage": "Page"
+  },
+  "account": {
+    "navFavorites": "Saved Listings",
+    "navReviews": "My Reviews",
+    "favoritesEmptyTitle": "Nothing saved yet",
+    "favoritesEmptyBody": "Tap the save icon on a listing to keep it here.",
+    "reviewsEmptyTitle": "You haven't reviewed anyone yet",
+    "reviewsEmptyBody": "Reviews you write for sellers show up here."
   }
 }

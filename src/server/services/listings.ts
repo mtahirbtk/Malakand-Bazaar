@@ -1,8 +1,12 @@
 import "server-only";
-import { rpc } from "../db";
+import { db, rpc } from "../db";
+import { ApiError } from "../http/errors";
+import { log } from "../http/log";
+import { boundedRange } from "../http/validate";
 import { cloudinaryUrl } from "../storage";
 import type { Listing, ListingSellerCard } from "@/types";
 import type { SearchListingsQuery } from "../schemas/listings";
+import type { PublicSellerListingsQuery } from "../schemas/public-seller-listings";
 
 /**
  * Listings read layer — GET /api/listings and the listing detail page.
@@ -173,4 +177,114 @@ export async function getSellerOtherListings(
     p_limit: limit,
   });
   return rows.map(toListing);
+}
+
+const SELLER_LISTING_COLUMNS =
+  "id, slug, title, description, price, compare_at_price, category_slug, subcategory_slug, tehsil_slug, locality_slug, locality_label, coordinates, contact_phone, seller_id, status, created_at";
+
+type PlainListingRow = {
+  id: string; slug: string; title: string; description: string; price: number;
+  compare_at_price: number | null; category_slug: string; subcategory_slug: string | null;
+  tehsil_slug: string | null; locality_slug: string | null; locality_label: string | null;
+  coordinates: { lat: number; lng: number } | null; contact_phone: string; seller_id: string;
+  status: Listing["status"]; created_at: string;
+};
+
+function plainRowToItem(row: PlainListingRow, images: string[]): ListingItemRow {
+  return {
+    id: row.id, slug: row.slug, title: row.title, description: row.description, price: row.price,
+    compareAtPrice: row.compare_at_price, categorySlug: row.category_slug,
+    subcategorySlug: row.subcategory_slug, tehsilSlug: row.tehsil_slug, localitySlug: row.locality_slug,
+    localityLabel: row.locality_label, images, contactPhone: row.contact_phone, sellerId: row.seller_id,
+    status: row.status, createdAt: row.created_at, coordinates: row.coordinates,
+  };
+}
+
+async function imagesFor(listingIds: string[]): Promise<Map<string, string[]>> {
+  if (listingIds.length === 0) return new Map();
+  const { data } = await db.from("listing_images").select("listing_id, path, sort").in("listing_id", listingIds).order("sort", { ascending: true });
+  const map = new Map<string, string[]>();
+  for (const row of data ?? []) {
+    const list = map.get(row.listing_id) ?? [];
+    list.push(row.path);
+    map.set(row.listing_id, list);
+  }
+  return map;
+}
+
+/**
+ * `/seller/[slug]` listings tab — §2.4 #28. A plain paginated read scoped to
+ * one seller, `moderation_status = 'approved'` and `deleted_at is null`
+ * always (a buyer never sees a pending or removed listing here regardless of
+ * `status`).
+ */
+export async function listPublicSellerListings(
+  sellerId: string,
+  query: PublicSellerListingsQuery
+): Promise<{ items: Listing[]; total: number }> {
+  const page = query.page ?? 1;
+
+  const { count: total, error: countError } = await db
+    .from("listings")
+    .select("id", { count: "exact", head: true })
+    .eq("seller_id", sellerId)
+    .eq("status", query.status)
+    .eq("moderation_status", "approved")
+    .is("deleted_at", null);
+
+  if (countError) {
+    log.error("listPublicSellerListings count failed", { sellerId, message: countError.message });
+    throw new ApiError("INTERNAL", "Could not load this seller's listings. Please try again.");
+  }
+
+  const range = boundedRange(page, query.limit, total ?? 0);
+  if (!range) return { items: [], total: total ?? 0 };
+
+  const [column, ascending] = (
+    { newest: ["created_at", false], price_low: ["price", true], price_high: ["price", false] } as const
+  )[query.sort];
+
+  const { data, error } = await db
+    .from("listings")
+    .select(SELLER_LISTING_COLUMNS)
+    .eq("seller_id", sellerId)
+    .eq("status", query.status)
+    .eq("moderation_status", "approved")
+    .is("deleted_at", null)
+    .order(column, { ascending })
+    .range(range.from, range.to);
+
+  if (error) {
+    log.error("listPublicSellerListings failed", { sellerId, message: error.message });
+    throw new ApiError("INTERNAL", "Could not load this seller's listings. Please try again.");
+  }
+
+  const rows = (data ?? []) as PlainListingRow[];
+  const images = await imagesFor(rows.map((r) => r.id));
+  return { items: rows.map((row) => toListing(plainRowToItem(row, images.get(row.id) ?? []))), total: total ?? 0 };
+}
+
+/**
+ * Batch-fetches listings by id, preserving none of the caller's ordering —
+ * `listFavorites` (favorites.ts) reorders by the favorite row's own
+ * `created_at`. Soft-deleted listings are silently dropped rather than
+ * erroring: a favorite on a listing the seller later removed just stops
+ * appearing, the favorite row itself is left alone.
+ */
+export async function getListingsByIds(ids: string[]): Promise<Listing[]> {
+  if (ids.length === 0) return [];
+  const { data, error } = await db
+    .from("listings")
+    .select(SELLER_LISTING_COLUMNS)
+    .in("id", ids)
+    .is("deleted_at", null);
+
+  if (error) {
+    log.error("getListingsByIds failed", { message: error.message });
+    throw new ApiError("INTERNAL", "Could not load listings. Please try again.");
+  }
+
+  const rows = (data ?? []) as PlainListingRow[];
+  const images = await imagesFor(rows.map((r) => r.id));
+  return rows.map((row) => toListing(plainRowToItem(row, images.get(row.id) ?? [])));
 }

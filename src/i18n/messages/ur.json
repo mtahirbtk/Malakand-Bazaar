@@ -85,6 +85,8 @@
   },
   "marketplace": {
     "saveListing": "اشتہار محفوظ کریں",
+    "unsaveListing": "محفوظ شدہ سے ہٹائیں",
+    "savedCta": "محفوظ شدہ",
     "sold": "فروخت شدہ",
     "reserved": "محفوظ شدہ",
     "verified": "تصدیق شدہ",
@@ -98,6 +100,7 @@
     "moreFromSeller": "{seller} کی مزید اشیاء",
     "allListingsBy": "{seller} کی تمام اشیاء",
     "noListingsYet": "ابھی کوئی دوسری اشیاء نہیں۔",
+    "memberSince": "{date} سے رکن",
     "storeLocation": "دکان کا مقام",
     "getDirections": "راستہ دیکھیں",
     "storeNotFoundTitle": "دکان نہیں ملی",
@@ -361,6 +364,36 @@
     "noReviewsYet": "ابھی کوئی جائزہ نہیں — پہلا جائزہ آپ کا ہو سکتا ہے۔",
     "signInPromptTitle": "جائزہ دینے کے لیے سائن ان کریں",
     "signInPromptBody": "اس فروخت کنندہ کو ریٹ اور جائزہ دینے کے لیے مفت اکاؤنٹ بنائیں یا سائن ان کریں۔",
-    "signInPromptCta": "سائن ان / اکاؤنٹ بنائیں"
+    "signInPromptCta": "سائن ان / اکاؤنٹ بنائیں",
+    "editReviewCta": "ترمیم کریں",
+    "deleteReviewCta": "حذف کریں",
+    "deleteConfirmTitle": "یہ جائزہ حذف کریں؟",
+    "deleteConfirmBody": "اسے واپس نہیں کیا جا سکتا۔",
+    "deleteConfirmCta": "حذف کریں",
+    "cancelCta": "منسوخ کریں",
+    "saveCta": "محفوظ کریں",
+    "loadMoreCta": "مزید جائزے لوڈ کریں"
+  },
+  "sellers": {
+    "title": "فروخت کنندگان کی ڈائریکٹری",
+    "searchPlaceholder": "نام سے فروخت کنندہ تلاش کریں...",
+    "verifiedOnlyLabel": "صرف تصدیق شدہ",
+    "sortAriaLabel": "فروخت کنندگان کو ترتیب دیں",
+    "sortRating": "سب سے زیادہ درجہ بند",
+    "sortNewest": "تازہ ترین",
+    "sortListings": "سب سے زیادہ اشیاء",
+    "emptyTitle": "آپ کے فلٹرز سے کوئی فروخت کنندہ میل نہیں کھاتا",
+    "emptyBody": "کوئی فلٹر ہٹا کر دیکھیں یا مختلف نام تلاش کریں۔",
+    "paginationPrevious": "پچھلا",
+    "paginationNext": "اگلا",
+    "paginationPage": "صفحہ"
+  },
+  "account": {
+    "navFavorites": "محفوظ شدہ اشتہارات",
+    "navReviews": "میرے جائزے",
+    "favoritesEmptyTitle": "ابھی کچھ بھی محفوظ نہیں",
+    "favoritesEmptyBody": "اشتہار کو یہاں رکھنے کے لیے محفوظ کریں کا آئیکن دبائیں۔",
+    "reviewsEmptyTitle": "آپ نے ابھی تک کسی کا جائزہ نہیں لیا",
+    "reviewsEmptyBody": "آپ فروخت کنندگان کے لیے جو جائزے لکھیں گے وہ یہاں نظر آئیں گے۔"
   }
 }
