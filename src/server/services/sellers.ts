@@ -4,10 +4,12 @@ import { ApiError } from "../http/errors";
 import { log } from "../http/log";
 import { hashPassword } from "../auth/password";
 import { publicStorageUrl } from "../storage";
+import { initialsFromName } from "@/lib/seller-display";
 import { deleteStorageObjects, forgetPendingUpload } from "./uploads";
 import type { RegisterSellerInput } from "../schemas/auth";
 import type { UpdateSellerInput } from "../schemas/seller";
 import type { PublicUser } from "./auth";
+import type { Seller, TehsilSlug } from "@/types";
 
 /**
  * Becoming a seller.
@@ -185,6 +187,45 @@ export async function registerSeller(
 export async function getSellerById(sellerId: string): Promise<SellerSummary | null> {
   const { data } = await db.from("sellers").select(SELLER_COLUMNS).eq("id", sellerId).maybeSingle();
   return data ? toSellerSummary(data as SellerRow) : null;
+}
+
+/**
+ * `/seller/[slug]` (the public storefront page). This is a stand-in for
+ * §2.4's GET /api/sellers/:slug (endpoint 27, Phase 7 — stats, response
+ * time, reviews) — a minimal-but-real DB read so a seller who registers and
+ * posts listings in Phase 6 has a working storefront today, rather than
+ * only their listing detail pages working until Phase 7 lands. Superseded
+ * wholesale once that endpoint exists.
+ */
+export async function getPublicSellerBySlug(slug: string): Promise<Seller | null> {
+  const { data } = await db
+    .from("sellers")
+    .select(
+      "id, slug, name, description, phone, tehsil_slug, locality_label, verified, rating_avg, rating_count, response_minutes, listing_count, avatar_path, banner_path"
+    )
+    .eq("slug", slug)
+    .eq("status", "active")
+    .maybeSingle();
+
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    slug: data.slug,
+    name: data.name,
+    initials: initialsFromName(data.name),
+    tehsilSlug: (data.tehsil_slug ?? "batkhela") as TehsilSlug,
+    localityLabel: data.locality_label ?? "",
+    rating: Number(data.rating_avg),
+    reviewCount: data.rating_count,
+    verified: data.verified,
+    responseMinutes: data.response_minutes,
+    listingCount: data.listing_count,
+    phone: data.phone,
+    description: data.description ?? undefined,
+    avatarUrl: data.avatar_path ? publicStorageUrl(data.avatar_path) : undefined,
+    storefrontBanner: data.banner_path ? publicStorageUrl(data.banner_path) : undefined,
+  };
 }
 
 /**

@@ -3,12 +3,43 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
 import { ListingDetail } from "./listing-detail";
-import { getListingBySlug, getListingsBySeller } from "@/lib/listings";
-import { getSellerById } from "@/lib/sellers";
+import type { Listing, Seller } from "@/types";
 
-const listing = getListingBySlug("solar-inverter-15kw-vfd")!;
-const seller = getSellerById(listing.sellerId);
-const otherListings = getListingsBySeller(listing.sellerId, { excludeId: listing.id, limit: 5 });
+const seller: Seller = {
+  id: "s1",
+  slug: "khan-solar-traders",
+  name: "Khan Solar Traders",
+  initials: "KS",
+  tehsilSlug: "batkhela",
+  localityLabel: "Batkhela City & Bazaar",
+  rating: 4.6,
+  reviewCount: 12,
+  verified: true,
+  responseMinutes: 20,
+  phone: "+923001234567",
+};
+
+const listing: Listing = {
+  id: "l1",
+  slug: "solar-inverter-15kw-vfd",
+  title: "Solar Inverter 1.5kW VFD",
+  description: "Barely used hybrid inverter, all accessories included.",
+  price: 85000,
+  categorySlug: "electronics",
+  subcategorySlug: "electronics-generators",
+  tehsilSlug: "batkhela",
+  localitySlug: "batkhela-city",
+  localityLabel: "Batkhela City & Bazaar",
+  images: [],
+  contactPhone: "+923001234567",
+  sellerId: seller.id,
+  status: "active",
+  createdAt: "2026-09-12T00:00:00.000Z",
+};
+
+const otherListings: Listing[] = [
+  { ...listing, id: "l2", slug: "solar-battery-100ah", title: "Solar Battery 100Ah" },
+];
 
 function renderDetail() {
   render(
@@ -38,8 +69,7 @@ describe("ListingDetail", () => {
 
   it("links to the seller's storefront and lists other listings", () => {
     renderDetail();
-    expect(screen.getAllByRole("link", { name: new RegExp(seller!.name) }).length).toBeGreaterThan(0);
-    expect(otherListings.length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: new RegExp(seller.name) }).length).toBeGreaterThan(0);
     for (const other of otherListings) {
       expect(screen.getByRole("heading", { name: other.title })).toBeInTheDocument();
     }

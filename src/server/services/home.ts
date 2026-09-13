@@ -1,6 +1,7 @@
 import "server-only";
 import { rpc } from "../db";
 import { toListing, type ListingItemRow } from "./listings";
+import { initialsFromName } from "@/lib/seller-display";
 import type { Listing, Seller, TehsilSlug } from "@/types";
 
 /**
@@ -46,13 +47,6 @@ type HomePayloadRow = {
   topSellers: HomeSellerRow[];
   counters: HomePayload["counters"];
 };
-
-/** "Khan Solar Traders" -> "KS" — a display transform of the real name, not invented data. */
-function initialsFromName(name: string): string {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  const letters = words.slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "");
-  return letters.join("") || "?";
-}
 
 function toSeller(row: HomeSellerRow): Seller {
   return {
