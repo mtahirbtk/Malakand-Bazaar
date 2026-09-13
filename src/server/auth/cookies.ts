@@ -26,14 +26,25 @@ const REFRESH_PATH = "/api/auth";
 
 type Jar = Awaited<ReturnType<typeof cookies>>;
 
-export async function setAuthCookies(jar: Jar, tokens: { accessToken: string; refreshToken: string }) {
-  jar.set(ACCESS_COOKIE, tokens.accessToken, {
+/**
+ * Just the access-token half of setAuthCookies — for re-minting the token
+ * mid-session (a role change) without touching the refresh token, which
+ * would require rotating it in the sessions table too. See setAuthCookies'
+ * doc comment on REFRESH_PATH for why a handler outside /api/auth can never
+ * read the current refresh cookie to decide whether to call the full version.
+ */
+export function setAccessCookie(jar: Jar, accessToken: string) {
+  jar.set(ACCESS_COOKIE, accessToken, {
     httpOnly: true,
     secure: isProduction,
     sameSite: "lax",
     path: "/",
     maxAge: accessTokenMaxAge(),
   });
+}
+
+export async function setAuthCookies(jar: Jar, tokens: { accessToken: string; refreshToken: string }) {
+  setAccessCookie(jar, tokens.accessToken);
 
   jar.set(REFRESH_COOKIE, tokens.refreshToken, {
     httpOnly: true,

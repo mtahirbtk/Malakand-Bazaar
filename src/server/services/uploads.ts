@@ -124,6 +124,21 @@ async function findOwnPendingUpload(sellerId: string, path: string): Promise<Pen
   return data as PendingUploadRow;
 }
 
+/**
+ * Confirms `path` is this seller's own, already-committed "listing" upload,
+ * without touching a listing row — the pre-flight half of attachListingImage,
+ * so createListing() can validate every path in a new listing's `images`
+ * array *before* inserting the listing row. Skipping this and only
+ * discovering a bad path via attachListingImage (after the insert) would
+ * leave a real listing behind while the client is told creation failed.
+ */
+export async function assertOwnCommittedListingUpload(sellerId: string, path: string): Promise<void> {
+  const pending = await findOwnPendingUpload(sellerId, path);
+  if (pending.kind !== "listing" || !pending.committed_at) {
+    throw ApiError.validation("Upload that photo before attaching it to a listing.");
+  }
+}
+
 /** Re-encodes the object in place: auto-oriented, EXIF stripped, dimensions verified. */
 async function processAndReplace(path: string): Promise<{ width: number; height: number; bytes: number }> {
   const { data: blob, error: downloadError } = await db.storage
@@ -225,7 +240,14 @@ export async function attachListingImage(sellerId: string, listingId: string, pa
 
   const { error } = await db
     .from("listing_images")
-    .insert({ listing_id: listingId, path, sort: count ?? 0 });
+    .insert({
+      listing_id: listingId,
+      path,
+      sort: count ?? 0,
+      width: pending.width,
+      height: pending.height,
+      bytes: pending.bytes,
+    });
   if (error) {
     log.error("listing_images insert failed", { listingId, message: error.message });
     throw new ApiError("INTERNAL", "Could not attach that photo. Please try again.");

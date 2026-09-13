@@ -3,7 +3,7 @@ import { db, PG } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
 import { publicStorageUrl } from "../storage";
-import { attachListingImage, deleteStorageObjects } from "./uploads";
+import { assertOwnCommittedListingUpload, attachListingImage, deleteStorageObjects } from "./uploads";
 import { resolveLocality } from "./sellers";
 import { toListing, type ListingItemRow } from "./listings";
 import type {
@@ -181,6 +181,13 @@ function translateWriteError(error: { code?: string; message: string }, context:
 }
 
 export async function createListing(sellerId: string, input: CreateListingInput): Promise<SellerListingRow> {
+  // Validated before the insert, not after: discovering a bad path only once
+  // attachListingImage runs would leave a real listing row behind while the
+  // client is told creation failed.
+  for (const path of input.images) {
+    await assertOwnCommittedListingUpload(sellerId, path);
+  }
+
   const localityLabel = await resolveLocality(input.tehsilSlug, input.localitySlug);
   const moderationStatus = (await isModerationRequired()) ? "pending" : "approved";
 

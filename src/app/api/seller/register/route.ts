@@ -8,7 +8,7 @@ import { registerSeller } from "@/server/services/sellers";
 import { accessTokenForUser, getPublicUser } from "@/server/services/auth";
 import { createSession, newCsrfToken } from "@/server/auth/session";
 import { verifyTurnstile } from "@/server/auth/turnstile";
-import { setAuthCookies, setCsrfCookie } from "@/server/auth/cookies";
+import { setAccessCookie, setAuthCookies, setCsrfCookie } from "@/server/auth/cookies";
 import { enforceCsrf } from "@/server/auth/csrf";
 
 export const runtime = "nodejs";
@@ -42,10 +42,11 @@ export const POST = handler(async (request) => {
 
   if (claims) {
     // Keep the existing session; just re-mint the access token so it carries
-    // the new role and sellerId.
+    // the new role and sellerId. The refresh cookie is scoped to /api/auth
+    // (see cookies.ts) so it is never present on this request — setAccessCookie
+    // is the access-token-only half of setAuthCookies, for exactly this case.
     const { accessToken, user } = await accessTokenForUser(result.userId, claims.sid);
-    const refreshToken = (await cookies()).get("mb_rt")?.value;
-    if (refreshToken) await setAuthCookies(jar, { accessToken, refreshToken });
+    setAccessCookie(jar, accessToken);
     await setCsrfCookie(jar, csrfToken);
     return ok({ seller: { id: result.sellerId, slug: result.slug }, user, csrfToken }, { status: 201 });
   }
