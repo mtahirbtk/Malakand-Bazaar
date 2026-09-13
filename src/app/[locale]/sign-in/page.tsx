@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { SignInForm } from "@/components/auth/sign-in-form";
@@ -12,7 +13,9 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
       <h1 className="mb-6 text-center text-xl font-extrabold tracking-tight text-on-surface">
         {t("pageTitle")}
       </h1>
-      <SignInForm />
+      <Suspense fallback={null}>
+        <SignInForm />
+      </Suspense>
     </main>
   );
 }
