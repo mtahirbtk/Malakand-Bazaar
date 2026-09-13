@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getListingBySlug, getSellerOtherListings } from "@/server/services/listings";
 import { ListingDetail } from "@/components/marketplace/listing-detail";
 import { ClientListingDetail } from "@/components/marketplace/client-listing-detail";
+import { ListingViewPing } from "@/components/marketplace/listing-view-ping";
 import { env } from "@/server/env";
 
 export default async function ListingDetailPage({
@@ -39,6 +40,7 @@ export default async function ListingDetailPage({
     return (
       <main className="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <ListingViewPing listingId={listing.id} />
         <ListingDetail listing={listing} seller={seller} otherListings={otherListings} />
       </main>
     );

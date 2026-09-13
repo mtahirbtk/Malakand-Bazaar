@@ -58,3 +58,9 @@ export const suggestListingsQuerySchema = z.object({
 });
 
 export type SuggestListingsQuery = z.infer<typeof suggestListingsQuerySchema>;
+
+export const contactClickSchema = z.object({
+  channel: z.enum(["whatsapp", "call", "copy"]),
+});
+
+export type ContactClickInput = z.infer<typeof contactClickSchema>;

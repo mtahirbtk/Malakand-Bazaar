@@ -87,6 +87,7 @@
     "sold": "Sold",
     "reserved": "Reserved",
     "verified": "Verified",
+    "activeListings": "Active Listings",
     "visitStore": "Visit Store & Chat",
     "registerVerifiedSeller": "Register as Verified Seller",
     "showWhatsappNumber": "Show WhatsApp Number",
@@ -193,17 +194,14 @@
       "honeyHerbs": "Honey & Herbs",
       "mobilePhones": "Mobile Phones"
     },
-    "shelfA": {
-      "title": "Electronics & Solar Tech",
-      "action": "View All Electronics (410+)"
+    "trending": {
+      "title": "Trending This Week",
+      "subtitle": "Listings getting the most views right now"
     },
-    "shelfB": {
-      "title": "Fresh Valley Fruits & Agro Produce",
-      "action": "View All Fruits & Fresh Produce (185+)"
-    },
-    "shelfC": {
-      "title": "Vehicles & Motorbikes",
-      "action": "View All Vehicles (340+)"
+    "launch": {
+      "title": "Malakand's marketplace is opening",
+      "body": "Be among the first sellers here — list an item and it's live immediately, no waiting.",
+      "cta": "List your first item"
     },
     "sellers": {
       "title": "Top Verified Local Sellers & Farms",

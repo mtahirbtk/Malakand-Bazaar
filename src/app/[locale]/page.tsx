@@ -1,5 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import HomeContent from "./home-content";
+import { getHomePayload } from "@/server/services/home";
 
 export default async function HomePage({
   params,
@@ -9,5 +10,7 @@ export default async function HomePage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <HomeContent />;
+  const payload = await getHomePayload();
+
+  return <HomeContent payload={payload} />;
 }

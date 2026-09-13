@@ -51,7 +51,7 @@ export class ApiClientError extends Error {
 const CSRF_COOKIE = "mb_csrf";
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
-function readCsrfToken(): string | null {
+export function readCsrfToken(): string | null {
   if (typeof document === "undefined") return null;
   const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${CSRF_COOKIE}=([^;]*)`));
   return match ? decodeURIComponent(match[1]) : null;

@@ -15,7 +15,7 @@ import type { SearchListingsQuery } from "../schemas/listings";
  * fields `Listing` expects, and turn storage paths into fetchable URLs.
  */
 
-type ListingItemRow = {
+export type ListingItemRow = {
   id: string;
   slug: string;
   title: string;
@@ -35,7 +35,7 @@ type ListingItemRow = {
   coordinates: { lat: number; lng: number } | null;
 };
 
-function toListing(row: ListingItemRow): Listing {
+export function toListing(row: ListingItemRow): Listing {
   return {
     id: row.id,
     slug: row.slug,
@@ -151,6 +151,15 @@ export async function getRelatedListings(listingId: string, limit = 6): Promise<
     p_limit: limit,
   });
   return rows.map(toListing);
+}
+
+/** §5: one counter increment, nothing about the viewer stored. */
+export async function bumpView(listingId: string): Promise<void> {
+  await rpc<void>("fn_bump_view", { p_listing_id: listingId });
+}
+
+export async function bumpContact(listingId: string, channel: "whatsapp" | "call" | "copy"): Promise<void> {
+  await rpc<void>("fn_bump_contact", { p_listing_id: listingId, p_channel: channel });
 }
 
 export async function getSellerOtherListings(

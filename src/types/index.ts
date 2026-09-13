@@ -69,9 +69,16 @@ export type Seller = {
   reviewCount: number;
   verified: boolean;
   responseMinutes: number;
-  specialty: string;
-  statLabel: string;
-  statValue: string;
+  /**
+   * Marketing copy the fixture sellers carry ("Deals Done", "142 Systems",
+   * a specialty blurb). There's no such field on a real seller — nothing in
+   * the data model backs it, and CLAUDE.md rules out inventing one — so it's
+   * optional and `SellerCard` falls back to `listingCount` when absent.
+   */
+  specialty?: string;
+  statLabel?: string;
+  statValue?: string;
+  listingCount?: number;
   phone: string;
   storefrontBanner?: string;
   coordinates?: { lat: number; lng: number };

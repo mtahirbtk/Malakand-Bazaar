@@ -40,13 +40,19 @@ export function SellerCard({ seller }: { seller: Seller }) {
               &lt; {seller.responseMinutes} mins
             </span>
           </div>
+          {/* Fixture sellers carry marketing copy (statLabel/statValue/specialty);
+              a real seller only has listingCount — fall back to that. */}
           <div className="flex items-center justify-between">
-            <span>{seller.statLabel}:</span>
-            <span className="font-bold text-on-surface tabular">{seller.statValue}</span>
+            <span>{seller.statLabel ?? t("activeListings")}:</span>
+            <span className="font-bold text-on-surface tabular">
+              {seller.statValue ?? (seller.listingCount ?? 0)}
+            </span>
           </div>
-          <div className="text-[10px] bg-white px-2 py-1 rounded border border-surface-border text-on-surface-muted mt-1">
-            Specialty: {seller.specialty}
-          </div>
+          {seller.specialty && (
+            <div className="text-[10px] bg-white px-2 py-1 rounded border border-surface-border text-on-surface-muted mt-1">
+              Specialty: {seller.specialty}
+            </div>
+          )}
         </div>
       </div>
 
