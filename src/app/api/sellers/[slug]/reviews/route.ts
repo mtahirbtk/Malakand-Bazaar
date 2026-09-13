@@ -1,5 +1,6 @@
 import { handler, ok, okCached } from "@/server/http/respond";
 import { ApiError } from "@/server/http/errors";
+import { log } from "@/server/http/log";
 import { readJson, readQuery } from "@/server/http/validate";
 import { enforceRateLimit } from "@/server/http/rate-limit";
 import { enforceCsrf } from "@/server/auth/csrf";
@@ -12,7 +13,11 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 async function sellerIdForSlug(slug: string): Promise<string> {
-  const { data } = await db.from("sellers").select("id").eq("slug", slug).eq("status", "active").maybeSingle();
+  const { data, error } = await db.from("sellers").select("id").eq("slug", slug).eq("status", "active").maybeSingle();
+  if (error) {
+    log.error("sellerIdForSlug lookup failed", { slug, message: error.message });
+    throw new ApiError("INTERNAL", "Could not load that seller. Please try again.");
+  }
   if (!data) throw ApiError.notFound("That seller");
   return data.id;
 }
