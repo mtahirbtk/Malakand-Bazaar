@@ -248,3 +248,28 @@ export async function listPublicSellerListings(
   const images = await imagesFor(rows.map((r) => r.id));
   return { items: rows.map((row) => toListing(plainRowToItem(row, images.get(row.id) ?? []))), total: count ?? 0 };
 }
+
+/**
+ * Batch-fetches listings by id, preserving none of the caller's ordering —
+ * `listFavorites` (favorites.ts) reorders by the favorite row's own
+ * `created_at`. Soft-deleted listings are silently dropped rather than
+ * erroring: a favorite on a listing the seller later removed just stops
+ * appearing, the favorite row itself is left alone.
+ */
+export async function getListingsByIds(ids: string[]): Promise<Listing[]> {
+  if (ids.length === 0) return [];
+  const { data, error } = await db
+    .from("listings")
+    .select(SELLER_LISTING_COLUMNS)
+    .in("id", ids)
+    .is("deleted_at", null);
+
+  if (error) {
+    log.error("getListingsByIds failed", { message: error.message });
+    throw new ApiError("INTERNAL", "Could not load listings. Please try again.");
+  }
+
+  const rows = (data ?? []) as PlainListingRow[];
+  const images = await imagesFor(rows.map((r) => r.id));
+  return rows.map((row) => toListing(plainRowToItem(row, images.get(row.id) ?? [])));
+}
