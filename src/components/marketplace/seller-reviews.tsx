@@ -14,6 +14,12 @@ import type { Seller } from "@/types";
 
 type ReviewItem = { id: string; buyerId: string; buyerName: string; rating: number; comment: string | null; createdAt: string };
 
+/**
+ * Shape of `GET /api/me/reviews` (src/server/services/reviews.ts's
+ * `MyReviewItem`) — only the fields this component reads.
+ */
+type MyReviewItem = { id: string; sellerId: string; rating: number; comment: string | null };
+
 export function SellerReviews({ seller }: { seller: Seller }) {
   const t = useTranslations("reviews");
   const common = useTranslations("common");
@@ -23,12 +29,15 @@ export function SellerReviews({ seller }: { seller: Seller }) {
 
   const [reviews, setReviews] = React.useState<ReviewItem[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [myReview, setMyReview] = React.useState<MyReviewItem | undefined>(undefined);
   const [showSignInPrompt, setShowSignInPrompt] = React.useState(false);
   const [showForm, setShowForm] = React.useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
   const [rating, setRating] = React.useState(5);
   const [comment, setComment] = React.useState("");
   const [submitting, setSubmitting] = React.useState(false);
+
+  const isOwnStore = user?.sellerId === seller.id;
 
   const refresh = React.useCallback(async () => {
     try {
@@ -41,12 +50,35 @@ export function SellerReviews({ seller }: { seller: Seller }) {
     }
   }, [seller.slug]);
 
+  /**
+   * The seller's own review list above is paginated (newest 24) and scoped to
+   * this seller — it can't reliably tell "does the signed-in buyer already
+   * have a review here" once a seller has more than a page of reviews. The
+   * account-wide `/api/me/reviews` list is what actually knows that, so the
+   * write/edit/delete gating is driven from here, not from a match against
+   * the paginated `reviews` state above.
+   */
+  const refreshMyReview = React.useCallback(async () => {
+    if (!user || isOwnStore) {
+      setMyReview(undefined);
+      return;
+    }
+    try {
+      const items = await api.get<MyReviewItem[]>(`/api/me/reviews?limit=60`);
+      setMyReview(items.find((r) => r.sellerId === seller.id));
+    } catch {
+      // Worst case the buyer sees "Write a Review" again and a 409 on
+      // submit — better than blocking the rest of the storefront on this.
+    }
+  }, [user, isOwnStore, seller.id]);
+
   React.useEffect(() => {
     void refresh();
   }, [refresh]);
 
-  const isOwnStore = user?.sellerId === seller.id;
-  const myReview = user ? reviews.find((r) => r.buyerId === user.id) : undefined;
+  React.useEffect(() => {
+    void refreshMyReview();
+  }, [refreshMyReview]);
 
   function openWriteForm() {
     if (!user) {
@@ -69,7 +101,7 @@ export function SellerReviews({ seller }: { seller: Seller }) {
         await api.post(`/api/sellers/${seller.slug}/reviews`, { rating, comment });
       }
       setShowForm(false);
-      await refresh();
+      await Promise.all([refresh(), refreshMyReview()]);
       show({ title: t("title"), tone: "success" });
     } catch (err) {
       show({ title: err instanceof ApiClientError ? err.message : common("genericError"), tone: "error" });
@@ -83,7 +115,7 @@ export function SellerReviews({ seller }: { seller: Seller }) {
     try {
       await api.delete(`/api/reviews/${myReview.id}`);
       setShowDeleteConfirm(false);
-      await refresh();
+      await Promise.all([refresh(), refreshMyReview()]);
     } catch (err) {
       show({ title: err instanceof ApiClientError ? err.message : common("genericError"), tone: "error" });
     }
