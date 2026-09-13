@@ -7,6 +7,7 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { FileUpload } from "@/components/ui/file-upload";
 import { fileToDataUrl } from "@/lib/file-to-data-url";
 import { TEHSIL_OPTIONS, findTehsil } from "@/data/tehsils";
@@ -36,9 +37,18 @@ export const MALAKAND_CENTER = { lat: 34.5667, lng: 71.9333 };
 export function SellerProfileFields({
   value,
   onChange,
+  showImages = true,
+  errors = {},
 }: {
   value: SellerProfileFieldsValue;
   onChange: (value: SellerProfileFieldsValue) => void;
+  /**
+   * Hidden during registration until the Storage upload pipeline lands —
+   * a picker that silently discarded the file would be worse than no picker.
+   */
+  showImages?: boolean;
+  /** Server-side field errors, keyed by the API's field name. */
+  errors?: Record<string, string>;
 }) {
   const t = useTranslations("sellerProfile");
   const localityOptions = (findTehsil(value.tehsilSlug)?.localities ?? []).map((l) => ({
@@ -48,11 +58,11 @@ export function SellerProfileFields({
 
   return (
     <div className="space-y-4">
-      <FormField label={t("storeNameLabel")} htmlFor="sp-name" required>
+      <FormField label={t("storeNameLabel")} htmlFor="sp-name" required error={errors.storeName}>
         <Input id="sp-name" value={value.storeName} onChange={(e) => onChange({ ...value, storeName: e.target.value })} />
       </FormField>
 
-      <FormField label={t("descriptionLabel")} htmlFor="sp-description" required>
+      <FormField label={t("descriptionLabel")} htmlFor="sp-description" error={errors.description}>
         <Textarea
           id="sp-description"
           value={value.description}
@@ -60,10 +70,9 @@ export function SellerProfileFields({
         />
       </FormField>
 
-      <FormField label={t("storePhoneLabel")} htmlFor="sp-phone" required hint={t("storePhoneHint")}>
-        <Input
+      <FormField label={t("storePhoneLabel")} htmlFor="sp-phone" required hint={t("storePhoneHint")} error={errors.storePhone}>
+        <PhoneInput
           id="sp-phone"
-          leadingIcon="call"
           value={value.storePhone}
           onChange={(e) => onChange({ ...value, storePhone: e.target.value })}
         />
@@ -82,7 +91,7 @@ export function SellerProfileFields({
             className="w-full"
           />
         </FormField>
-        <FormField label={t("localityLabel")} htmlFor="sp-locality" required>
+        <FormField label={t("localityLabel")} htmlFor="sp-locality" required error={errors.localitySlug}>
           <Select
             ariaLabel={t("localityLabel")}
             value={value.localitySlug}
@@ -101,6 +110,7 @@ export function SellerProfileFields({
         />
       </FormField>
 
+      {showImages && (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FormField label={t("avatarLabel")}>
           <FileUpload
@@ -121,6 +131,7 @@ export function SellerProfileFields({
           />
         </FormField>
       </div>
+      )}
     </div>
   );
 }

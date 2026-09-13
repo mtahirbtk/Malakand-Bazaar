@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { usePathname, Link } from "@/i18n/routing";
-import { useAuth } from "@/lib/mock-db/auth-context";
+import { useAuth } from "@/lib/auth/auth-context";
 import { getReviewsForSeller, getMyReviewForSeller, upsertReview } from "@/lib/mock-db/reviews";
 import { Rating } from "@/components/ui/rating";
 import { Textarea } from "@/components/ui/textarea";

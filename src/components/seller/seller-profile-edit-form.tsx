@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { useAuth } from "@/lib/mock-db/auth-context";
+import { useAuth } from "@/lib/auth/auth-context";
 import { getSellerByIdOverlay, applyProfileFields, saveSeller } from "@/lib/mock-db/sellers";
 import { findTehsil } from "@/data/tehsils";
 import { Badge } from "@/components/ui/badge";

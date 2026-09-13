@@ -4,6 +4,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
 import { FormField } from "@/components/ui/form-field";
 import { Select } from "@/components/ui/select";
@@ -34,6 +35,8 @@ import { Carousel } from "@/components/ui/carousel";
 import { ToastProvider, useToast } from "@/components/ui/toast";
 import { FileUpload } from "@/components/ui/file-upload";
 import { MultiFileUpload } from "@/components/ui/multi-file-upload";
+import { Spinner } from "@/components/ui/spinner";
+import { FullscreenLoader } from "@/components/ui/fullscreen-loader";
 import { cn } from "@/lib/cn";
 import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { CATEGORY_OPTIONS, allSubcategoryOptions } from "@/data/categories";
@@ -145,6 +148,7 @@ function PaletteSection() {
 }
 
 export default function GalleryPage() {
+  const [phone, setPhone] = React.useState("");
   const [tehsil, setTehsil] = React.useState("all");
   const [category, setCategory] = React.useState("");
   const [subcategory, setSubcategory] = React.useState("");
@@ -250,7 +254,7 @@ export default function GalleryPage() {
                   <Input id="g-price" invalid placeholder="PKR" />
                 </FormField>
                 <FormField label="Phone" hint="+92 300 1234567" htmlFor="g-phone">
-                  <Input id="g-phone" placeholder="3001234567" />
+                  <PhoneInput id="g-phone" placeholder="300 1234567" value={phone} onChange={(e) => setPhone(e.target.value)} />
                 </FormField>
               </div>
             </Row>
@@ -591,6 +595,36 @@ export default function GalleryPage() {
                 />
               </div>
             </Row>
+          </Section>
+
+          <Section title="Loaders">
+            <div className="space-y-6">
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <Spinner size="sm" />
+                  <span className="text-xs text-on-surface-muted">sm</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Spinner size="md" />
+                  <span className="text-xs text-on-surface-muted">md</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Spinner size="lg" />
+                  <span className="text-xs text-on-surface-muted">lg</span>
+                </div>
+                <Button disabled>
+                  <Spinner size="sm" tone="onBrand" />
+                  Publishing…
+                </Button>
+              </div>
+
+              <div>
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider text-on-surface-muted">
+                  Fullscreen overlay (shown inline here)
+                </p>
+                <FullscreenLoader inline label="Loading your storefront…" />
+              </div>
+            </div>
           </Section>
 
           <Section title="Carousel">

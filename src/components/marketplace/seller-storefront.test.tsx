@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider } from "@/lib/auth/auth-context";
 import { SellerStorefront } from "./seller-storefront";
 import { getSellerBySlug } from "@/lib/sellers";
 import { getListingsBySeller } from "@/lib/listings";

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
-import { useAuth } from "@/lib/mock-db/auth-context";
+import { useAuth } from "@/lib/auth/auth-context";
 import { saveListing, createListingId, generateListingSlug } from "@/lib/mock-db/listings";
 import { getSellerByIdOverlay } from "@/lib/mock-db/sellers";
 import { CATEGORIES } from "@/data/categories";

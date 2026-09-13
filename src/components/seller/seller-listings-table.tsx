@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { useAuth } from "@/lib/mock-db/auth-context";
+import { useAuth } from "@/lib/auth/auth-context";
 import { getListingsBySellerOverlay, setListingStatus } from "@/lib/mock-db/listings";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

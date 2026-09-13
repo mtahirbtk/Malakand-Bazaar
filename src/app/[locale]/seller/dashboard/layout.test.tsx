@@ -2,8 +2,11 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider, type AuthUser } from "@/lib/auth/auth-context";
+import { makeSeller, mockApi } from "@tests/auth-harness";
 import SellerDashboardLayout from "./layout";
+
+let signedIn: AuthUser | null = null;
 
 const pushMock = vi.fn();
 vi.mock("@/i18n/routing", async () => {
@@ -15,20 +18,15 @@ vi.mock("@/i18n/routing", async () => {
   };
 });
 
+/** Seeds the auth context the way the server would, rather than faking cookies. */
 function seedSeller() {
-  window.localStorage.setItem(
-    "mb.users",
-    JSON.stringify([
-      { id: "u1", phone: "+923001234567", password: "password1", role: "seller", displayName: "Green Valley", sellerId: "s1" },
-    ])
-  );
-  window.localStorage.setItem("mb.session", JSON.stringify("u1"));
+  signedIn = makeSeller({ sellerId: "s1" });
 }
 
 function renderLayout() {
   render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <AuthProvider>
+      <AuthProvider initialUser={signedIn}>
         <SellerDashboardLayout>
           <p>Route content</p>
         </SellerDashboardLayout>
@@ -40,6 +38,7 @@ function renderLayout() {
 describe("SellerDashboardLayout", () => {
   beforeEach(() => {
     window.localStorage.clear();
+    signedIn = null;
     pushMock.mockClear();
   });
 
@@ -51,9 +50,19 @@ describe("SellerDashboardLayout", () => {
     expect(screen.getByRole("tab", { name: /Profile/ })).toBeInTheDocument();
   });
 
-  it("shows a loading state instead of route content when signed out", () => {
+  it("redirects a signed-out visitor to sign-in and never renders route content", async () => {
+    // No server-provided user, so the provider asks /api/auth/me and is told
+    // there is no session — the same shape the real endpoint returns.
+    mockApi({
+      "GET /api/auth/me": { error: { code: "AUTH_REQUIRED", message: "Sign in to continue." }, status: 401 },
+    });
+
     renderLayout();
+
     expect(screen.queryByText("Route content")).toBeNull();
-    expect(pushMock).toHaveBeenCalledWith(expect.stringContaining("/sign-in"));
+    await waitFor(() =>
+      expect(pushMock).toHaveBeenCalledWith(expect.stringContaining("/sign-in"))
+    );
+    expect(screen.queryByText("Route content")).toBeNull();
   });
 });

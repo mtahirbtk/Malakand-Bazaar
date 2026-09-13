@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
 import { saveSeller } from "@/lib/mock-db/sellers";
 import { saveListing } from "@/lib/mock-db/listings";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider } from "@/lib/auth/auth-context";
 import { ClientSellerStorefront } from "./client-seller-storefront";
 import type { Seller, Listing } from "@/types";
 

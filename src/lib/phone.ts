@@ -1,11 +1,17 @@
 /** Pakistani mobile numbers are 10 digits after the country code, starting with 3. */
 const PK_MOBILE = /^3\d{9}$/;
 
-export function normalizePhone(input: string): string | null {
+/** Strips a leading +92 / 92 / 0 country-code prefix, leaving the local digits. */
+export function stripCountryCode(input: string): string {
   let digits = input.replace(/[\s\-()]/g, "");
   if (digits.startsWith("+92")) digits = digits.slice(3);
   else if (digits.startsWith("92")) digits = digits.slice(2);
   else if (digits.startsWith("0")) digits = digits.slice(1);
+  return digits;
+}
+
+export function normalizePhone(input: string): string | null {
+  const digits = stripCountryCode(input);
   if (!PK_MOBILE.test(digits)) return null;
   return `+92${digits}`;
 }

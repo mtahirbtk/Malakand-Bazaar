@@ -1,15 +1,27 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider, type AuthUser } from "@/lib/auth/auth-context";
+import { makeUser, makeSeller } from "@tests/auth-harness";
 import { SiteHeader } from "./site-header";
+
+// jsdom has no real Next.js App Router mounted — the header's search forms
+// now navigate via useRouter() (see goToSearch), so mock it the same way
+// sign-in-form.test.tsx does.
+const pushMock = vi.fn();
+vi.mock("@/i18n/routing", async () => {
+  const actual = await vi.importActual<typeof import("@/i18n/routing")>("@/i18n/routing");
+  return { ...actual, useRouter: () => ({ push: pushMock, replace: pushMock }) };
+});
+
+let signedIn: AuthUser | null = null;
 
 function renderHeader() {
   render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <AuthProvider>
+      <AuthProvider initialUser={signedIn}>
         <SiteHeader />
       </AuthProvider>
     </NextIntlClientProvider>
@@ -18,6 +30,8 @@ function renderHeader() {
 
 beforeEach(() => {
   window.localStorage.clear();
+  signedIn = null;
+  pushMock.mockClear();
 });
 
 describe("SiteHeader", () => {
@@ -29,7 +43,7 @@ describe("SiteHeader", () => {
   it("uses no native select element", () => {
     const { container } = render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <AuthProvider>
+        <AuthProvider initialUser={signedIn}>
           <SiteHeader />
         </AuthProvider>
       </NextIntlClientProvider>
@@ -43,6 +57,13 @@ describe("SiteHeader", () => {
     expect(boxes.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("submitting the mobile search box navigates to /search with the query", async () => {
+    renderHeader();
+    const [box] = screen.getAllByRole("searchbox", { name: /search/i });
+    await userEvent.type(box, "solar inverter{enter}");
+    expect(pushMock).toHaveBeenCalledWith("/search?q=solar+inverter");
+  });
+
   it("shows the Become a Seller call to action when signed out", () => {
     renderHeader();
     expect(screen.getByRole("link", { name: /Become a Seller/ })).toBeInTheDocument();
@@ -54,24 +75,14 @@ describe("SiteHeader", () => {
   });
 
   it("shows an account menu instead of Sign In once signed in", async () => {
-    window.localStorage.setItem(
-      "mb.users",
-      JSON.stringify([{ id: "u1", phone: "+923001234567", password: "password1", role: "customer", displayName: "Ayesha" }])
-    );
-    window.localStorage.setItem("mb.session", JSON.stringify("u1"));
+    signedIn = makeUser({ displayName: "Ayesha" });
     renderHeader();
     expect(await screen.findByRole("button", { name: "Account menu" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Sign In/ })).toBeNull();
   });
 
   it("hides Become a Seller once signed in as a seller", async () => {
-    window.localStorage.setItem(
-      "mb.users",
-      JSON.stringify([
-        { id: "u2", phone: "+923001234567", password: "password1", role: "seller", displayName: "Green Valley", sellerId: "s_x" },
-      ])
-    );
-    window.localStorage.setItem("mb.session", JSON.stringify("u2"));
+    signedIn = makeSeller({ displayName: "Green Valley", sellerId: "s_x", sellerSlug: "green-valley" });
     renderHeader();
     await screen.findByRole("button", { name: "Account menu" });
     expect(screen.queryByRole("link", { name: /Become a Seller/ })).toBeNull();
@@ -99,13 +110,7 @@ describe("SiteHeader", () => {
         },
       ])
     );
-    window.localStorage.setItem(
-      "mb.users",
-      JSON.stringify([
-        { id: "u3", phone: "+923001234567", password: "password1", role: "seller", displayName: "Test Store", sellerId: "s_teststore1" },
-      ])
-    );
-    window.localStorage.setItem("mb.session", JSON.stringify("u3"));
+    signedIn = makeSeller({ displayName: "Test Store", sellerId: "s_teststore1", sellerSlug: "test-store" });
     renderHeader();
     await userEvent.click(await screen.findByRole("button", { name: "Account menu" }));
     expect(await screen.findByRole("menuitem", { name: "My Storefront" })).toHaveAttribute(

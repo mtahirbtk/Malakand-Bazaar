@@ -3,17 +3,17 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider, type AuthUser } from "@/lib/auth/auth-context";
+import { makeSeller } from "@tests/auth-harness";
 import { saveListing } from "@/lib/mock-db/listings";
 import { SellerListingsTable } from "./seller-listings-table";
 import type { Listing } from "@/types";
 
+let signedIn: AuthUser | null = null;
+
+/** Seeds the auth context the way the server would, rather than faking cookies. */
 function seedSignedInSeller() {
-  window.localStorage.setItem(
-    "mb.users",
-    JSON.stringify([{ id: "u1", phone: "+923001234567", password: "password1", role: "seller", displayName: "Store", sellerId: "s_test1" }])
-  );
-  window.localStorage.setItem("mb.session", JSON.stringify("u1"));
+  signedIn = makeSeller({ sellerId: "s_test1" });
 }
 
 const LISTING: Listing = {
@@ -37,7 +37,7 @@ const LISTING: Listing = {
 function renderTable() {
   render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <AuthProvider>
+      <AuthProvider initialUser={signedIn}>
         <SellerListingsTable />
       </AuthProvider>
     </NextIntlClientProvider>
@@ -47,6 +47,7 @@ function renderTable() {
 describe("SellerListingsTable", () => {
   beforeEach(() => {
     window.localStorage.clear();
+    signedIn = null;
   });
 
   it("shows the seller's active listings by default", async () => {

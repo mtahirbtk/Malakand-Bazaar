@@ -8,7 +8,9 @@
     "free": "Free",
     "viewAll": "View All",
     "whatsapp": "WhatsApp",
-    "call": "Call Seller"
+    "call": "Call Seller",
+    "loading": "Loading",
+    "signingOut": "Signing out…"
   },
   "announcement": {
     "message": "Zero middleman fees — confirmed directly via WhatsApp.",
@@ -98,6 +100,55 @@
     "getDirections": "Get Directions",
     "storeNotFoundTitle": "Store Not Found",
     "storeNotFoundBody": "This storefront doesn't exist or hasn't loaded on this device yet."
+  },
+  "search": {
+    "breadcrumbHome": "Home",
+    "breadcrumbCurrent": "Search & Explore",
+    "title": "Listings & Products in Malakand",
+    "resultsFor": "Results for “{query}”",
+    "matches": "{count} matches",
+    "subheading": "Verified local sellers, orchard crates, tubewell machinery, solar gear, livestock & motorbikes across Batkhela, Dargai, and Thana.",
+    "inlineSearchPlaceholder": "Refine this search...",
+    "filters": "Filter Listings",
+    "resetAll": "Reset All",
+    "categoryHeading": "Shop by Category",
+    "priceHeading": "Price Range (PKR)",
+    "priceFrom": "From",
+    "priceTo": "To",
+    "priceApply": "Apply Price Filter",
+    "priceHighest": "The highest price in selection is",
+    "availabilityHeading": "Stock & Availability",
+    "availabilityActiveOnly": "In Stock / Available Only",
+    "localityHeading": "Locality / Tehsil Corridor",
+    "sellerHeading": "Verification & Seller",
+    "verifiedOnly": "Verified Shopkeeper / Farmer Only",
+    "helpTitle": "Need help finding an item?",
+    "helpBody": "Our Batkhela Facilitation team will connect you directly with authentic verified vendors across Malakand on WhatsApp.",
+    "helpCta": "Chat on WhatsApp",
+    "mobileFiltersButton": "Filters ({count})",
+    "activeFiltersLabel": "Active Filters:",
+    "clearAll": "Clear all",
+    "sortLabel": "Sort by:",
+    "sort": {
+      "featured": "Featured First",
+      "relevant": "Most Relevant",
+      "price_low": "Price, Low to High",
+      "price_high": "Price, High to Low",
+      "date_new": "Date, New to Old",
+      "date_old": "Date, Old to New"
+    },
+    "searchFilterChip": "Search: “{query}”",
+    "categoryFilterChip": "Category: {category}",
+    "tehsilFilterChip": "Zone: {tehsil}",
+    "verifiedFilterChip": "Verified sellers only",
+    "priceFilterChip": "Rs. {from} - Rs. {to}",
+    "showingRange": "Showing {from} - {to} of {total} products in Malakand",
+    "paginationPrevious": "Previous",
+    "paginationNext": "Next",
+    "paginationPage": "Page",
+    "noResultsTitle": "No listings match your filters",
+    "noResultsBody": "Try widening your price range, clearing a filter, or searching a different term.",
+    "clearFiltersCta": "Clear all filters"
   },
   "home": {
     "hero": {
@@ -194,7 +245,9 @@
     "passwordLabel": "Password",
     "passwordHint": "At least 8 characters.",
     "signInCta": "Sign In",
-    "createAccountCta": "Create Account"
+    "createAccountCta": "Create Account",
+    "signingIn": "Signing in…",
+    "creatingAccount": "Creating your account…"
   },
   "sellerProfile": {
     "storeNameLabel": "Store Name",
@@ -219,7 +272,9 @@
     "submitCta": "Create My Storefront",
     "alreadySellerTitle": "You already have a storefront",
     "alreadySellerBody": "This account is already registered as a seller.",
-    "goToDashboardCta": "Go to Dashboard"
+    "goToDashboardCta": "Go to Dashboard",
+    "submitting": "Creating your storefront…",
+    "genericError": "Something went wrong. Please try again."
   },
   "sellerDashboard": {
     "title": "Seller Dashboard",

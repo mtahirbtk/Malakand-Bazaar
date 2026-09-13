@@ -6,7 +6,8 @@ import { notFound } from "next/navigation";
 import { routing, dirForLocale } from "@/i18n/routing";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider } from "@/lib/auth/auth-context";
+import { getServerUser } from "@/server/auth/server-user";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -42,6 +43,10 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
 
+  // Resolved on the server so the first paint already knows who is signed in —
+  // otherwise the header flashes "Sign In" at a signed-in user on every load.
+  const user = await getServerUser();
+
   return (
     <html lang={locale} dir={dirForLocale(locale)} className={jakarta.variable}>
       <head>
@@ -58,7 +63,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <TooltipProvider>
             <ToastProvider>
-              <AuthProvider>
+              <AuthProvider initialUser={user}>
                 <AnnouncementBar />
                 <SiteHeader />
                 {children}

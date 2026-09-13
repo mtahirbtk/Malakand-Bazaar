@@ -3,10 +3,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider, type AuthUser } from "@/lib/auth/auth-context";
+import { makeSeller } from "@tests/auth-harness";
 import { saveSeller } from "@/lib/mock-db/sellers";
 import { SellerProfileEditForm } from "./seller-profile-edit-form";
 import type { Seller } from "@/types";
+
+let signedIn: AuthUser | null = null;
 
 vi.mock("leaflet/dist/leaflet.css", () => ({}));
 vi.mock("leaflet/dist/images/marker-icon-2x.png", () => ({ default: { src: "" } }));
@@ -38,19 +41,16 @@ const SELLER: Seller = {
   description: "Original bio.",
 };
 
+/** Seeds the auth context the way the server would, rather than faking cookies. */
 function seedSignedInSeller() {
+  signedIn = makeSeller({ sellerId: "s_edit1" });
   saveSeller(SELLER);
-  window.localStorage.setItem(
-    "mb.users",
-    JSON.stringify([{ id: "u1", phone: "+923001234567", password: "password1", role: "seller", displayName: "Edit Store", sellerId: "s_edit1" }])
-  );
-  window.localStorage.setItem("mb.session", JSON.stringify("u1"));
 }
 
 function renderForm() {
   render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <AuthProvider>
+      <AuthProvider initialUser={signedIn}>
         <SellerProfileEditForm />
       </AuthProvider>
     </NextIntlClientProvider>
@@ -60,6 +60,7 @@ function renderForm() {
 describe("SellerProfileEditForm", () => {
   beforeEach(() => {
     window.localStorage.clear();
+    signedIn = null;
   });
 
   it("shows a Pending Verification badge for an unverified seller", async () => {

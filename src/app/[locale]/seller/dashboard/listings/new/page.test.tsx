@@ -3,9 +3,12 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider, type AuthUser } from "@/lib/auth/auth-context";
+import { makeSeller } from "@tests/auth-harness";
 import { getListingsBySellerOverlay } from "@/lib/mock-db/listings";
 import NewListingPage from "./page";
+
+let signedIn: AuthUser | null = null;
 
 const pushMock = vi.fn();
 vi.mock("@/i18n/routing", async () => {
@@ -13,18 +16,15 @@ vi.mock("@/i18n/routing", async () => {
   return { ...actual, useRouter: () => ({ push: pushMock, replace: pushMock }) };
 });
 
+/** Seeds the auth context the way the server would, rather than faking cookies. */
 function seedSignedInSeller() {
-  window.localStorage.setItem(
-    "mb.users",
-    JSON.stringify([{ id: "u1", phone: "+923001234567", password: "password1", role: "seller", displayName: "Store", sellerId: "s1" }])
-  );
-  window.localStorage.setItem("mb.session", JSON.stringify("u1"));
+  signedIn = makeSeller({ sellerId: "s1" });
 }
 
 function renderPage() {
   render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <AuthProvider>
+      <AuthProvider initialUser={signedIn}>
         <NewListingPage />
       </AuthProvider>
     </NextIntlClientProvider>
@@ -34,6 +34,7 @@ function renderPage() {
 describe("NewListingPage", () => {
   beforeEach(() => {
     window.localStorage.clear();
+    signedIn = null;
     pushMock.mockClear();
   });
 

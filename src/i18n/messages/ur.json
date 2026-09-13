@@ -8,7 +8,9 @@
     "free": "مفت",
     "viewAll": "سب دیکھیں",
     "whatsapp": "واٹس ایپ",
-    "call": "کال کریں"
+    "call": "کال کریں",
+    "loading": "لوڈ ہو رہا ہے",
+    "signingOut": "سائن آؤٹ ہو رہا ہے…"
   },
   "announcement": {
     "message": "کوئی بچولیا فیس نہیں — براہ راست واٹس ایپ پر تصدیق شدہ۔",
@@ -98,6 +100,55 @@
     "getDirections": "راستہ دیکھیں",
     "storeNotFoundTitle": "دکان نہیں ملی",
     "storeNotFoundBody": "یہ دکان موجود نہیں یا ابھی اس ڈیوائس پر لوڈ نہیں ہوئی۔"
+  },
+  "search": {
+    "breadcrumbHome": "ہوم",
+    "breadcrumbCurrent": "تلاش اور دریافت",
+    "title": "ملاکنڈ میں اشیاء اور مصنوعات",
+    "resultsFor": "“{query}” کے نتائج",
+    "matches": "{count} نتائج",
+    "subheading": "بٹ خیلہ، درگئی اور تھانہ میں تصدیق شدہ فروخت کنندگان، باغات کی پیداوار، ٹیوب ویل مشینری، سولر سامان، مویشی اور موٹر سائیکلیں۔",
+    "inlineSearchPlaceholder": "اس تلاش کو مزید بہتر بنائیں...",
+    "filters": "اشتہارات فلٹر کریں",
+    "resetAll": "سب دوبارہ ترتیب دیں",
+    "categoryHeading": "زمرہ کے مطابق دیکھیں",
+    "priceHeading": "قیمت کی حد (روپے)",
+    "priceFrom": "سے",
+    "priceTo": "تک",
+    "priceApply": "قیمت فلٹر لاگو کریں",
+    "priceHighest": "منتخب کردہ حد میں سب سے زیادہ قیمت ہے",
+    "availabilityHeading": "دستیابی",
+    "availabilityActiveOnly": "صرف دستیاب اشیاء دکھائیں",
+    "localityHeading": "علاقہ / تحصیل",
+    "sellerHeading": "تصدیق اور فروخت کنندہ",
+    "verifiedOnly": "صرف تصدیق شدہ دکاندار / کسان",
+    "helpTitle": "کوئی چیز ڈھونڈنے میں مدد چاہیے؟",
+    "helpBody": "ہماری بٹ خیلہ سہولت ٹیم آپ کو ملاکنڈ بھر کے تصدیق شدہ فروخت کنندگان سے براہ راست واٹس ایپ پر ملائے گی۔",
+    "helpCta": "واٹس ایپ پر بات کریں",
+    "mobileFiltersButton": "فلٹرز ({count})",
+    "activeFiltersLabel": "فعال فلٹرز:",
+    "clearAll": "سب ہٹا دیں",
+    "sortLabel": "ترتیب دیں:",
+    "sort": {
+      "featured": "نمایاں سب سے پہلے",
+      "relevant": "سب سے زیادہ متعلقہ",
+      "price_low": "قیمت، کم سے زیادہ",
+      "price_high": "قیمت، زیادہ سے کم",
+      "date_new": "تاریخ، نئی سے پرانی",
+      "date_old": "تاریخ، پرانی سے نئی"
+    },
+    "searchFilterChip": "تلاش: “{query}”",
+    "categoryFilterChip": "زمرہ: {category}",
+    "tehsilFilterChip": "علاقہ: {tehsil}",
+    "verifiedFilterChip": "صرف تصدیق شدہ فروخت کنندگان",
+    "priceFilterChip": "روپے {from} - روپے {to}",
+    "showingRange": "ملاکنڈ میں {total} میں سے {from} - {to} مصنوعات دکھائی جا رہی ہیں",
+    "paginationPrevious": "پچھلا",
+    "paginationNext": "اگلا",
+    "paginationPage": "صفحہ",
+    "noResultsTitle": "آپ کے فلٹرز سے کوئی اشتہار میل نہیں کھاتا",
+    "noResultsBody": "قیمت کی حد بڑھائیں، کوئی فلٹر ہٹائیں، یا مختلف الفاظ سے تلاش کریں۔",
+    "clearFiltersCta": "تمام فلٹرز ہٹا دیں"
   },
   "home": {
     "hero": {
@@ -194,7 +245,9 @@
     "passwordLabel": "پاس ورڈ",
     "passwordHint": "کم از کم 8 حروف۔",
     "signInCta": "سائن ان",
-    "createAccountCta": "اکاؤنٹ بنائیں"
+    "createAccountCta": "اکاؤنٹ بنائیں",
+    "signingIn": "سائن ان ہو رہا ہے…",
+    "creatingAccount": "آپ کا اکاؤنٹ بن رہا ہے…"
   },
   "sellerProfile": {
     "storeNameLabel": "دکان کا نام",
@@ -219,7 +272,9 @@
     "submitCta": "میری دکان بنائیں",
     "alreadySellerTitle": "آپ کی دکان پہلے سے موجود ہے",
     "alreadySellerBody": "یہ اکاؤنٹ پہلے سے بطور فروخت کنندہ رجسٹرڈ ہے۔",
-    "goToDashboardCta": "ڈیش بورڈ پر جائیں"
+    "goToDashboardCta": "ڈیش بورڈ پر جائیں",
+    "submitting": "آپ کا اسٹور بن رہا ہے…",
+    "genericError": "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔"
   },
   "sellerDashboard": {
     "title": "فروخت کنندہ ڈیش بورڈ",

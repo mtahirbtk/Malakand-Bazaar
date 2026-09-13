@@ -4,10 +4,13 @@ import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
+import { AuthProvider, type AuthUser } from "@/lib/auth/auth-context";
+import { makeSeller } from "@tests/auth-harness";
 import { saveListing, getListingByIdOverlay } from "@/lib/mock-db/listings";
 import EditListingPage from "./page";
 import type { Listing } from "@/types";
+
+let signedIn: AuthUser | null = null;
 
 const pushMock = vi.fn();
 const notFoundMock = vi.fn();
@@ -39,11 +42,7 @@ const OWNED_LISTING: Listing = {
 };
 
 function seedSignedInSeller(sellerId: string) {
-  window.localStorage.setItem(
-    "mb.users",
-    JSON.stringify([{ id: "u1", phone: "+923001234567", password: "password1", role: "seller", displayName: "Store", sellerId }])
-  );
-  window.localStorage.setItem("mb.session", JSON.stringify("u1"));
+  signedIn = makeSeller({ sellerId });
 }
 
 async function renderPage(id: string) {
@@ -59,7 +58,7 @@ async function renderPage(id: string) {
   await act(async () => {
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <AuthProvider>
+        <AuthProvider initialUser={signedIn}>
           <React.Suspense fallback={null}>
             <EditListingPage params={Promise.resolve({ id })} />
           </React.Suspense>
@@ -72,6 +71,7 @@ async function renderPage(id: string) {
 describe("EditListingPage", () => {
   beforeEach(() => {
     window.localStorage.clear();
+    signedIn = makeSeller({ sellerId: "s1" });
     pushMock.mockClear();
     notFoundMock.mockClear();
   });
