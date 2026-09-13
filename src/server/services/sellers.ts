@@ -8,6 +8,7 @@ import { initialsFromName } from "@/lib/seller-display";
 import { deleteStorageObjects, forgetPendingUpload } from "./uploads";
 import type { RegisterSellerInput } from "../schemas/auth";
 import type { UpdateSellerInput } from "../schemas/seller";
+import type { SellersDirectoryQuery, TopSellersQuery } from "../schemas/sellers-directory";
 import type { PublicUser } from "./auth";
 import type { Seller, TehsilSlug } from "@/types";
 
@@ -71,6 +72,37 @@ export function toSellerSummary(row: SellerRow): SellerSummary {
     avatarPath: row.avatar_path,
     bannerPath: row.banner_path,
     createdAt: row.created_at,
+  };
+}
+
+const PUBLIC_SELLER_COLUMNS =
+  "id, slug, name, description, phone, tehsil_slug, locality_label, verified, rating_avg, rating_count, response_minutes, listing_count, avatar_path, banner_path, created_at";
+
+type PublicSellerRow = {
+  id: string; slug: string; name: string; description: string | null; phone: string;
+  tehsil_slug: string | null; locality_label: string | null; verified: boolean;
+  rating_avg: number; rating_count: number; response_minutes: number; listing_count: number;
+  avatar_path: string | null; banner_path: string | null; created_at: string;
+};
+
+function toPublicSeller(row: PublicSellerRow): Seller {
+  return {
+    id: row.id,
+    slug: row.slug,
+    name: row.name,
+    initials: initialsFromName(row.name),
+    tehsilSlug: (row.tehsil_slug ?? "batkhela") as TehsilSlug,
+    localityLabel: row.locality_label ?? "",
+    rating: Number(row.rating_avg),
+    reviewCount: row.rating_count,
+    verified: row.verified,
+    responseMinutes: row.response_minutes,
+    listingCount: row.listing_count,
+    phone: row.phone,
+    description: row.description ?? undefined,
+    avatarUrl: row.avatar_path ? cloudinaryUrl(row.avatar_path) : undefined,
+    storefrontBanner: row.banner_path ? cloudinaryUrl(row.banner_path) : undefined,
+    memberSince: row.created_at,
   };
 }
 
@@ -190,43 +222,24 @@ export async function getSellerById(sellerId: string): Promise<SellerSummary | n
 }
 
 /**
- * `/seller/[slug]` (the public storefront page). This is a stand-in for
- * §2.4's GET /api/sellers/:slug (endpoint 27, Phase 7 — stats, response
- * time, reviews) — a minimal-but-real DB read so a seller who registers and
- * posts listings in Phase 6 has a working storefront today, rather than
- * only their listing detail pages working until Phase 7 lands. Superseded
- * wholesale once that endpoint exists.
+ * `/seller/[slug]` storefront header — §2.4 #27. Was a stand-in
+ * (`getPublicSellerBySlug`) built ahead of this phase; now the real thing —
+ * same query, routed through the shared `toPublicSeller` mapper so it always
+ * matches what `listSellers`/`topSellers` return.
  */
-export async function getPublicSellerBySlug(slug: string): Promise<Seller | null> {
+export async function getSellerDetail(slug: string): Promise<Seller | null> {
   const { data } = await db
     .from("sellers")
-    .select(
-      "id, slug, name, description, phone, tehsil_slug, locality_label, verified, rating_avg, rating_count, response_minutes, listing_count, avatar_path, banner_path"
-    )
+    .select(PUBLIC_SELLER_COLUMNS)
     .eq("slug", slug)
     .eq("status", "active")
     .maybeSingle();
 
-  if (!data) return null;
-
-  return {
-    id: data.id,
-    slug: data.slug,
-    name: data.name,
-    initials: initialsFromName(data.name),
-    tehsilSlug: (data.tehsil_slug ?? "batkhela") as TehsilSlug,
-    localityLabel: data.locality_label ?? "",
-    rating: Number(data.rating_avg),
-    reviewCount: data.rating_count,
-    verified: data.verified,
-    responseMinutes: data.response_minutes,
-    listingCount: data.listing_count,
-    phone: data.phone,
-    description: data.description ?? undefined,
-    avatarUrl: data.avatar_path ? cloudinaryUrl(data.avatar_path) : undefined,
-    storefrontBanner: data.banner_path ? cloudinaryUrl(data.banner_path) : undefined,
-  };
+  return data ? toPublicSeller(data as PublicSellerRow) : null;
 }
+
+/** @deprecated Use getSellerDetail — this alias exists only until Task 11 updates its one caller. */
+export const getPublicSellerBySlug = getSellerDetail;
 
 /**
  * GET/PATCH /api/seller/me. Unlike getSellerById (used for anything read
@@ -247,6 +260,71 @@ export async function getSellerPrivate(sellerId: string): Promise<SellerPrivateS
     avatarUrl: row.avatarPath ? cloudinaryUrl(row.avatarPath) : null,
     bannerUrl: row.bannerPath ? cloudinaryUrl(row.bannerPath) : null,
   };
+}
+
+/**
+ * `/sellers` directory — §2.4 #26. Plain filtered/sorted/paginated read, no
+ * facets (unlike GET /api/listings, this list doesn't need them) — matches
+ * the pattern in seller-listings.ts's listSellerListings rather than the RPC
+ * pattern reserved for the heavy search/home reads (§1.4).
+ */
+export async function listSellers(query: SellersDirectoryQuery): Promise<{ items: Seller[]; total: number }> {
+  const page = query.page ?? 1;
+  const from = (page - 1) * query.limit;
+  const to = from + query.limit - 1;
+
+  let builder = db.from("sellers").select(PUBLIC_SELLER_COLUMNS, { count: "exact" }).eq("status", "active");
+
+  if (query.tehsil) builder = builder.eq("tehsil_slug", query.tehsil);
+  if (query.verifiedOnly) builder = builder.eq("verified", true);
+  if (query.q) builder = builder.ilike("name", `%${query.q}%`);
+  if (query.category) {
+    // A seller has no category of its own — "sells in this category" means
+    // "has at least one live listing in it". A subquery keeps this to one
+    // round trip instead of fetching every seller id first.
+    const { data: sellerIds } = await db
+      .from("listings")
+      .select("seller_id")
+      .eq("category_slug", query.category)
+      .eq("status", "active")
+      .is("deleted_at", null);
+    const ids = [...new Set((sellerIds ?? []).map((r) => r.seller_id))];
+    if (ids.length === 0) return { items: [], total: 0 };
+    builder = builder.in("id", ids);
+  }
+
+  const [column, ascending] = (
+    { rating: ["rating_score", false], newest: ["created_at", false], listings: ["listing_count", false] } as const
+  )[query.sort];
+
+  const { data, error, count } = await builder.order(column, { ascending }).range(from, to);
+  if (error) {
+    log.error("listSellers failed", { message: error.message });
+    throw new ApiError("INTERNAL", "Could not load sellers. Please try again.");
+  }
+
+  return { items: (data as PublicSellerRow[] ?? []).map(toPublicSeller), total: count ?? 0 };
+}
+
+/**
+ * Homepage top-sellers widget — §2.4 #30. `getSellerDetail`'s DB query with
+ * a rating floor and a hard limit instead of a slug lookup.
+ */
+export async function topSellers(query: TopSellersQuery): Promise<Seller[]> {
+  const { data, error } = await db
+    .from("sellers")
+    .select(PUBLIC_SELLER_COLUMNS)
+    .eq("status", "active")
+    .gte("rating_count", 1)
+    .order("rating_score", { ascending: false })
+    .order("rating_count", { ascending: false })
+    .limit(query.limit);
+
+  if (error) {
+    log.error("topSellers failed", { message: error.message });
+    throw new ApiError("INTERNAL", "Could not load top sellers. Please try again.");
+  }
+  return (data as PublicSellerRow[] ?? []).map(toPublicSeller);
 }
 
 /**
