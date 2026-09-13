@@ -226,12 +226,21 @@ function toReviewItem(row: ReviewRow, buyerName: string): ReviewItem {
   };
 }
 
-/** Maps the two DB-enforced invariants to friendly errors; rethrows anything else. */
+/**
+ * Maps the two DB-enforced invariants to friendly errors; rethrows anything
+ * else. The self-review trigger (`fn_reviews_no_self`, migration 0007)
+ * explicitly sets `errcode = 'check_violation'` (PG.CHECK_VIOLATION,
+ * `23514`) — the same SQLSTATE a plain `check (...)` constraint violation
+ * would raise (e.g. `reviews_rating_chk`, unreachable here since zod already
+ * bounds rating/comment before this query runs, but sharing the code
+ * regardless). The message text is what's actually unique to this trigger,
+ * so match on that, not on the error code.
+ */
 function translateReviewWriteError(error: { code?: string; message: string }, context: Record<string, unknown>): never {
   if (error.code === PG.UNIQUE_VIOLATION) {
     throw ApiError.conflict("You have already reviewed this seller. Edit your existing review instead.");
   }
-  if (error.code === PG.RAISE_EXCEPTION && /cannot review their own storefront/.test(error.message)) {
+  if (/cannot review their own storefront/.test(error.message)) {
     throw ApiError.validation("You cannot review your own storefront.");
   }
   log.error("review write failed", { ...context, code: error.code, message: error.message });
@@ -804,12 +813,19 @@ export async function getSellerDetail(slug: string): Promise<Seller | null> {
 }
 ```
 
-Delete the old `getPublicSellerBySlug` function entirely (Task 11 updates its one call site — do not leave a re-export alias, `grep -rn getPublicSellerBySlug src` first to confirm the only caller is `seller/[slug]/page.tsx`, which Task 11 rewrites in the same sitting).
+`grep -rn getPublicSellerBySlug src` first to confirm the only caller is `seller/[slug]/page.tsx` (Task 11 rewrites that page to call `getSellerDetail` directly). Until Task 11 runs, the branch must still compile and every other task's `npx tsc --noEmit` must stay clean — so keep a thin re-export alias rather than deleting the old name outright:
+
+```typescript
+/** @deprecated Use getSellerDetail — this alias exists only until Task 11 updates its one caller. */
+export const getPublicSellerBySlug = getSellerDetail;
+```
+
+Task 11 removes this alias in the same commit that switches the page's import.
 
 - [ ] **Step 4: Typecheck**
 
 Run: `npx tsc --noEmit`
-Expected: errors only at `src/app/[locale]/seller/[slug]/page.tsx` (still calling the now-deleted `getPublicSellerBySlug`) — confirms nothing else referenced it. That call site is fixed in Task 11; leave it broken between now and then only if executing tasks back-to-back in one sitting, otherwise do Task 11's page-import fix in this same commit to keep `main`/the branch buildable.
+Expected: clean. The branch must compile after every task, not just after Task 11 — that's what the alias in Step 3 is for.
 
 - [ ] **Step 5: Commit**
 
@@ -1621,6 +1637,7 @@ EOF
 **Files:**
 - Modify: `src/app/[locale]/seller/[slug]/page.tsx`
 - Modify: `src/components/marketplace/seller-storefront.tsx` (render `memberSince`)
+- Modify: `src/server/services/sellers.ts` (remove the `getPublicSellerBySlug` deprecated alias added in Task 5, now that its one caller is gone)
 
 **Interfaces:**
 - Consumes: `getSellerDetail`, `listPublicSellerListings` (Tasks 5, 7).
@@ -2019,7 +2036,7 @@ export function SaveListingButton({ listingId, className }: { listingId: string;
 }
 ```
 
-This starts every listing as unsaved (`saved` initialised to `false`) even for a listing already in the user's favourites — the detail page doesn't currently fetch favourite status per listing. Fix that in the same step: accept an `initiallySaved` prop instead of hardcoding `false`, defaulting to `false` for now, and wire the real initial value in Task-13-Step-3 once `ListingDetail`'s caller (the listing detail page) has a cheap way to know — check the listing detail page (`src/app/[locale]/listing/[slug]/page.tsx`) for whether `requireUser`/`currentUser` is already called there; if not, add `const viewer = await currentUser();` and, only when signed in, one `db.from("favorites").select("listing_id").eq("user_id", viewer.sub).eq("listing_id", listing.id).maybeSingle()` check (or reuse `listFavorites` if convenient) to pass `initiallySaved` down. Keep this check cheap — one indexed point lookup, not a full favourites list fetch.
+**Ruling (made during plan preflight, not left to the implementer):** this button always starts in the unsaved state, even when the listing is already in the viewer's favourites — it does not thread an `initiallySaved` prop from the (Server Component) listing detail page through `ListingDetail` down to this button. Wiring that would mean giving the detail page a per-viewer DB read on every visit and changing two components' prop signatures for a cosmetic gap (the button briefly reads "Save" instead of "Saved" until clicked once more). Not required by Phase 7's *Done when* line in `docs/backend-plan.md` §9. Ship without it; revisit only if a future phase's spec asks for it explicitly.
 
 - [ ] **Step 3: Mount it on the listing detail page**
 
