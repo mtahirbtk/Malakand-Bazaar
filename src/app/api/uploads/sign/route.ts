@@ -10,9 +10,10 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * { kind, contentType, size } → a Storage-native signed upload URL + object
- * path (§2.8 #51). The browser PUTs directly to `signedUrl`; bytes never
- * reach this server. See src/server/services/uploads.ts for the full pipeline.
+ * { kind, contentType, size } → a Cloudinary upload URL + signed form fields
+ * (§2.8 #51). The browser POSTs the file directly to `uploadUrl` with
+ * `formFields` spread into the multipart body; bytes never reach this
+ * server. See src/server/services/uploads.ts for the full pipeline.
  */
 export const POST = handler(async (request) => {
   await enforceCsrf(request);

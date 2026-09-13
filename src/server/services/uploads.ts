@@ -1,88 +1,80 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import sharp from "sharp";
+import { cloudinary } from "../cloudinary";
 import { db } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
-import { env } from "../env";
-import { publicStorageUrl } from "../storage";
+import { cloudinaryUrl } from "../storage";
 import type { CommitUploadInput, SignUploadInput, UploadKind } from "../schemas/uploads";
 import { MAX_UPLOAD_BYTES } from "../schemas/uploads";
 
 /**
- * The upload pipeline. §1.3 / Phase 6.
+ * The upload pipeline. §1.3 / Phase 6 — Cloudinary edition.
  *
  * Three steps, two of them here:
- *   1. sign()   — POST /api/uploads/sign. Issues a Storage-native signed
- *                 upload URL scoped to one object path; the browser PUTs the
- *                 raw bytes straight to it (see docs/backend-plan.md §1.3 —
- *                 they never pass through this server).
- *   2. (browser) fetch(signedUrl, { method: "PUT", body: file })
- *   3. commit() — POST /api/uploads/commit. The one point that actually looks
- *                 at the bytes.
+ *   1. sign()   — POST /api/uploads/sign. Returns a Cloudinary upload
+ *                 endpoint plus a set of signed form fields; the browser
+ *                 POSTs the file straight there (bytes never pass through
+ *                 this server, same as the Supabase Storage version did).
+ *   2. (browser) POST multipart/form-data to signed.uploadUrl with
+ *                 signed.formFields spread in, plus the file.
+ *   3. commit() — POST /api/uploads/commit. Confirms the asset actually
+ *                 exists and re-reads its *real* metadata from Cloudinary's
+ *                 own record rather than trusting whatever the browser
+ *                 echoes back from the upload response.
  *
- * commit() is where every safety property the plan asks for actually lives:
- *   - "real" MIME, not the client's declared Content-Type: sharp decodes the
- *     object and reports the format it *found*. A renamed .exe or an SVG
- *     (XSS risk, deliberately not in the allow-list) fails to decode as one
- *     of the four raster formats and is rejected — the declared contentType
- *     on the signed URL is a UX hint, never trusted as fact.
- *   - EXIF strip: sharp's default output carries no metadata unless
- *     `.withMetadata()` is called, which it never is here. `.rotate()` with
- *     no argument bakes in the EXIF orientation (so a sideways phone photo
- *     still displays upright with the orientation tag gone) before that
- *     metadata is dropped.
- *   - real dimensions: read from the same decode, not trusted from the client.
- *
- * One dependency (`sharp`) buys all three instead of hand-rolling a
- * magic-byte sniffer, a separate dimension reader and an EXIF stripper — it
- * is already in the dependency tree (Next's own image optimizer uses it) and
- * is the standard choice for server-side image work on Node/Vercel.
+ * What used to be sharp's job now happens two different ways:
+ *   - format allow-list + EXIF strip: enforced BY Cloudinary at upload time.
+ *     `allowed_formats` (a signed param — the browser cannot change it
+ *     without invalidating the signature) rejects anything that isn't
+ *     actually one of our four raster formats, decoded from the real bytes,
+ *     not the declared Content-Type. The signed `transformation: "a_exif"`
+ *     param is an *incoming* transformation, applied to the stored asset
+ *     itself — it bakes in the EXIF-orientation rotation and, because any
+ *     transformation forces a re-encode, the re-encoded asset carries none
+ *     of the original file's metadata (GPS included).
+ *   - real dimensions / size cap: read back from Cloudinary's Admin API
+ *     (cloudinary.api.resource) in commit(), never from the client — a
+ *     tampered client response claiming false width/height/bytes changes
+ *     nothing we store.
  */
 
-const EXTENSION: Record<SignUploadInput["contentType"], string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-  "image/avif": "avif",
-};
-
-/** Formats sharp/libvips may report for our four allowed content types. */
-const ACCEPTED_SHARP_FORMATS = new Set(["jpeg", "png", "webp", "avif", "heif"]);
-
-/**
- * The real bytes decide the Content-Type header, not the client's declared
- * one from /api/uploads/sign — a caller could sign for "image/png" and PUT a
- * JPEG; sharp's decode tells us what it actually is.
- */
-const SHARP_FORMAT_TO_CONTENT_TYPE: Record<string, string> = {
-  jpeg: "image/jpeg",
-  png: "image/png",
-  webp: "image/webp",
-  avif: "image/avif",
-  heif: "image/avif",
-};
-
+const ALLOWED_FORMATS = "jpg,png,webp,avif";
+const ACCEPTED_RESOURCE_FORMATS = new Set(["jpg", "jpeg", "png", "webp", "avif", "heif"]);
 const MAX_DIMENSION = 8000;
 
-function objectPath(sellerId: string, kind: UploadKind, contentType: SignUploadInput["contentType"]): string {
-  const id = randomUUID();
-  return `sellers/${sellerId}/${kind}/${id}.${EXTENSION[contentType]}`;
+function publicId(sellerId: string, kind: UploadKind): string {
+  return `sellers/${sellerId}/${kind}/${randomUUID()}`;
 }
 
-export type SignedUpload = { path: string; signedUrl: string; token: string };
+export type SignedUpload = {
+  publicId: string;
+  uploadUrl: string;
+  /** Spread these into the multipart form the browser POSTs, verbatim — every one participated in the signature. */
+  formFields: Record<string, string>;
+};
 
 export async function signUpload(sellerId: string, input: SignUploadInput): Promise<SignedUpload> {
-  const path = objectPath(sellerId, input.kind, input.contentType);
+  const id = publicId(sellerId, input.kind);
+  const timestamp = Math.floor(Date.now() / 1000);
 
-  const { data, error } = await db.storage.from(env.SUPABASE_STORAGE_BUCKET).createSignedUploadUrl(path);
-  if (error || !data) {
-    log.error("createSignedUploadUrl failed", { message: error?.message });
+  const paramsToSign = {
+    public_id: id,
+    timestamp,
+    allowed_formats: ALLOWED_FORMATS,
+    transformation: "a_exif",
+  };
+
+  let signature: string;
+  try {
+    signature = cloudinary.utils.api_sign_request(paramsToSign, cloudinary.config().api_secret as string);
+  } catch (error) {
+    log.error("cloudinary signature failed", { message: error instanceof Error ? error.message : String(error) });
     throw new ApiError("INTERNAL", "Could not prepare the upload. Please try again.");
   }
 
   const { error: insertError } = await db.from("pending_uploads").insert({
-    path,
+    path: id,
     seller_id: sellerId,
     kind: input.kind,
     content_type: input.contentType,
@@ -93,7 +85,18 @@ export async function signUpload(sellerId: string, input: SignUploadInput): Prom
     throw new ApiError("INTERNAL", "Could not prepare the upload. Please try again.");
   }
 
-  return { path, signedUrl: data.signedUrl, token: data.token };
+  return {
+    publicId: id,
+    uploadUrl: `https://api.cloudinary.com/v1_1/${cloudinary.config().cloud_name}/image/upload`,
+    formFields: {
+      api_key: String(cloudinary.config().api_key),
+      timestamp: String(timestamp),
+      signature,
+      public_id: paramsToSign.public_id,
+      allowed_formats: paramsToSign.allowed_formats,
+      transformation: paramsToSign.transformation,
+    },
+  };
 }
 
 export type CommittedUpload = { path: string; url: string; width: number; height: number };
@@ -110,9 +113,10 @@ type PendingUploadRow = {
 };
 
 async function findOwnPendingUpload(sellerId: string, path: string): Promise<PendingUploadRow> {
-  // The path itself is namespaced `sellers/{sellerId}/...`, but the row is the
-  // authority: it is only ever inserted by sign() for the caller who signed
-  // it, so a forged path with someone else's id in it simply has no row here.
+  // The public_id itself is namespaced `sellers/{sellerId}/...`, but the row
+  // is the authority: it is only ever inserted by sign() for the caller who
+  // signed it, so a forged id with someone else's id in it simply has no row
+  // here.
   const { data } = await db
     .from("pending_uploads")
     .select("path, seller_id, kind, content_type, width, height, bytes, committed_at")
@@ -122,6 +126,81 @@ async function findOwnPendingUpload(sellerId: string, path: string): Promise<Pen
 
   if (!data) throw ApiError.notFound("That upload");
   return data as PendingUploadRow;
+}
+
+/** Best-effort Cloudinary delete — callers proceed regardless (a leaked asset costs storage, not correctness). */
+export async function deleteStorageObjects(publicIds: string[]): Promise<void> {
+  if (publicIds.length === 0) return;
+  try {
+    await cloudinary.api.delete_resources(publicIds, { resource_type: "image" });
+  } catch (error) {
+    log.warn("cloudinary delete_resources failed", {
+      publicIds,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
+/**
+ * Re-reads the asset's real metadata from Cloudinary's own record — never
+ * trusting whatever the browser's upload response claimed — and enforces the
+ * size/dimension caps that Cloudinary's signed params don't cover.
+ */
+async function verifyAndReadMetadata(path: string): Promise<{ width: number; height: number; bytes: number }> {
+  let resource: { format?: string; width?: number; height?: number; bytes?: number };
+  try {
+    resource = await cloudinary.api.resource(path, { resource_type: "image" });
+  } catch {
+    throw ApiError.validation("That photo could not be found. Upload it again.");
+  }
+
+  if (!resource.format || !ACCEPTED_RESOURCE_FORMATS.has(resource.format)) {
+    await deleteStorageObjects([path]);
+    throw ApiError.validation("Photos must be JPEG, PNG, WebP or AVIF.");
+  }
+
+  const { width = 0, height = 0, bytes = 0 } = resource;
+
+  if (bytes > MAX_UPLOAD_BYTES) {
+    await deleteStorageObjects([path]);
+    throw ApiError.validation("Photos must be 5 MB or smaller.");
+  }
+  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+    await deleteStorageObjects([path]);
+    throw ApiError.validation(`Photos must be ${MAX_DIMENSION}px or smaller on each side.`);
+  }
+
+  return { width, height, bytes };
+}
+
+/**
+ * Verifies, and records, one uploaded asset. Idempotent: calling it again
+ * for an already-committed path just returns the stored result rather than
+ * re-checking Cloudinary.
+ */
+export async function commitUpload(sellerId: string, input: CommitUploadInput): Promise<CommittedUpload> {
+  const pending = await findOwnPendingUpload(sellerId, input.path);
+
+  let width = pending.width;
+  let height = pending.height;
+
+  if (!pending.committed_at) {
+    const result = await verifyAndReadMetadata(pending.path);
+    width = result.width;
+    height = result.height;
+
+    const { error } = await db
+      .from("pending_uploads")
+      .update({ width: result.width, height: result.height, bytes: result.bytes, committed_at: new Date().toISOString() })
+      .eq("path", pending.path);
+    if (error) log.warn("pending_uploads commit stamp failed", { path: pending.path, message: error.message });
+  }
+
+  if (pending.kind === "listing" && input.listingId) {
+    await attachListingImage(sellerId, input.listingId, pending.path);
+  }
+
+  return { path: pending.path, url: cloudinaryUrl(pending.path), width: width ?? 0, height: height ?? 0 };
 }
 
 /**
@@ -137,81 +216,6 @@ export async function assertOwnCommittedListingUpload(sellerId: string, path: st
   if (pending.kind !== "listing" || !pending.committed_at) {
     throw ApiError.validation("Upload that photo before attaching it to a listing.");
   }
-}
-
-/** Re-encodes the object in place: auto-oriented, EXIF stripped, dimensions verified. */
-async function processAndReplace(path: string): Promise<{ width: number; height: number; bytes: number }> {
-  const { data: blob, error: downloadError } = await db.storage
-    .from(env.SUPABASE_STORAGE_BUCKET)
-    .download(path);
-  if (downloadError || !blob) {
-    throw ApiError.validation("That photo could not be found. Upload it again.");
-  }
-
-  const original = Buffer.from(await blob.arrayBuffer());
-  if (original.byteLength > MAX_UPLOAD_BYTES) {
-    throw ApiError.validation("Photos must be 5 MB or smaller.");
-  }
-
-  let format: string | undefined;
-  try {
-    format = (await sharp(original, { failOn: "error" }).metadata()).format;
-  } catch {
-    throw ApiError.validation("That file is not a photo we can use.");
-  }
-
-  if (!format || !ACCEPTED_SHARP_FORMATS.has(format)) {
-    throw ApiError.validation("Photos must be JPEG, PNG, WebP or AVIF.");
-  }
-
-  const { data: processed, info } = await sharp(original, { failOn: "error" })
-    .rotate() // bakes in EXIF orientation, then metadata (incl. GPS) is dropped
-    .toBuffer({ resolveWithObject: true });
-
-  if (info.width > MAX_DIMENSION || info.height > MAX_DIMENSION) {
-    throw ApiError.validation(`Photos must be ${MAX_DIMENSION}px or smaller on each side.`);
-  }
-
-  const realContentType = SHARP_FORMAT_TO_CONTENT_TYPE[format] ?? "application/octet-stream";
-  const { error: uploadError } = await db.storage
-    .from(env.SUPABASE_STORAGE_BUCKET)
-    .upload(path, processed, { upsert: true, contentType: realContentType });
-  if (uploadError) {
-    log.error("re-upload after processing failed", { path, message: uploadError.message });
-    throw new ApiError("INTERNAL", "Could not process that photo. Please try again.");
-  }
-
-  return { width: info.width, height: info.height, bytes: processed.byteLength };
-}
-
-/**
- * Verifies, strips, and records one uploaded object. Idempotent: calling it
- * again for an already-committed path just returns the stored result rather
- * than re-downloading and re-processing.
- */
-export async function commitUpload(sellerId: string, input: CommitUploadInput): Promise<CommittedUpload> {
-  const pending = await findOwnPendingUpload(sellerId, input.path);
-
-  let width = pending.width;
-  let height = pending.height;
-
-  if (!pending.committed_at) {
-    const result = await processAndReplace(pending.path);
-    width = result.width;
-    height = result.height;
-
-    const { error } = await db
-      .from("pending_uploads")
-      .update({ width: result.width, height: result.height, bytes: result.bytes, committed_at: new Date().toISOString() })
-      .eq("path", pending.path);
-    if (error) log.warn("pending_uploads commit stamp failed", { path: pending.path, message: error.message });
-  }
-
-  if (pending.kind === "listing" && input.listingId) {
-    await attachListingImage(sellerId, input.listingId, pending.path);
-  }
-
-  return { path: pending.path, url: publicStorageUrl(pending.path), width: width ?? 0, height: height ?? 0 };
 }
 
 /**
@@ -262,24 +266,17 @@ export async function forgetPendingUpload(path: string): Promise<void> {
   if (error) log.warn("pending_uploads delete failed", { path, message: error.message });
 }
 
-/** Best-effort Storage delete — callers proceed regardless (a leaked object costs storage, not correctness). */
-export async function deleteStorageObjects(paths: string[]): Promise<void> {
-  if (paths.length === 0) return;
-  const { error } = await db.storage.from(env.SUPABASE_STORAGE_BUCKET).remove(paths);
-  if (error) log.warn("storage remove failed", { paths, message: error.message });
-}
-
-/** A signed URL nobody ever PUT to — swept quickly; it costs nothing to keep trying. */
+/** A signed upload nobody ever POSTed to Cloudinary — swept quickly; it costs nothing to keep trying. */
 const SIGNED_NOT_UPLOADED_GRACE_MS = 2 * 60 * 60 * 1000;
 /** A committed photo never attached to a listing or profile field — a longer grace window so an in-progress draft isn't punished. */
 const COMMITTED_NOT_ATTACHED_GRACE_MS = 24 * 60 * 60 * 1000;
 
 /**
- * The Node half of orphan cleanup — Storage object deletion needs the JS SDK,
- * so this can't be the pg_cron job 0009 uses for everything else. Driven by
- * an authenticated route (CRON_SECRET), same fallback shape as the rank
- * refresh. Safe to run as often as convenient: every row it touches is, by
- * definition, not referenced by any listing or seller profile field.
+ * The Node half of orphan cleanup — Cloudinary asset deletion needs its
+ * Admin API, so this can't be the pg_cron job 0009 uses for everything else.
+ * Driven by an authenticated route (CRON_SECRET), same fallback shape as the
+ * rank refresh. Safe to run as often as convenient: every row it touches is,
+ * by definition, not referenced by any listing or seller profile field.
  */
 export async function sweepPendingUploads(): Promise<{ swept: number }> {
   const now = Date.now();
@@ -310,4 +307,4 @@ export async function sweepPendingUploads(): Promise<{ swept: number }> {
   return { swept: paths.length };
 }
 
-export const _internal = { objectPath, EXTENSION, ACCEPTED_SHARP_FORMATS };
+export const _internal = { publicId, ALLOWED_FORMATS, ACCEPTED_RESOURCE_FORMATS };

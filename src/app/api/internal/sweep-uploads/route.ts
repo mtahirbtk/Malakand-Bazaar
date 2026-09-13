@@ -8,9 +8,9 @@ export const dynamic = "force-dynamic";
 
 /**
  * Orphan upload cleanup — driven by a platform scheduler (Vercel Cron), not
- * pg_cron: deleting a Supabase Storage object needs the JS SDK, which
- * Postgres cannot call. Same CRON_SECRET-bearer pattern the rank-refresh
- * fallback in docs/backend-plan.md §12 uses for the equivalent pg_cron gap.
+ * pg_cron: deleting a Cloudinary asset needs its Admin API, which Postgres
+ * cannot call. Same CRON_SECRET-bearer pattern the rank-refresh fallback in
+ * docs/backend-plan.md §12 uses for the equivalent pg_cron gap.
  *
  * No CSRF check and no per-caller rate limit: this isn't a browser session,
  * it's a server calling a server with a shared secret — a different trust

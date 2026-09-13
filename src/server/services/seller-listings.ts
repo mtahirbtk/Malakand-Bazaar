@@ -2,7 +2,7 @@ import "server-only";
 import { db, PG } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
-import { publicStorageUrl } from "../storage";
+import { cloudinaryUrl } from "../storage";
 import { assertOwnCommittedListingUpload, attachListingImage, deleteStorageObjects } from "./uploads";
 import { resolveLocality } from "./sellers";
 import { toListing, type ListingItemRow } from "./listings";
@@ -148,7 +148,7 @@ export async function getOwnListingById(sellerId: string, listingId: string): Pr
 
   const imageDetails: ListingImage[] = (imageRows ?? []).map((row) => ({
     id: row.id,
-    url: publicStorageUrl(row.path),
+    url: cloudinaryUrl(row.path),
     width: row.width,
     height: row.height,
     sort: row.sort,
@@ -381,7 +381,7 @@ export async function reorderListingImages(sellerId: string, listingId: string, 
 
   return ids.map((id, sort) => {
     const row = byId.get(id)!;
-    return { id, url: publicStorageUrl(row.path), width: row.width, height: row.height, sort };
+    return { id, url: cloudinaryUrl(row.path), width: row.width, height: row.height, sort };
   });
 }
 

@@ -5,8 +5,10 @@ import { z } from "zod";
  *
  * Only these four content types are ever accepted — see
  * `src/server/services/uploads.ts` for why the declared `contentType` here is
- * a hint, not a fact: the real check happens at commit time, by decoding the
- * bytes.
+ * a hint, not a fact: Cloudinary's signed `allowed_formats` param is what
+ * actually enforces this, against the real decoded bytes, and commit()
+ * re-reads the result from Cloudinary's own record rather than trusting the
+ * browser's upload response.
  */
 
 export const UPLOAD_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"] as const;

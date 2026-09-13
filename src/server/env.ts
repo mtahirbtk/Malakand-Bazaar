@@ -22,7 +22,16 @@ const schema = z.object({
 
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
-  SUPABASE_STORAGE_BUCKET: z.string().min(1).default("media"),
+
+  // Media storage — listing photos, seller avatars/banners. Not Supabase
+  // Storage (see src/server/cloudinary.ts for why). Neither key is
+  // NEXT_PUBLIC_: the signed-upload flow hands the browser its cloud name and
+  // API key (not a secret — it's meant to travel with a signature) inside the
+  // POST /api/uploads/sign response, so the server stays the one place that
+  // configures which Cloudinary account this app talks to.
+  CLOUDINARY_CLOUD_NAME: z.string().min(1),
+  CLOUDINARY_API_KEY: z.string().min(1),
+  CLOUDINARY_API_SECRET: z.string().min(10, "Copy this from the Cloudinary dashboard — Settings → API Keys."),
 
   AUTH_JWT_SECRET: secret(32),
   AUTH_JWT_SECRET_PREVIOUS: z.string().optional().transform((v) => (v ? v : undefined)),

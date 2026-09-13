@@ -67,11 +67,17 @@ describe("SellerProfileFields", () => {
   it("uploads the avatar through the signed-upload pipeline, not a blob: or data: URL", async () => {
     mockApi({
       "POST /api/uploads/sign": {
-        data: { path: "sellers/s1/avatar/x.png", signedUrl: "https://storage.test/upload", token: "t" },
+        data: {
+          publicId: "sellers/s1/avatar/x",
+          uploadUrl: "https://api.cloudinary.test/v1_1/demo/image/upload",
+          formFields: { api_key: "k", timestamp: "1", signature: "sig", public_id: "sellers/s1/avatar/x" },
+        },
       },
-      "PUT https://storage.test/upload": { data: {} },
+      "POST https://api.cloudinary.test/v1_1/demo/image/upload": {
+        data: { public_id: "sellers/s1/avatar/x", secure_url: "https://storage.test/public/x.png" },
+      },
       "POST /api/uploads/commit": {
-        data: { path: "sellers/s1/avatar/x.png", url: "https://storage.test/public/x.png", width: 40, height: 40 },
+        data: { path: "sellers/s1/avatar/x", url: "https://storage.test/public/x.png", width: 40, height: 40 },
       },
     });
 
@@ -82,7 +88,7 @@ describe("SellerProfileFields", () => {
 
     await vi.waitFor(() => {
       expect(onChange).toHaveBeenCalledWith(
-        expect.objectContaining({ avatarUrl: "https://storage.test/public/x.png", avatarPath: "sellers/s1/avatar/x.png" })
+        expect.objectContaining({ avatarUrl: "https://storage.test/public/x.png", avatarPath: "sellers/s1/avatar/x" })
       );
     });
     const call = onChange.mock.calls.find((c) => typeof c[0].avatarUrl === "string" && c[0].avatarUrl);

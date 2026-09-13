@@ -1,6 +1,6 @@
 import "server-only";
 import { rpc } from "../db";
-import { publicStorageUrl } from "../storage";
+import { cloudinaryUrl } from "../storage";
 import type { Listing, ListingSellerCard } from "@/types";
 import type { SearchListingsQuery } from "../schemas/listings";
 
@@ -51,7 +51,7 @@ export function toListing(row: ListingItemRow): Listing {
     tehsilSlug: (row.tehsilSlug ?? "") as Listing["tehsilSlug"],
     localitySlug: row.localitySlug ?? "",
     localityLabel: row.localityLabel ?? "",
-    images: row.images.map(publicStorageUrl),
+    images: row.images.map(cloudinaryUrl),
     contactPhone: row.contactPhone,
     sellerId: row.sellerId,
     status: row.status,

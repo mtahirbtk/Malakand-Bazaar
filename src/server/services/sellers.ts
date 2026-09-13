@@ -3,7 +3,7 @@ import { db, PG } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
 import { hashPassword } from "../auth/password";
-import { publicStorageUrl } from "../storage";
+import { cloudinaryUrl } from "../storage";
 import { initialsFromName } from "@/lib/seller-display";
 import { deleteStorageObjects, forgetPendingUpload } from "./uploads";
 import type { RegisterSellerInput } from "../schemas/auth";
@@ -223,8 +223,8 @@ export async function getPublicSellerBySlug(slug: string): Promise<Seller | null
     listingCount: data.listing_count,
     phone: data.phone,
     description: data.description ?? undefined,
-    avatarUrl: data.avatar_path ? publicStorageUrl(data.avatar_path) : undefined,
-    storefrontBanner: data.banner_path ? publicStorageUrl(data.banner_path) : undefined,
+    avatarUrl: data.avatar_path ? cloudinaryUrl(data.avatar_path) : undefined,
+    storefrontBanner: data.banner_path ? cloudinaryUrl(data.banner_path) : undefined,
   };
 }
 
@@ -244,8 +244,8 @@ export async function getSellerPrivate(sellerId: string): Promise<SellerPrivateS
   const row = data as SellerSummary & { coordinates: { lat: number; lng: number } | null };
   return {
     ...row,
-    avatarUrl: row.avatarPath ? publicStorageUrl(row.avatarPath) : null,
-    bannerUrl: row.bannerPath ? publicStorageUrl(row.bannerPath) : null,
+    avatarUrl: row.avatarPath ? cloudinaryUrl(row.avatarPath) : null,
+    bannerUrl: row.bannerPath ? cloudinaryUrl(row.bannerPath) : null,
   };
 }
 

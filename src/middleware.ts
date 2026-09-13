@@ -37,15 +37,7 @@ function randomToken(bytes = 16): string {
   return btoa(String.fromCharCode(...buf)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-function supabaseOrigin(): string {
-  try {
-    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").origin;
-  } catch {
-    return "";
-  }
-}
-
-function contentSecurityPolicy(nonce: string, supabase: string, isDev: boolean): string {
+function contentSecurityPolicy(nonce: string, isDev: boolean): string {
   const directives = [
     `default-src 'self'`,
     // 'strict-dynamic' lets the nonce-trusted Next bootstrap load its own
@@ -57,11 +49,15 @@ function contentSecurityPolicy(nonce: string, supabase: string, isDev: boolean):
     // execution is a far smaller problem than the alternative.
     `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
     `font-src 'self' https://fonts.gstatic.com data:`,
-    // OpenStreetMap tiles are images fetched by Leaflet; a duplicate img-src
-    // directive is ignored by the parser, so every image source lives here.
-    `img-src 'self' data: blob: ${supabase} https://*.tile.openstreetmap.org`,
-    `media-src 'self' ${supabase}`,
-    `connect-src 'self' ${supabase}${isDev ? " ws: wss:" : ""}`,
+    // OpenStreetMap tiles (Leaflet) and Cloudinary-hosted photos — a
+    // duplicate img-src directive is ignored by the parser, so every image
+    // source lives here. The browser never talks to Supabase directly (§1.2)
+    // — Cloudinary is the only third-party media origin.
+    `img-src 'self' data: blob: https://res.cloudinary.com https://*.tile.openstreetmap.org`,
+    // The signed-upload POST (src/lib/upload-image.ts) goes straight from the
+    // browser to Cloudinary's own upload endpoint — bytes never pass through
+    // this server, same principle as the old Supabase Storage PUT.
+    `connect-src 'self' https://api.cloudinary.com${isDev ? " ws: wss:" : ""}`,
     // Turnstile renders in an iframe from Cloudflare's challenge origin.
     `frame-src https://challenges.cloudflare.com`,
     `frame-ancestors 'none'`,
@@ -130,7 +126,7 @@ function redirectTo(request: NextRequest, locale: string, path: string, next?: s
 export default async function middleware(request: NextRequest): Promise<NextResponse> {
   const isDev = process.env.NODE_ENV !== "production";
   const nonce = randomToken(16);
-  const csp = contentSecurityPolicy(nonce, supabaseOrigin(), isDev);
+  const csp = contentSecurityPolicy(nonce, isDev);
   const { pathname } = request.nextUrl;
 
   // Both headers go on the *request*, not just the response: `x-nonce` so a

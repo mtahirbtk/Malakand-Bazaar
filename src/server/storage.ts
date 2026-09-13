@@ -2,10 +2,16 @@ import "server-only";
 import { env } from "./env";
 
 /**
- * Turns a Supabase Storage object path (what `listing_images.path` stores)
- * into the public URL the browser actually fetches. The bucket is public
- * read (Phase 6 upload pipeline writes it that way), so no signing needed.
+ * Turns a Cloudinary public_id (what `listing_images.path`,
+ * `sellers.avatar_path` and `sellers.banner_path` store — the column names
+ * are unchanged from the Supabase Storage version; a Cloudinary public_id is
+ * every bit as much an opaque "path to the asset" as an object key was) into
+ * the delivery URL the browser fetches.
+ *
+ * No transformation segment: this is the plain original asset. A resized or
+ * cropped variant would insert one (e.g. `.../upload/w_400,h_400,c_fill/...`)
+ * — none of today's call sites need that yet.
  */
-export function publicStorageUrl(path: string): string {
-  return `${env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${env.SUPABASE_STORAGE_BUCKET}/${path}`;
+export function cloudinaryUrl(publicId: string): string {
+  return `https://res.cloudinary.com/${env.CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}`;
 }

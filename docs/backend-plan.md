@@ -66,16 +66,33 @@ Consequence: the browser **never** talks to Supabase. Only our server holds the
 service-role key. RLS is enabled with **zero policies** (deny-all) on every
 table as defence in depth — if the anon key ever leaked it reads nothing.
 
-### 1.3 Images: Supabase Storage, not Cloudinary — **deviation from `docs/decisions.md`**
+### 1.3 Images: Cloudinary, per `docs/decisions.md`
 
-One vendor instead of two, free tier covers launch, and `next/image` already
-does the resizing/AVIF work Cloudinary was wanted for. Uploads go through our
-API (auth + MIME + size + magic-byte check), which returns a **signed upload
-URL** scoped to one object path; the browser PUTs directly to Storage so image
-bytes never pass through the serverless function.
+Phase 6 shipped this section as Supabase Storage instead — one vendor rather
+than two, and `next/image` already did the resizing/AVIF work Cloudinary was
+wanted for. Reverted back to Cloudinary shortly after, on request, exactly
+along the seam this section already called out below: only
+`src/server/services/uploads.ts`, `src/server/storage.ts` and the
+`listing_images.path` prefix (a Cloudinary `public_id` now, same column) changed.
 
-If Cloudinary is preferred later, only `src/server/services/uploads.ts` and the
-`listing_images.path` prefix change.
+Uploads go through our API (auth + size check; format/EXIF/dimension
+verification described below), which returns a **signed set of upload
+params** for one Cloudinary `public_id`; the browser POSTs directly to
+Cloudinary so image bytes never pass through the serverless function — same
+principle as the Storage PUT, different vendor. `allowed_formats` (signed, so
+the browser cannot widen it) rejects anything that doesn't decode as one of
+the four raster formats; a signed incoming `transformation: "a_exif"` bakes
+in EXIF-orientation rotation and, as a re-encode side effect, strips the
+original file's metadata. `POST /api/uploads/commit` re-reads the asset's
+real width/height/bytes from Cloudinary's Admin API rather than trusting the
+browser's upload response, and enforces the size/dimension caps.
+
+Consequence for Storage: the `media` Supabase Storage bucket provisioned in
+migration `0018_storage_bucket.sql` is no longer used by the app. Left in
+place rather than dropped via a raw `storage.buckets` delete (Supabase
+recommends deleting a bucket through the Storage API/dashboard, not SQL) —
+it's empty and costs nothing; delete it from the dashboard if you want it
+gone.
 
 ### 1.4 Everything else
 

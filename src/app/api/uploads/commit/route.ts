@@ -10,9 +10,10 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Verifies the uploaded object, strips EXIF, records real dimensions
- * (§2.8 #52). The one point in the pipeline that actually looks at the
- * bytes — see src/server/services/uploads.ts.
+ * Confirms the asset actually exists and re-reads its real dimensions/size
+ * from Cloudinary's own record (§2.8 #52) — never the client's word for it.
+ * See src/server/services/uploads.ts for what Cloudinary already enforced at
+ * upload time (format allow-list, EXIF strip) versus what this still checks.
  */
 export const POST = handler(async (request) => {
   await enforceCsrf(request);
