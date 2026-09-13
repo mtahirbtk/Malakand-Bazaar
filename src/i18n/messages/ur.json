@@ -361,6 +361,14 @@
     "noReviewsYet": "ابھی کوئی جائزہ نہیں — پہلا جائزہ آپ کا ہو سکتا ہے۔",
     "signInPromptTitle": "جائزہ دینے کے لیے سائن ان کریں",
     "signInPromptBody": "اس فروخت کنندہ کو ریٹ اور جائزہ دینے کے لیے مفت اکاؤنٹ بنائیں یا سائن ان کریں۔",
-    "signInPromptCta": "سائن ان / اکاؤنٹ بنائیں"
+    "signInPromptCta": "سائن ان / اکاؤنٹ بنائیں",
+    "editReviewCta": "ترمیم کریں",
+    "deleteReviewCta": "حذف کریں",
+    "deleteConfirmTitle": "یہ جائزہ حذف کریں؟",
+    "deleteConfirmBody": "اسے واپس نہیں کیا جا سکتا۔",
+    "deleteConfirmCta": "حذف کریں",
+    "cancelCta": "منسوخ کریں",
+    "saveCta": "محفوظ کریں",
+    "loadMoreCta": "مزید جائزے لوڈ کریں"
   }
 }

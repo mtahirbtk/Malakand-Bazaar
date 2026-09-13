@@ -19,6 +19,8 @@ const buttonVariants = cva(
           "bg-accent-green-dark text-white hover:bg-accent-green-darker",
         subtle:
           "bg-surface border border-surface-border text-brand-700 hover:bg-brand-50 hover:border-brand-400 shadow-2xs",
+        danger:
+          "bg-danger text-white shadow-sm hover:bg-danger/90",
       },
       size: {
         sm: "text-[11px] px-2 py-1.5",
