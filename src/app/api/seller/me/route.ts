@@ -5,7 +5,7 @@ import { enforceRateLimit } from "@/server/http/rate-limit";
 import { enforceCsrf } from "@/server/auth/csrf";
 import { requireSeller } from "@/server/auth/guard";
 import { updateSellerSchema } from "@/server/schemas/seller";
-import { getSellerById, updateSeller } from "@/server/services/sellers";
+import { getSellerPrivate, updateSeller } from "@/server/services/sellers";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 /** My own storefront, private fields included (§2.8 #40). Dashboard bootstrap. */
 export const GET = handler(async () => {
   const { sellerId } = await requireSeller();
-  const seller = await getSellerById(sellerId);
+  const seller = await getSellerPrivate(sellerId);
   if (!seller) throw ApiError.notFound("Your storefront");
   return ok({ seller }, { headers: { "Cache-Control": "no-store" } });
 });

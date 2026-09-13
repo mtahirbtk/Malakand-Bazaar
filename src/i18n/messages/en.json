@@ -10,7 +10,8 @@
     "whatsapp": "WhatsApp",
     "call": "Call Seller",
     "loading": "Loading",
-    "signingOut": "Signing out…"
+    "signingOut": "Signing out…",
+    "saving": "Saving…"
   },
   "announcement": {
     "message": "Zero middleman fees — confirmed directly via WhatsApp.",
@@ -264,7 +265,8 @@
     "avatarUploadCta": "Upload Logo",
     "bannerLabel": "Storefront Banner",
     "bannerUploadCta": "Upload Banner",
-    "removeCta": "Remove"
+    "removeCta": "Remove",
+    "uploadFailedError": "Could not upload that photo. Please try again."
   },
   "sellerRegistration": {
     "pageTitle": "Register Your Store",
@@ -316,15 +318,21 @@
     "localityLabel": "Locality",
     "contactPhoneLabel": "Contact Number",
     "imagesLabel": "Photos",
-    "imagesHint": "Up to 6 photos.",
-    "addPhotoCta": "Add Photo"
+    "imagesHint": "Up to 12 photos.",
+    "addPhotoCta": "Add Photo",
+    "uploadingCta": "Uploading…",
+    "uploadFailedError": "Could not upload that photo. Please try again.",
+    "removePhotoCta": "Remove photo",
+    "removePhotoFailedError": "Could not remove that photo. Please try again.",
+    "movePhotoEarlierCta": "Move photo earlier",
+    "movePhotoLaterCta": "Move photo later",
+    "reorderFailedError": "Could not reorder photos. Please try again."
   },
   "sellerListingForm": {
     "newPageTitle": "Add Listing",
     "editPageTitle": "Edit Listing",
     "createCta": "Publish Listing",
-    "saveCta": "Save Changes",
-    "invalidPriceError": "Enter a title and a valid price."
+    "saveCta": "Save Changes"
   },
   "reviews": {
     "title": "Reviews",

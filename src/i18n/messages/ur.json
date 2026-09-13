@@ -10,7 +10,8 @@
     "whatsapp": "واٹس ایپ",
     "call": "کال کریں",
     "loading": "لوڈ ہو رہا ہے",
-    "signingOut": "سائن آؤٹ ہو رہا ہے…"
+    "signingOut": "سائن آؤٹ ہو رہا ہے…",
+    "saving": "محفوظ ہو رہا ہے…"
   },
   "announcement": {
     "message": "کوئی بچولیا فیس نہیں — براہ راست واٹس ایپ پر تصدیق شدہ۔",
@@ -264,7 +265,8 @@
     "avatarUploadCta": "لوگو اپ لوڈ کریں",
     "bannerLabel": "دکان کا بینر",
     "bannerUploadCta": "بینر اپ لوڈ کریں",
-    "removeCta": "ہٹا دیں"
+    "removeCta": "ہٹا دیں",
+    "uploadFailedError": "تصویر اپ لوڈ نہیں ہو سکی۔ دوبارہ کوشش کریں۔"
   },
   "sellerRegistration": {
     "pageTitle": "اپنی دکان رجسٹر کریں",
@@ -316,15 +318,21 @@
     "localityLabel": "علاقہ",
     "contactPhoneLabel": "رابطہ نمبر",
     "imagesLabel": "تصاویر",
-    "imagesHint": "زیادہ سے زیادہ 6 تصاویر۔",
-    "addPhotoCta": "تصویر شامل کریں"
+    "imagesHint": "زیادہ سے زیادہ 12 تصاویر۔",
+    "addPhotoCta": "تصویر شامل کریں",
+    "uploadingCta": "اپ لوڈ ہو رہی ہے…",
+    "uploadFailedError": "تصویر اپ لوڈ نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+    "removePhotoCta": "تصویر ہٹائیں",
+    "removePhotoFailedError": "تصویر ہٹائی نہیں جا سکی۔ دوبارہ کوشش کریں۔",
+    "movePhotoEarlierCta": "تصویر پہلے منتقل کریں",
+    "movePhotoLaterCta": "تصویر بعد میں منتقل کریں",
+    "reorderFailedError": "تصاویر کی ترتیب تبدیل نہیں ہو سکی۔ دوبارہ کوشش کریں۔"
   },
   "sellerListingForm": {
     "newPageTitle": "اشتہار شامل کریں",
     "editPageTitle": "اشتہار میں ترمیم کریں",
     "createCta": "اشتہار شائع کریں",
-    "saveCta": "تبدیلیاں محفوظ کریں",
-    "invalidPriceError": "عنوان اور درست قیمت درج کریں۔"
+    "saveCta": "تبدیلیاں محفوظ کریں"
   },
   "reviews": {
     "title": "جائزے",

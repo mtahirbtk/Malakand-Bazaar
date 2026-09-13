@@ -3,13 +3,13 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { useAuth } from "@/lib/auth/auth-context";
-import { getListingsBySellerOverlay, setListingStatus } from "@/lib/mock-db/listings";
+import { api, ApiClientError } from "@/lib/api-client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs } from "@/components/ui/tabs";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Price } from "@/components/ui/price";
+import { Spinner } from "@/components/ui/spinner";
 import type { Listing, ListingStatus, BadgeTone } from "@/types";
 
 const STATUS_TONE: Record<ListingStatus, BadgeTone> = {
@@ -28,24 +28,37 @@ const STATUS_LABEL_KEY: Record<ListingStatus, string> = {
 
 export function SellerListingsTable() {
   const t = useTranslations("sellerListings");
-  const { user } = useAuth();
-  const [listings, setListings] = React.useState<Listing[]>([]);
+  const common = useTranslations("common");
+  const [listings, setListings] = React.useState<Listing[] | null>(null);
   const [statusFilter, setStatusFilter] = React.useState<ListingStatus>("active");
+  const [pendingId, setPendingId] = React.useState<string | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
-  const refresh = React.useCallback(() => {
-    if (!user?.sellerId) return;
-    setListings(getListingsBySellerOverlay(user.sellerId));
-  }, [user?.sellerId]);
+  const refresh = React.useCallback(async (status: ListingStatus) => {
+    setError(null);
+    try {
+      const items = await api.get<Listing[]>(`/api/seller/listings?status=${status}&limit=60`);
+      setListings(items);
+    } catch (err) {
+      setError(err instanceof ApiClientError ? err.message : common("genericError"));
+    }
+  }, [common]);
 
   React.useEffect(() => {
-    refresh();
-  }, [refresh]);
+    void refresh(statusFilter);
+  }, [refresh, statusFilter]);
 
-  const visible = listings.filter((l) => l.status === statusFilter);
-
-  function handleStatusChange(id: string, status: ListingStatus) {
-    setListingStatus(id, status);
-    refresh();
+  async function handleStatusChange(id: string, status: ListingStatus) {
+    setPendingId(id);
+    setError(null);
+    try {
+      await api.patch(`/api/seller/listings/${id}/status`, { status });
+      await refresh(statusFilter);
+    } catch (err) {
+      setError(err instanceof ApiClientError ? err.message : common("genericError"));
+    } finally {
+      setPendingId(null);
+    }
   }
 
   return (
@@ -66,11 +79,21 @@ export function SellerListingsTable() {
         </Button>
       </div>
 
-      {visible.length === 0 ? (
+      {error && (
+        <p role="alert" className="text-xs font-semibold text-danger">
+          {error}
+        </p>
+      )}
+
+      {listings === null ? (
+        <div className="flex justify-center py-10">
+          <Spinner size="lg" />
+        </div>
+      ) : listings.length === 0 ? (
         <EmptyState icon="inventory_2" title={t("emptyTitle")} body={t("emptyBody")} />
       ) : (
         <div className="space-y-2">
-          {visible.map((listing) => (
+          {listings.map((listing) => (
             <div
               key={listing.id}
               className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-surface-border bg-surface p-4"
@@ -87,17 +110,32 @@ export function SellerListingsTable() {
                   <Link href={`/seller/dashboard/listings/${listing.id}/edit`}>{t("editCta")}</Link>
                 </Button>
                 {listing.status !== "reserved" && (
-                  <Button variant="subtle" size="sm" onClick={() => handleStatusChange(listing.id, "reserved")}>
+                  <Button
+                    variant="subtle"
+                    size="sm"
+                    disabled={pendingId === listing.id}
+                    onClick={() => handleStatusChange(listing.id, "reserved")}
+                  >
                     {t("markReservedCta")}
                   </Button>
                 )}
                 {listing.status !== "sold" && (
-                  <Button variant="subtle" size="sm" onClick={() => handleStatusChange(listing.id, "sold")}>
+                  <Button
+                    variant="subtle"
+                    size="sm"
+                    disabled={pendingId === listing.id}
+                    onClick={() => handleStatusChange(listing.id, "sold")}
+                  >
                     {t("markSoldCta")}
                   </Button>
                 )}
                 {listing.status !== "removed" && (
-                  <Button variant="ghost" size="sm" onClick={() => handleStatusChange(listing.id, "removed")}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={pendingId === listing.id}
+                    onClick={() => handleStatusChange(listing.id, "removed")}
+                  >
                     {t("removeCta")}
                   </Button>
                 )}

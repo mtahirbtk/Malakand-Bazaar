@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { FileUpload } from "@/components/ui/file-upload";
-import { fileToDataUrl } from "@/lib/file-to-data-url";
+import { uploadSellerImage, UploadValidationError } from "@/lib/upload-image";
 import { TEHSIL_OPTIONS, findTehsil } from "@/data/tehsils";
 import type { TehsilSlug } from "@/types";
 
@@ -25,8 +25,18 @@ export type SellerProfileFieldsValue = {
   tehsilSlug: TehsilSlug;
   localitySlug: string;
   coordinates: { lat: number; lng: number };
+  /** Preview only — what the FileUpload shows. */
   avatarUrl: string;
   storefrontBanner: string;
+  /**
+   * The Storage object path to actually save, once a new photo is uploaded
+   * (§2.8 #41 takes `avatarPath`/`bannerPath`, never a URL). `undefined` means
+   * "unchanged since the form opened"; `""` means "the seller cleared it" —
+   * SellerProfileEditForm relies on that distinction to omit the field
+   * entirely from a PATCH that never touched it.
+   */
+  avatarPath?: string;
+  bannerPath?: string;
 };
 
 /** No per-locality coordinates exist in TEHSILS — this is a fixed
@@ -51,10 +61,22 @@ export function SellerProfileFields({
   errors?: Record<string, string>;
 }) {
   const t = useTranslations("sellerProfile");
+  const [uploadError, setUploadError] = React.useState<string | null>(null);
   const localityOptions = (findTehsil(value.tehsilSlug)?.localities ?? []).map((l) => ({
     value: l.slug,
     label: l.nameEn,
   }));
+
+  async function handlePhotoSelected(kind: "avatar" | "banner", file: File) {
+    setUploadError(null);
+    try {
+      const uploaded = await uploadSellerImage(file, kind);
+      if (kind === "avatar") onChange({ ...value, avatarUrl: uploaded.url, avatarPath: uploaded.path });
+      else onChange({ ...value, storefrontBanner: uploaded.url, bannerPath: uploaded.path });
+    } catch (err) {
+      setUploadError(err instanceof UploadValidationError ? err.message : t("uploadFailedError"));
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -112,12 +134,12 @@ export function SellerProfileFields({
 
       {showImages && (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <FormField label={t("avatarLabel")}>
+        <FormField label={t("avatarLabel")} error={uploadError ?? undefined}>
           <FileUpload
             label={t("avatarUploadCta")}
             previewUrl={value.avatarUrl || undefined}
-            onFileSelected={async (file) => onChange({ ...value, avatarUrl: await fileToDataUrl(file) })}
-            onClear={() => onChange({ ...value, avatarUrl: "" })}
+            onFileSelected={(file) => handlePhotoSelected("avatar", file)}
+            onClear={() => onChange({ ...value, avatarUrl: "", avatarPath: "" })}
             removeLabel={t("removeCta")}
           />
         </FormField>
@@ -125,8 +147,8 @@ export function SellerProfileFields({
           <FileUpload
             label={t("bannerUploadCta")}
             previewUrl={value.storefrontBanner || undefined}
-            onFileSelected={async (file) => onChange({ ...value, storefrontBanner: await fileToDataUrl(file) })}
-            onClear={() => onChange({ ...value, storefrontBanner: "" })}
+            onFileSelected={(file) => handlePhotoSelected("banner", file)}
+            onClear={() => onChange({ ...value, storefrontBanner: "", bannerPath: "" })}
             removeLabel={t("removeCta")}
           />
         </FormField>

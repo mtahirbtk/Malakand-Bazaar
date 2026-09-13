@@ -1,8 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
+import { mockApi } from "@tests/auth-harness";
 import { SellerProfileFields, MALAKAND_CENTER, type SellerProfileFieldsValue } from "./seller-profile-fields";
 
 vi.mock("leaflet/dist/leaflet.css", () => ({}));
@@ -59,15 +60,32 @@ describe("SellerProfileFields", () => {
     expect(await screen.findByRole("group", { name: "Store Location" })).toBeInTheDocument();
   });
 
-  it("stores the uploaded avatar as a persistable data: URL, not a blob: URL", async () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("uploads the avatar through the signed-upload pipeline, not a blob: or data: URL", async () => {
+    mockApi({
+      "POST /api/uploads/sign": {
+        data: { path: "sellers/s1/avatar/x.png", signedUrl: "https://storage.test/upload", token: "t" },
+      },
+      "PUT https://storage.test/upload": { data: {} },
+      "POST /api/uploads/commit": {
+        data: { path: "sellers/s1/avatar/x.png", url: "https://storage.test/public/x.png", width: 40, height: 40 },
+      },
+    });
+
     const onChange = vi.fn();
     render(<Wrapper onChange={onChange} />);
     const file = new File(["avatar-bytes"], "avatar.png", { type: "image/png" });
     await userEvent.upload(screen.getByLabelText("Upload Logo"), file);
+
     await vi.waitFor(() => {
-      expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ avatarUrl: expect.stringMatching(/^data:/) }));
+      expect(onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ avatarUrl: "https://storage.test/public/x.png", avatarPath: "sellers/s1/avatar/x.png" })
+      );
     });
     const call = onChange.mock.calls.find((c) => typeof c[0].avatarUrl === "string" && c[0].avatarUrl);
-    expect(call?.[0].avatarUrl).not.toMatch(/^blob:/);
+    expect(call?.[0].avatarUrl).not.toMatch(/^(blob|data):/);
   });
 });

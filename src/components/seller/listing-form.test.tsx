@@ -15,7 +15,6 @@ const BASE_VALUE: ListingFormValue = {
   subcategorySlug: CATEGORIES[0].subcategories[0].slug,
   tehsilSlug: "batkhela",
   localitySlug: "batkhela-city",
-  images: [],
   contactPhone: "",
 };
 

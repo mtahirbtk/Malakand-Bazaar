@@ -3,6 +3,7 @@ import { db, PG } from "../db";
 import { ApiError } from "../http/errors";
 import { log } from "../http/log";
 import { hashPassword } from "../auth/password";
+import { publicStorageUrl } from "../storage";
 import { deleteStorageObjects, forgetPendingUpload } from "./uploads";
 import type { RegisterSellerInput } from "../schemas/auth";
 import type { UpdateSellerInput } from "../schemas/seller";
@@ -32,6 +33,13 @@ export type SellerSummary = {
   avatarPath: string | null;
   bannerPath: string | null;
   createdAt: string;
+};
+
+/** getSellerById's shape, plus what only the owner needs — coordinates and ready-to-render photo URLs. */
+export type SellerPrivateSummary = SellerSummary & {
+  coordinates: { lat: number; lng: number } | null;
+  avatarUrl: string | null;
+  bannerUrl: string | null;
 };
 
 const SELLER_COLUMNS =
@@ -180,6 +188,27 @@ export async function getSellerById(sellerId: string): Promise<SellerSummary | n
 }
 
 /**
+ * GET/PATCH /api/seller/me. Unlike getSellerById (used for anything read
+ * generically), this goes through fn_seller_private (0019) because a plain
+ * REST select of a `geography` column returns raw WKB hex, not {lat,lng}.
+ */
+export async function getSellerPrivate(sellerId: string): Promise<SellerPrivateSummary | null> {
+  const { data, error } = await db.rpc("fn_seller_private", { p_seller_id: sellerId });
+  if (error) {
+    log.error("fn_seller_private failed", { sellerId, message: error.message });
+    throw new ApiError("INTERNAL", "Could not load your storefront. Please try again.");
+  }
+  if (!data) return null;
+
+  const row = data as SellerSummary & { coordinates: { lat: number; lng: number } | null };
+  return {
+    ...row,
+    avatarUrl: row.avatarPath ? publicStorageUrl(row.avatarPath) : null,
+    bannerUrl: row.bannerPath ? publicStorageUrl(row.bannerPath) : null,
+  };
+}
+
+/**
  * Confirms a photo path is one this seller uploaded and committed, and that
  * it is the kind the caller says it is — a customer cannot set their avatar
  * to a path lifted from someone else's committed upload, and a "listing"
@@ -212,7 +241,7 @@ async function resolveProfilePhotoPath(
  * Profile edit. §1.4 / Phase 6 endpoint 41 — everything except the slug
  * (immutable after creation, and simply not accepted by the schema).
  */
-export async function updateSeller(sellerId: string, input: UpdateSellerInput): Promise<SellerSummary> {
+export async function updateSeller(sellerId: string, input: UpdateSellerInput): Promise<SellerPrivateSummary> {
   const current = await getSellerById(sellerId);
   if (!current) throw ApiError.notFound("Your storefront");
 
@@ -243,12 +272,7 @@ export async function updateSeller(sellerId: string, input: UpdateSellerInput): 
   const nextBannerPath = await resolveProfilePhotoPath(sellerId, "banner", input.bannerPath);
   if (nextBannerPath !== undefined) patch.banner_path = nextBannerPath;
 
-  const { data, error } = await db
-    .from("sellers")
-    .update(patch)
-    .eq("id", sellerId)
-    .select(SELLER_COLUMNS)
-    .single();
+  const { error } = await db.from("sellers").update(patch).eq("id", sellerId);
 
   if (error) {
     log.error("seller update failed", { sellerId, code: error.code, message: error.message });
@@ -269,5 +293,10 @@ export async function updateSeller(sellerId: string, input: UpdateSellerInput): 
   if (nextAvatarPath) await forgetPendingUpload(nextAvatarPath);
   if (nextBannerPath) await forgetPendingUpload(nextBannerPath);
 
-  return toSellerSummary(data as SellerRow);
+  // Re-read through fn_seller_private rather than .select().single() on the
+  // update itself, so the response carries real {lat,lng} instead of the raw
+  // WKB hex a plain REST select of `coordinates` would return.
+  const updated = await getSellerPrivate(sellerId);
+  if (!updated) throw new ApiError("INTERNAL", "Could not save your storefront. Please try again.");
+  return updated;
 }

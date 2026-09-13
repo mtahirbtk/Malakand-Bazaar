@@ -56,23 +56,35 @@ export function renderWithAuth(ui: React.ReactNode, user: AuthUser | null = null
 type Route = { status?: number; ok?: boolean; data?: unknown; error?: { code: string; message: string; fields?: Record<string, string> } };
 
 /**
+ * A route can also be a function of the call so far — for the rare test that
+ * needs a mocked endpoint's answer to change between calls (e.g. a list that
+ * should reflect a mutation made moments earlier in the same test). Most
+ * tests want the plain static form.
+ */
+type RouteEntry = Route | ((call: { body: unknown; callNumber: number }) => Route);
+
+/**
  * Stubs `fetch` with a map of "METHOD /path" to an envelope.
  *
  * Anything not listed fails the test loudly rather than returning undefined —
  * a component quietly calling an endpoint nobody stubbed is exactly the bug
  * this should surface.
  */
-export function mockApi(routes: Record<string, Route>) {
+export function mockApi(routes: Record<string, RouteEntry>) {
   const calls: { method: string; path: string; body: unknown }[] = [];
+  const callCounts: Record<string, number> = {};
 
   const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const path = typeof input === "string" ? input : input.toString();
     const method = (init?.method ?? "GET").toUpperCase();
     const key = `${method} ${path}`;
-    calls.push({ method, path, body: init?.body ? JSON.parse(init.body as string) : undefined });
+    // A direct-to-Storage upload PUT (see src/lib/upload-image.ts) sends a
+    // File/Blob body, not JSON — record it as-is rather than assuming string.
+    const body = typeof init?.body === "string" ? JSON.parse(init.body) : init?.body;
+    calls.push({ method, path, body });
 
-    const route = routes[key];
-    if (!route) {
+    const entry = routes[key];
+    if (!entry) {
       // The provider bootstraps with GET /api/auth/me whenever no server user
       // was supplied. Answering "signed out" by default keeps every test from
       // having to stub a call it does not care about.
@@ -85,11 +97,14 @@ export function mockApi(routes: Record<string, Route>) {
       throw new Error(`No mock for ${key}. Add it to mockApi({ "${key}": { data: {} } }).`);
     }
 
-    const body = route.error
+    callCounts[key] = (callCounts[key] ?? 0) + 1;
+    const route = typeof entry === "function" ? entry({ body, callNumber: callCounts[key] }) : entry;
+
+    const responseBody = route.error
       ? { ok: false, error: route.error }
       : { ok: route.ok ?? true, data: route.data ?? {} };
 
-    return new Response(JSON.stringify(body), {
+    return new Response(JSON.stringify(responseBody), {
       status: route.status ?? (route.error ? 400 : 200),
       headers: { "content-type": "application/json" },
     });
