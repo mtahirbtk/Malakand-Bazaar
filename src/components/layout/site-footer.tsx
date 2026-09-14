@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "./brand-logo";
 import { Link } from "@/i18n/routing";
+import { CONTACT_PHONES } from "@/lib/contact";
 
 /** Ported from code.html:1236-1330. */
 export function SiteFooter() {
@@ -40,7 +41,13 @@ export function SiteFooter() {
               <div className="flex items-center gap-2 font-bold text-accent-green-dark">
                 <Icon name="support_agent" size={18} />
                 <span>
-                  {t("whatsappHotline")}: <span dir="ltr">+92 316 644 1108</span>
+                  {t("whatsappHotline")}:{" "}
+                  {CONTACT_PHONES.map((phone, i) => (
+                    <span key={phone.raw} dir="ltr">
+                      {i > 0 && " / "}
+                      {phone.display}
+                    </span>
+                  ))}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-on-surface-muted">

@@ -169,6 +169,18 @@
       "slide3Title": "Clean Solar Agri-Tech &",
       "slide3Accent": "Pure Organic Dairy",
       "slide3Body": "Heavy-duty 15kW tube-well inverters, high-yield Sahiwal dairy cattle, and 100% natural Totakan mountain honey directly from verified local families.",
+      "slide4Eyebrow": "Malakand Hills & Countryside",
+      "slide4Title": "Lush Greenery Across the",
+      "slide4Accent": "Hills of Malakand",
+      "slide4Body": "From terraced hillside farms to pine-covered slopes, discover produce and goods sourced straight from Malakand's green countryside.",
+      "slide5Eyebrow": "Malakand's Signature Citrus",
+      "slide5Title": "The Famous",
+      "slide5Accent": "Palai Malta of Malakand",
+      "slide5Body": "Sweet, juicy Malta oranges grown in Palai's orchards — a Malakand specialty available fresh, direct from local growers.",
+      "slide6Eyebrow": "Batkhela City & Waterfront",
+      "slide6Title": "Explore the City of",
+      "slide6Accent": "Batkhela",
+      "slide6Body": "From the bustling city center to the calm of Batkhela Lake, connect with sellers across the heart of Malakand's commercial hub.",
       "primaryCta": "Explore Verified Deals",
       "secondaryCta": "Become a Seller (Free)"
     },
@@ -235,6 +247,12 @@
       "title": "PTA Approved Mobiles",
       "body": "Checked batteries, original warranty receipts.",
       "link": "Explore Electronics"
+    },
+    "patron": {
+      "eyebrow": "With Appreciation",
+      "body": "MalakandBazaar grew out of the district's push to bring local trade online — built with the encouragement and support of the Malakand administration.",
+      "name": "Muhammad Fayyaz Khan Sherpao",
+      "role": "Deputy Commissioner, Malakand"
     }
   },
   "auth": {

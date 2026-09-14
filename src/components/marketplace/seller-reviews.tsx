@@ -80,11 +80,10 @@ export function SellerReviews({ seller }: { seller: Seller }) {
     void refreshMyReview();
   }, [refreshMyReview]);
 
-  function openWriteForm() {
-    if (!user) {
-      setShowSignInPrompt(true);
-      return;
-    }
+  // Only reachable from the "Edit" link on the buyer's own review — that
+  // link only ever renders once `myReview` exists, so the buyer is already
+  // signed in by the time this runs.
+  function openEditForm() {
     setRating(myReview?.rating ?? 5);
     setComment(myReview?.comment ?? "");
     setShowForm(true);
@@ -92,7 +91,10 @@ export function SellerReviews({ seller }: { seller: Seller }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!user) return;
+    if (!user) {
+      setShowSignInPrompt(true);
+      return;
+    }
     setSubmitting(true);
     try {
       if (myReview) {
@@ -123,22 +125,30 @@ export function SellerReviews({ seller }: { seller: Seller }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-extrabold tracking-tight text-on-surface">{t("title")}</h2>
-        {ready && user?.role !== "admin" && !isOwnStore && !myReview && (
-          <Button variant="subtle" size="sm" onClick={openWriteForm}>
-            {t("writeReviewCta")}
-          </Button>
-        )}
-      </div>
+      <h2 className="text-lg font-extrabold tracking-tight text-on-surface">{t("title")}</h2>
 
-      {showForm && (
+      {/*
+       * Composer is inline and always visible to an eligible visitor — signed
+       * in or not — rather than hidden behind a "Write a Review" toggle.
+       * Login is only asked for at submit time (handleSubmit), the same
+       * pattern most review UIs use. It doubles as the edit form: once
+       * `myReview` exists it stays hidden until the buyer clicks "Edit"
+       * (`showForm`), and re-hides itself after a successful submit.
+       */}
+      {ready && user?.role !== "admin" && !isOwnStore && (!myReview || showForm) && (
         <form className="space-y-3 rounded-xl border border-surface-border bg-surface-low p-4" onSubmit={handleSubmit}>
           <Rating value={rating} editable onChange={setRating} ariaLabel={t("yourRatingAria")} />
           <Textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder={t("commentPlaceholder")} />
-          <Button type="submit" size="sm" disabled={submitting}>
-            {myReview ? t("saveCta") : t("submitReviewCta")}
-          </Button>
+          <div className="flex gap-2">
+            <Button type="submit" size="sm" disabled={submitting}>
+              {myReview ? t("saveCta") : t("submitReviewCta")}
+            </Button>
+            {showForm && myReview && (
+              <Button type="button" variant="subtle" size="sm" onClick={() => setShowForm(false)}>
+                {t("cancelCta")}
+              </Button>
+            )}
+          </div>
         </form>
       )}
 
@@ -157,7 +167,7 @@ export function SellerReviews({ seller }: { seller: Seller }) {
                 {review.comment && <p className="mt-1 text-xs text-on-surface-muted">{review.comment}</p>}
                 {isMine && (
                   <div className="mt-2 flex gap-3">
-                    <button type="button" onClick={openWriteForm} className="text-xs font-bold text-brand-700 hover:underline">
+                    <button type="button" onClick={openEditForm} className="text-xs font-bold text-brand-700 hover:underline">
                       {t("editReviewCta")}
                     </button>
                     <button

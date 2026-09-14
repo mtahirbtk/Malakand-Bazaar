@@ -9,6 +9,7 @@ import { CATEGORIES } from "@/data/categories";
 import { TEHSILS } from "@/data/tehsils";
 import type { TehsilSlug } from "@/types";
 import { cn } from "@/lib/cn";
+import { CONTACT_PHONES } from "@/lib/contact";
 
 /** The subset of the search query this sidebar reads and patches. */
 export type SearchFiltersValue = {
@@ -168,14 +169,20 @@ export function SearchFiltersPanel({
           {t("helpTitle")}
         </p>
         <p className="text-[11px] leading-relaxed text-white/85">{t("helpBody")}</p>
-        <a
-          href="https://wa.me/923166441108"
-          target="_blank"
-          rel="noreferrer"
-          className="block rounded bg-accent-green-dark py-1.5 text-center font-bold text-white shadow-sm transition-colors hover:bg-accent-green-darker"
-        >
-          {t("helpCta")}
-        </a>
+        <div className="space-y-1.5">
+          {CONTACT_PHONES.map((phone) => (
+            <a
+              key={phone.raw}
+              href={`https://wa.me/${phone.raw.replace(/\D/g, "")}`}
+              target="_blank"
+              rel="noreferrer"
+              dir="ltr"
+              className="block rounded bg-accent-green-dark py-1.5 text-center font-bold text-white shadow-sm transition-colors hover:bg-accent-green-darker"
+            >
+              {t("helpCta")}: {phone.display}
+            </a>
+          ))}
+        </div>
       </div>
     </aside>
   );

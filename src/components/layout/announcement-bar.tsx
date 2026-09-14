@@ -3,11 +3,8 @@
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/ui/icon";
 import { whatsappUrl } from "@/lib/whatsapp";
+import { CONTACT_PHONES } from "@/lib/contact";
 import { LocaleSwitcher } from "./locale-switcher";
-
-/** Same support number as the floating WhatsApp button and the search
- * sidebar's help card — there's one official contact channel, not per-page ones. */
-const SUPPORT_PHONE = "+923166441108";
 
 /**
  * Ported from code.html:55-90. The source dropdown mixed three tehsils with
@@ -30,16 +27,24 @@ export function AnnouncementBar() {
                 real page for it yet, and a dead link is worse than no icon. */}
             <a
               className="hover:opacity-80 transition-opacity"
-              href={whatsappUrl(SUPPORT_PHONE, "Assalam-o-Alaikum MalakandBazaar")}
+              href={whatsappUrl(CONTACT_PHONES[0].raw, "Assalam-o-Alaikum MalakandBazaar")}
               target="_blank"
               rel="noopener noreferrer"
               title={t("whatsappCommunity")}
             >
               <Icon name="forum" size={15} />
             </a>
-            <a className="hover:opacity-80 transition-opacity" href={`tel:${SUPPORT_PHONE}`} title={t("phoneSupport")}>
-              <Icon name="call" size={15} />
-            </a>
+            <div className="hidden md:flex items-center gap-1.5 whitespace-nowrap" aria-label={t("phoneSupport")}>
+              <Icon name="call" size={13} />
+              {CONTACT_PHONES.map((phone, i) => (
+                <span key={phone.raw} className="flex items-center gap-1.5">
+                  {i > 0 && <span className="text-white/50">/</span>}
+                  <a className="hover:opacity-80 transition-opacity" href={`tel:${phone.raw}`} dir="ltr">
+                    {phone.display}
+                  </a>
+                </span>
+              ))}
+            </div>
           </div>
           <span className="inline-flex items-center gap-1.5 tracking-tight font-semibold">
             <span className="w-2 h-2 rounded-full bg-white animate-none sm:animate-ping" />

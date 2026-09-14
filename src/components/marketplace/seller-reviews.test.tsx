@@ -42,36 +42,40 @@ describe("SellerReviews", () => {
     fire.mockClear();
   });
 
-  it("prompts sign-in when a signed-out visitor tries to write a review", async () => {
+  it("shows the review composer inline (no button needed) even signed out, and prompts sign-in on submit", async () => {
     mockApi({ "GET /api/sellers/khan-solar-engineering/reviews?limit=24": { data: [] } });
     renderWithAuth(<SellerReviews seller={SELLER} />, null);
-    await userEvent.click(await screen.findByRole("button", { name: "Write a Review" }));
+    const textarea = await screen.findByPlaceholderText("Share your experience with this seller...");
+    await userEvent.type(textarea, "Great seller!");
+    await userEvent.click(screen.getByRole("button", { name: "Submit Review" }));
     expect(await screen.findByText("Sign In to Review")).toBeInTheDocument();
   });
 
-  it("lets a signed-in customer submit a review, which then appears in the list", async () => {
+  it("lets a signed-in customer submit a review directly (no toggle button), which then appears in the list", async () => {
     mockApi({
       "GET /api/sellers/khan-solar-engineering/reviews?limit=24": ({ callNumber }) =>
         callNumber === 1 ? { data: [] } : { data: [MY_REVIEW] },
-      "GET /api/me/reviews?limit=60": { data: [] },
+      "GET /api/me/reviews?limit=60": ({ callNumber }) =>
+        callNumber === 1 ? { data: [] } : { data: [{ id: "r1", sellerId: "s1", rating: 5, comment: "Great seller!" }] },
       "POST /api/sellers/khan-solar-engineering/reviews": { data: { review: { id: "r1" } }, status: 201 },
     });
     renderWithAuth(<SellerReviews seller={SELLER} />, makeUser({ displayName: "Bilal" }));
-    await userEvent.click(await screen.findByRole("button", { name: "Write a Review" }));
-    await userEvent.type(screen.getByPlaceholderText("Share your experience with this seller..."), "Great seller!");
+    await userEvent.type(await screen.findByPlaceholderText("Share your experience with this seller..."), "Great seller!");
     await userEvent.click(screen.getByRole("button", { name: "Submit Review" }));
     expect(await screen.findByText("Bilal")).toBeInTheDocument();
     expect(await screen.findByText("Solid, would buy again.")).toBeInTheDocument();
+    // Composer hides itself once the buyer has a review — replaced by the read-only card + Edit/Delete.
+    expect(screen.queryByPlaceholderText("Share your experience with this seller...")).toBeNull();
   });
 
-  it("hides the write-review button for the seller's own storefront", async () => {
+  it("hides the composer entirely for the seller's own storefront", async () => {
     mockApi({ "GET /api/sellers/khan-solar-engineering/reviews?limit=24": { data: [] } });
     renderWithAuth(<SellerReviews seller={SELLER} />, makeSeller({ sellerId: "s1" }));
     await screen.findByText("Reviews");
-    expect(screen.queryByRole("button", { name: "Write a Review" })).toBeNull();
+    expect(screen.queryByPlaceholderText("Share your experience with this seller...")).toBeNull();
   });
 
-  it("shows Edit/Delete instead of Write for a buyer whose review is on the fetched page", async () => {
+  it("shows Edit/Delete instead of the composer for a buyer whose review is on the fetched page", async () => {
     mockApi({
       "GET /api/sellers/khan-solar-engineering/reviews?limit=24": { data: [MY_REVIEW] },
       "GET /api/me/reviews?limit=60": { data: [{ id: "r1", sellerId: "s1", rating: 4, comment: MY_REVIEW.comment }] },
@@ -79,10 +83,10 @@ describe("SellerReviews", () => {
     renderWithAuth(<SellerReviews seller={SELLER} />, makeUser({ id: TEST_USER_ID, displayName: "Bilal" }));
     expect(await screen.findByRole("button", { name: "Edit" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Delete" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Write a Review" })).toBeNull();
+    expect(screen.queryByPlaceholderText("Share your experience with this seller...")).toBeNull();
   });
 
-  it("still hides Write for a buyer whose review exists but isn't on the fetched page (>1 page of reviews)", async () => {
+  it("still hides the composer for a buyer whose review exists but isn't on the fetched page (>1 page of reviews)", async () => {
     // The seller-scoped list only ever returns the newest 24 — simulate the
     // buyer's own review having aged off that page while /api/me/reviews
     // (account-wide, not seller-scoped) still reports it exists.
@@ -95,7 +99,7 @@ describe("SellerReviews", () => {
     renderWithAuth(<SellerReviews seller={SELLER} />, makeUser({ id: TEST_USER_ID, displayName: "Bilal" }));
     await screen.findByText("Ayesha");
     await waitFor(() => {
-      expect(screen.queryByRole("button", { name: "Write a Review" })).toBeNull();
+      expect(screen.queryByPlaceholderText("Share your experience with this seller...")).toBeNull();
     });
   });
 
@@ -155,7 +159,8 @@ describe("SellerReviews", () => {
     await waitFor(() => {
       expect(screen.queryByText("Solid, would buy again.")).toBeNull();
     });
-    expect(await screen.findByRole("button", { name: "Write a Review" })).toBeInTheDocument();
+    // Composer reappears since the buyer no longer has a review.
+    expect(await screen.findByPlaceholderText("Share your experience with this seller...")).toBeInTheDocument();
   });
 
   it("shows an error toast and leaves the form open when submitting fails", async () => {
@@ -169,8 +174,7 @@ describe("SellerReviews", () => {
     });
     renderWithAuth(<SellerReviews seller={SELLER} />, makeUser({ displayName: "Bilal" }));
 
-    await userEvent.click(await screen.findByRole("button", { name: "Write a Review" }));
-    await userEvent.type(screen.getByPlaceholderText("Share your experience with this seller..."), "Great seller!");
+    await userEvent.type(await screen.findByPlaceholderText("Share your experience with this seller..."), "Great seller!");
     await userEvent.click(screen.getByRole("button", { name: "Submit Review" }));
 
     await waitFor(() => {

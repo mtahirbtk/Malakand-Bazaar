@@ -8,6 +8,7 @@ import { CategoryCircle } from "@/components/marketplace/category-circle";
 import { SectionHeader } from "@/components/marketplace/section-header";
 import { ListingCard } from "@/components/marketplace/listing-card";
 import { SellerCard } from "@/components/marketplace/seller-card";
+import { PatronCredit } from "@/components/marketplace/patron-credit";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -90,6 +91,45 @@ export default function HomeContent({ payload }: { payload: HomePayload }) {
       body: t("hero.slide3Body"),
       image: "/images/hero/hero-3.jpg",
       imageAlt: "High Alpine Swat & Malakand Valley",
+      scrimTone: "accent-green-dark" as const,
+      primaryCta: { label: t("hero.primaryCta"), href: "/search" },
+      secondaryCta: { label: t("hero.secondaryCta"), href: "/sell" },
+    },
+    {
+      eyebrow: t("hero.slide4Eyebrow"),
+      eyebrowIcon: "forest",
+      eyebrowTone: "green" as const,
+      title: t("hero.slide4Title"),
+      titleAccent: t("hero.slide4Accent"),
+      body: t("hero.slide4Body"),
+      image: "/images/hero/hero-4.jpg",
+      imageAlt: "Malakand Greenery & Hillside Landscape",
+      scrimTone: "primary" as const,
+      primaryCta: { label: t("hero.primaryCta"), href: "/search" },
+      secondaryCta: { label: t("hero.secondaryCta"), href: "/sell" },
+    },
+    {
+      eyebrow: t("hero.slide5Eyebrow"),
+      eyebrowIcon: "nutrition",
+      eyebrowTone: "sand" as const,
+      title: t("hero.slide5Title"),
+      titleAccent: t("hero.slide5Accent"),
+      body: t("hero.slide5Body"),
+      image: "/images/hero/hero-5.jpg",
+      imageAlt: "Malakand Palai Malta (Blood Orange) Harvest",
+      scrimTone: "secondary" as const,
+      primaryCta: { label: t("hero.primaryCta"), href: "/search" },
+      secondaryCta: { label: t("hero.secondaryCta"), href: "/sell" },
+    },
+    {
+      eyebrow: t("hero.slide6Eyebrow"),
+      eyebrowIcon: "location_city",
+      eyebrowTone: "secondary" as const,
+      title: t("hero.slide6Title"),
+      titleAccent: t("hero.slide6Accent"),
+      body: t("hero.slide6Body"),
+      image: "/images/hero/hero-6.jpg",
+      imageAlt: "Batkhela City Lake View",
       scrimTone: "accent-green-dark" as const,
       primaryCta: { label: t("hero.primaryCta"), href: "/search" },
       secondaryCta: { label: t("hero.secondaryCta"), href: "/sell" },
@@ -289,6 +329,9 @@ export default function HomeContent({ payload }: { payload: HomePayload }) {
           </div>
         ))}
       </section>
+
+      {/* 8. Patron credit — quiet, indirect acknowledgement */}
+      <PatronCredit />
     </main>
   );
 }
