@@ -8,10 +8,21 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
+/**
+ * Next's webpack dev server wraps a static image import as
+ * `{ src, width, height }`; Turbopack (this project's `next dev --turbopack`)
+ * hands back the plain URL string instead. Reading `.src` off that string is
+ * `undefined`, which is exactly what makes `L.icon` throw "iconUrl not set in
+ * Icon options" — normalize both shapes instead of assuming one.
+ */
+function assetSrc(asset: string | { src: string }): string {
+  return typeof asset === "string" ? asset : asset.src;
+}
+
 const pinIcon = L.icon({
-  iconUrl: markerIcon.src,
-  iconRetinaUrl: markerIcon2x.src,
-  shadowUrl: markerShadow.src,
+  iconUrl: assetSrc(markerIcon),
+  iconRetinaUrl: assetSrc(markerIcon2x),
+  shadowUrl: assetSrc(markerShadow),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
@@ -38,7 +49,12 @@ export function MapPinPicker({
     <div
       role="group"
       aria-label={ariaLabel}
-      className="overflow-hidden rounded-xl border border-surface-border"
+      // isolate: Leaflet's panes/controls carry z-index up to 1000. Its own
+      // container is position:relative with z-index:auto, which per spec
+      // does NOT create a stacking context — so those z-indexes escape past
+      // this box and render above app overlays like Select (z-[110]).
+      // isolate contains them so they can never outrank anything outside.
+      className="isolate overflow-hidden rounded-xl border border-surface-border"
     >
       <MapContainer
         center={[value.lat, value.lng]}

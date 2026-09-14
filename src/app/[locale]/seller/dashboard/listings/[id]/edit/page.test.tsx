@@ -1,13 +1,9 @@
 import * as React from "react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { NextIntlClientProvider } from "next-intl";
-import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
-import { saveListing, getListingByIdOverlay } from "@/lib/mock-db/listings";
+import { renderWithAuth, mockApi, makeSeller } from "@tests/auth-harness";
 import EditListingPage from "./page";
-import type { Listing } from "@/types";
 
 const pushMock = vi.fn();
 const notFoundMock = vi.fn();
@@ -20,31 +16,18 @@ vi.mock("next/navigation", async () => {
   return { ...actual, notFound: () => notFoundMock() };
 });
 
-const OWNED_LISTING: Listing = {
+const OWNED_LISTING = {
   id: "l_owned",
-  slug: "owned-listing",
   title: "Owned Listing",
-  description: "Mine.",
+  description: "Mine, and it says so right here.",
   price: 5000,
   categorySlug: "electronics",
   subcategorySlug: "electronics-generators",
   tehsilSlug: "batkhela",
   localitySlug: "batkhela-city",
-  localityLabel: "Batkhela City & Bazaar",
-  images: [],
   contactPhone: "+923001234567",
-  sellerId: "s1",
-  status: "active",
-  createdAt: "2026-09-12T00:00:00.000Z",
+  imageDetails: [],
 };
-
-function seedSignedInSeller(sellerId: string) {
-  window.localStorage.setItem(
-    "mb.users",
-    JSON.stringify([{ id: "u1", phone: "+923001234567", password: "password1", role: "seller", displayName: "Store", sellerId }])
-  );
-  window.localStorage.setItem("mb.session", JSON.stringify("u1"));
-}
 
 async function renderPage(id: string) {
   // EditListingPage unwraps its `params` promise with React.use(), which
@@ -57,40 +40,44 @@ async function renderPage(id: string) {
   // already-resolved promise inside React's Suspense retry never flushes to
   // the DOM otherwise — jsdom has no browser event loop driving it forward.
   await act(async () => {
-    render(
-      <NextIntlClientProvider locale="en" messages={messages}>
-        <AuthProvider>
-          <React.Suspense fallback={null}>
-            <EditListingPage params={Promise.resolve({ id })} />
-          </React.Suspense>
-        </AuthProvider>
-      </NextIntlClientProvider>
+    renderWithAuth(
+      <React.Suspense fallback={null}>
+        <EditListingPage params={Promise.resolve({ id })} />
+      </React.Suspense>,
+      makeSeller({ sellerId: "s1" })
     );
   });
 }
 
-describe("EditListingPage", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
-    pushMock.mockClear();
-    notFoundMock.mockClear();
-  });
+afterEach(() => {
+  vi.unstubAllGlobals();
+  pushMock.mockClear();
+  notFoundMock.mockClear();
+});
 
+describe("EditListingPage", () => {
   it("loads and saves changes to the seller's own listing", async () => {
-    saveListing(OWNED_LISTING);
-    seedSignedInSeller("s1");
+    mockApi({
+      "GET /api/seller/listings/l_owned": { data: { listing: OWNED_LISTING } },
+      "PATCH /api/seller/listings/l_owned": { data: { listing: { ...OWNED_LISTING, title: "Renamed Listing" } } },
+    });
     await renderPage("l_owned");
+
     const titleInput = await screen.findByDisplayValue("Owned Listing");
     await userEvent.clear(titleInput);
     await userEvent.type(titleInput, "Renamed Listing");
     await userEvent.click(screen.getByRole("button", { name: "Save Changes" }));
-    expect(pushMock).toHaveBeenCalledWith("/seller/dashboard/listings");
-    expect(getListingByIdOverlay("l_owned")?.title).toBe("Renamed Listing");
+
+    await vi.waitFor(() => expect(pushMock).toHaveBeenCalledWith("/seller/dashboard/listings"));
   });
 
   it("calls notFound for a listing belonging to a different seller", async () => {
-    saveListing(OWNED_LISTING);
-    seedSignedInSeller("s_someone_else");
+    mockApi({
+      "GET /api/seller/listings/l_owned": {
+        status: 404,
+        error: { code: "NOT_FOUND", message: "That listing could not be found." },
+      },
+    });
     await renderPage("l_owned");
     await vi.waitFor(() => expect(notFoundMock).toHaveBeenCalled());
   });

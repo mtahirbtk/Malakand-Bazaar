@@ -5,8 +5,7 @@ export const QUICK_LINKS: {
     | "livestockCattle"
     | "vehiclesBikes"
     | "propertyPlots"
-    | "solarElectronics"
-    | "topLocalSellers";
+    | "solarElectronics";
   href: string;
 }[] = [
   { labelKey: "dailyFreshAgro", href: "/search?category=fresh-produce-food" },
@@ -14,5 +13,4 @@ export const QUICK_LINKS: {
   { labelKey: "vehiclesBikes", href: "/search?category=vehicles" },
   { labelKey: "propertyPlots", href: "/search?category=property-for-sale" },
   { labelKey: "solarElectronics", href: "/search?category=solar-energy" },
-  { labelKey: "topLocalSellers", href: "/sellers" },
 ];

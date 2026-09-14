@@ -69,15 +69,44 @@ export type Seller = {
   reviewCount: number;
   verified: boolean;
   responseMinutes: number;
-  specialty: string;
-  statLabel: string;
-  statValue: string;
+  /**
+   * Marketing copy the fixture sellers carry ("Deals Done", "142 Systems",
+   * a specialty blurb). There's no such field on a real seller — nothing in
+   * the data model backs it, and CLAUDE.md rules out inventing one — so it's
+   * optional and `SellerCard` falls back to `listingCount` when absent.
+   */
+  specialty?: string;
+  statLabel?: string;
+  statValue?: string;
+  listingCount?: number;
   phone: string;
   storefrontBanner?: string;
   coordinates?: { lat: number; lng: number };
   /** Storefront bio, set at registration. Absent on the 5 seed fixtures. */
   description?: string;
   avatarUrl?: string;
+  /** ISO date the storefront was created. Absent only for the 5 seed fixtures. */
+  memberSince?: string;
+};
+
+/**
+ * What a listing detail page's seller card actually renders — a subset of
+ * `Seller`, satisfied by both the full fixture `Seller` and the smaller
+ * real-data shape `fn_get_listing_by_slug` returns.
+ */
+export type ListingSellerCard = Pick<Seller, "slug" | "name" | "coordinates">;
+
+/**
+ * One photo, as the seller dashboard needs it (id + sort for drag-reorder and
+ * delete-by-id). Public reads only ever see `Listing.images: string[]` — this
+ * shape exists for the owner-only endpoints in Phase 6.
+ */
+export type ListingImage = {
+  id: string;
+  url: string;
+  width: number | null;
+  height: number | null;
+  sort: number;
 };
 
 export type UserRole = "customer" | "seller" | "admin";

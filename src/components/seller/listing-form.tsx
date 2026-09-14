@@ -6,9 +6,8 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
-import { MultiFileUpload } from "@/components/ui/multi-file-upload";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
-import { fileToDataUrl } from "@/lib/file-to-data-url";
 import { CATEGORY_OPTIONS, findCategory } from "@/data/categories";
 import { TEHSIL_OPTIONS, findTehsil } from "@/data/tehsils";
 import type { TehsilSlug } from "@/types";
@@ -22,7 +21,6 @@ export type ListingFormValue = {
   subcategorySlug: string;
   tehsilSlug: TehsilSlug;
   localitySlug: string;
-  images: string[];
   contactPhone: string;
 };
 
@@ -32,12 +30,21 @@ export function ListingForm({
   onSubmit,
   submitLabel,
   error,
+  imagesSection,
 }: {
   value: ListingFormValue;
   onChange: (value: ListingFormValue) => void;
   onSubmit: (e: React.FormEvent) => void;
   submitLabel: string;
   error?: string | null;
+  /**
+   * Create and edit need different image UIs — a new listing stages uploads
+   * locally until the listing itself exists, an existing one attaches,
+   * reorders and deletes each photo against the API immediately (§2.8
+   * #48/#49) — so this field owns none of it and just renders whatever its
+   * caller passes (NewListingPage / EditListingPage).
+   */
+  imagesSection?: React.ReactNode;
 }) {
   const t = useTranslations("listingForm");
   const subcategoryOptions = (findCategory(value.categorySlug)?.subcategories ?? []).map((s) => ({
@@ -133,21 +140,15 @@ export function ListingForm({
       </div>
 
       <FormField label={t("contactPhoneLabel")} htmlFor="lf-phone" required>
-        <Input
+        <PhoneInput
           id="lf-phone"
-          leadingIcon="call"
           value={value.contactPhone}
           onChange={(e) => onChange({ ...value, contactPhone: e.target.value })}
         />
       </FormField>
 
       <FormField label={t("imagesLabel")} hint={t("imagesHint")}>
-        <MultiFileUpload
-          label={t("addPhotoCta")}
-          urls={value.images}
-          onAdd={async (file) => onChange({ ...value, images: [...value.images, await fileToDataUrl(file)] })}
-          onRemove={(index) => onChange({ ...value, images: value.images.filter((_, i) => i !== index) })}
-        />
+        {imagesSection}
       </FormField>
 
       {error && (

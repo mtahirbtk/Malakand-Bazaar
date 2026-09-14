@@ -1,21 +1,63 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { NextIntlClientProvider } from "next-intl";
-import messages from "@/i18n/messages/en.json";
+import { screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { renderWithAuth, mockApi, makeUser } from "@tests/auth-harness";
 import { ListingDetail } from "./listing-detail";
-import { getListingBySlug, getListingsBySeller } from "@/lib/listings";
-import { getSellerById } from "@/lib/sellers";
+import { ListingCard } from "./listing-card";
+import type { Listing, Seller } from "@/types";
 
-const listing = getListingBySlug("solar-inverter-15kw-vfd")!;
-const seller = getSellerById(listing.sellerId);
-const otherListings = getListingsBySeller(listing.sellerId, { excludeId: listing.id, limit: 5 });
+const seller: Seller = {
+  id: "s1",
+  slug: "khan-solar-traders",
+  name: "Khan Solar Traders",
+  initials: "KS",
+  tehsilSlug: "batkhela",
+  localityLabel: "Batkhela City & Bazaar",
+  rating: 4.6,
+  reviewCount: 12,
+  verified: true,
+  responseMinutes: 20,
+  phone: "+923001234567",
+};
+
+const listing: Listing = {
+  id: "l1",
+  slug: "solar-inverter-15kw-vfd",
+  title: "Solar Inverter 1.5kW VFD",
+  description: "Barely used hybrid inverter, all accessories included.",
+  price: 85000,
+  categorySlug: "electronics",
+  subcategorySlug: "electronics-generators",
+  tehsilSlug: "batkhela",
+  localitySlug: "batkhela-city",
+  localityLabel: "Batkhela City & Bazaar",
+  images: [],
+  contactPhone: "+923001234567",
+  sellerId: seller.id,
+  status: "active",
+  createdAt: "2026-09-12T00:00:00.000Z",
+};
+
+const otherListings: Listing[] = [
+  { ...listing, id: "l2", slug: "solar-battery-100ah", title: "Solar Battery 100Ah" },
+];
+
+// `otherListingsSlot` is rendered by the caller (see seller-other-listings.tsx,
+// behind its own <Suspense>) — ListingDetail just places whatever it's given.
+const otherListingsSlot = (
+  <div>
+    {otherListings.map((l) => (
+      <ListingCard key={l.id} listing={l} />
+    ))}
+  </div>
+);
 
 function renderDetail() {
-  render(
-    <NextIntlClientProvider locale="en" messages={messages}>
-      <ListingDetail listing={listing} seller={seller} otherListings={otherListings} />
-    </NextIntlClientProvider>
-  );
+  // Signed out by default (SaveListingButton renders nothing for a
+  // signed-out visitor) so the existing assertions below are unaffected by
+  // its presence next to PhoneReveal. renderWithAuth already wraps with
+  // NextIntlClientProvider, so no separate provider is needed here.
+  renderWithAuth(<ListingDetail listing={listing} seller={seller} otherListingsSlot={otherListingsSlot} />, null);
 }
 
 describe("ListingDetail", () => {
@@ -38,10 +80,17 @@ describe("ListingDetail", () => {
 
   it("links to the seller's storefront and lists other listings", () => {
     renderDetail();
-    expect(screen.getAllByRole("link", { name: new RegExp(seller!.name) }).length).toBeGreaterThan(0);
-    expect(otherListings.length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: new RegExp(seller.name) }).length).toBeGreaterThan(0);
     for (const other of otherListings) {
       expect(screen.getByRole("heading", { name: other.title })).toBeInTheDocument();
     }
+  });
+
+  it("mounts the save listing button next to PhoneReveal for a signed-in visitor", async () => {
+    mockApi({ "POST /api/me/favorites": { data: { saved: true }, status: 201 } });
+    renderWithAuth(<ListingDetail listing={listing} seller={seller} otherListingsSlot={otherListingsSlot} />, makeUser());
+    const saveButton = screen.getByRole("button", { name: "Save listing" });
+    await userEvent.click(saveButton);
+    expect(await screen.findByRole("button", { name: "Remove from saved" })).toBeInTheDocument();
   });
 });

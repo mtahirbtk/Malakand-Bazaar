@@ -1,10 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { NextIntlClientProvider } from "next-intl";
-import messages from "@/i18n/messages/en.json";
-import { AuthProvider } from "@/lib/mock-db/auth-context";
-import { getListingsBySellerOverlay } from "@/lib/mock-db/listings";
+import { renderWithAuth, mockApi, makeSeller } from "@tests/auth-harness";
 import NewListingPage from "./page";
 
 const pushMock = vi.fn();
@@ -13,48 +10,50 @@ vi.mock("@/i18n/routing", async () => {
   return { ...actual, useRouter: () => ({ push: pushMock, replace: pushMock }) };
 });
 
-function seedSignedInSeller() {
-  window.localStorage.setItem(
-    "mb.users",
-    JSON.stringify([{ id: "u1", phone: "+923001234567", password: "password1", role: "seller", displayName: "Store", sellerId: "s1" }])
-  );
-  window.localStorage.setItem("mb.session", JSON.stringify("u1"));
-}
+afterEach(() => {
+  vi.unstubAllGlobals();
+  pushMock.mockClear();
+});
 
-function renderPage() {
-  render(
-    <NextIntlClientProvider locale="en" messages={messages}>
-      <AuthProvider>
-        <NewListingPage />
-      </AuthProvider>
-    </NextIntlClientProvider>
-  );
-}
+const SELLER_ME = { "GET /api/seller/me": { data: { seller: { phone: "+923001234567" } } } };
 
 describe("NewListingPage", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
-    pushMock.mockClear();
-  });
-
   it("creates a listing for the signed-in seller and redirects to the listings tab", async () => {
-    seedSignedInSeller();
-    renderPage();
+    const { callTo } = mockApi({
+      ...SELLER_ME,
+      "POST /api/seller/listings": { data: { listing: { id: "l_new" } }, status: 201 },
+    });
+    renderWithAuth(<NewListingPage />, makeSeller({ sellerId: "s1" }));
+
     await userEvent.type(screen.getByLabelText("Title"), "Second Hand Bicycle");
     await userEvent.type(screen.getByLabelText("Description"), "Lightly used, well maintained.");
     await userEvent.type(screen.getByLabelText("Price (PKR)"), "15000");
+    await userEvent.clear(screen.getByLabelText("Contact Number"));
     await userEvent.type(screen.getByLabelText("Contact Number"), "3001234567");
     await userEvent.click(screen.getByRole("button", { name: "Publish Listing" }));
-    expect(pushMock).toHaveBeenCalledWith("/seller/dashboard/listings");
-    expect(getListingsBySellerOverlay("s1").some((l) => l.title === "Second Hand Bicycle")).toBe(true);
+
+    await vi.waitFor(() => expect(pushMock).toHaveBeenCalledWith("/seller/dashboard/listings"));
+    expect(callTo("POST", "/api/seller/listings")?.body).toMatchObject({ title: "Second Hand Bicycle", price: 15000 });
   });
 
-  it("rejects an empty title", async () => {
-    seedSignedInSeller();
-    renderPage();
+  it("shows the server's field error against the right field", async () => {
+    mockApi({
+      ...SELLER_ME,
+      "POST /api/seller/listings": {
+        status: 400,
+        error: {
+          code: "VALIDATION_FAILED",
+          message: "Some of the details need fixing.",
+          fields: { title: "Must be at least 4 characters." },
+        },
+      },
+    });
+    renderWithAuth(<NewListingPage />, makeSeller({ sellerId: "s1" }));
+
     await userEvent.type(screen.getByLabelText("Price (PKR)"), "15000");
     await userEvent.click(screen.getByRole("button", { name: "Publish Listing" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent(/valid price/i);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Must be at least 4 characters.");
     expect(pushMock).not.toHaveBeenCalled();
   });
 });

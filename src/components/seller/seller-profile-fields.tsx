@@ -7,8 +7,9 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { FileUpload } from "@/components/ui/file-upload";
-import { fileToDataUrl } from "@/lib/file-to-data-url";
+import { uploadSellerImage, UploadValidationError } from "@/lib/upload-image";
 import { TEHSIL_OPTIONS, findTehsil } from "@/data/tehsils";
 import type { TehsilSlug } from "@/types";
 
@@ -24,8 +25,18 @@ export type SellerProfileFieldsValue = {
   tehsilSlug: TehsilSlug;
   localitySlug: string;
   coordinates: { lat: number; lng: number };
+  /** Preview only — what the FileUpload shows. */
   avatarUrl: string;
   storefrontBanner: string;
+  /**
+   * The Storage object path to actually save, once a new photo is uploaded
+   * (§2.8 #41 takes `avatarPath`/`bannerPath`, never a URL). `undefined` means
+   * "unchanged since the form opened"; `""` means "the seller cleared it" —
+   * SellerProfileEditForm relies on that distinction to omit the field
+   * entirely from a PATCH that never touched it.
+   */
+  avatarPath?: string;
+  bannerPath?: string;
 };
 
 /** No per-locality coordinates exist in TEHSILS — this is a fixed
@@ -36,23 +47,57 @@ export const MALAKAND_CENTER = { lat: 34.5667, lng: 71.9333 };
 export function SellerProfileFields({
   value,
   onChange,
+  showImages = true,
+  errors = {},
 }: {
   value: SellerProfileFieldsValue;
   onChange: (value: SellerProfileFieldsValue) => void;
+  /**
+   * Hidden during registration until the Storage upload pipeline lands —
+   * a picker that silently discarded the file would be worse than no picker.
+   */
+  showImages?: boolean;
+  /** Server-side field errors, keyed by the API's field name. */
+  errors?: Record<string, string>;
 }) {
   const t = useTranslations("sellerProfile");
+  const [uploadError, setUploadError] = React.useState<string | null>(null);
+  const [uploadingKind, setUploadingKind] = React.useState<"avatar" | "banner" | null>(null);
   const localityOptions = (findTehsil(value.tehsilSlug)?.localities ?? []).map((l) => ({
     value: l.slug,
     label: l.nameEn,
   }));
 
+  const cropLabels = {
+    title: t("cropTitle"),
+    description: t("cropDescription"),
+    zoomAria: t("cropZoomAria"),
+    cancel: t("cropCancel"),
+    save: t("cropSave"),
+    error: t("cropError"),
+  };
+
+  async function handlePhotoSelected(kind: "avatar" | "banner", file: File) {
+    setUploadError(null);
+    setUploadingKind(kind);
+    try {
+      const uploaded = await uploadSellerImage(file, kind);
+      if (kind === "avatar") onChange({ ...value, avatarUrl: uploaded.url, avatarPath: uploaded.path });
+      else onChange({ ...value, storefrontBanner: uploaded.url, bannerPath: uploaded.path });
+    } catch (err) {
+      setUploadError(err instanceof UploadValidationError ? err.message : t("uploadFailedError"));
+    } finally {
+      setUploadingKind(null);
+    }
+  }
+
   return (
     <div className="space-y-4">
-      <FormField label={t("storeNameLabel")} htmlFor="sp-name" required>
+      <FormField label={t("storeNameLabel")} htmlFor="sp-name" required error={errors.storeName}>
         <Input id="sp-name" value={value.storeName} onChange={(e) => onChange({ ...value, storeName: e.target.value })} />
       </FormField>
 
-      <FormField label={t("descriptionLabel")} htmlFor="sp-description" required>
+      <FormField label={t("descriptionLabel")} htmlFor="sp-description" error={errors.description}>
         <Textarea
           id="sp-description"
           value={value.description}
@@ -60,10 +105,9 @@ export function SellerProfileFields({
         />
       </FormField>
 
-      <FormField label={t("storePhoneLabel")} htmlFor="sp-phone" required hint={t("storePhoneHint")}>
-        <Input
+      <FormField label={t("storePhoneLabel")} htmlFor="sp-phone" required hint={t("storePhoneHint")} error={errors.storePhone}>
+        <PhoneInput
           id="sp-phone"
-          leadingIcon="call"
           value={value.storePhone}
           onChange={(e) => onChange({ ...value, storePhone: e.target.value })}
         />
@@ -82,7 +126,7 @@ export function SellerProfileFields({
             className="w-full"
           />
         </FormField>
-        <FormField label={t("localityLabel")} htmlFor="sp-locality" required>
+        <FormField label={t("localityLabel")} htmlFor="sp-locality" required error={errors.localitySlug}>
           <Select
             ariaLabel={t("localityLabel")}
             value={value.localitySlug}
@@ -101,26 +145,34 @@ export function SellerProfileFields({
         />
       </FormField>
 
+      {showImages && (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <FormField label={t("avatarLabel")}>
+        <FormField label={t("avatarLabel")} hint={t("avatarHint")} error={uploadError ?? undefined}>
           <FileUpload
             label={t("avatarUploadCta")}
+            description={t("avatarDropHint")}
             previewUrl={value.avatarUrl || undefined}
-            onFileSelected={async (file) => onChange({ ...value, avatarUrl: await fileToDataUrl(file) })}
-            onClear={() => onChange({ ...value, avatarUrl: "" })}
+            onFileSelected={(file) => handlePhotoSelected("avatar", file)}
+            onClear={() => onChange({ ...value, avatarUrl: "", avatarPath: "" })}
             removeLabel={t("removeCta")}
+            uploading={uploadingKind === "avatar"}
+            crop={{ aspect: 1, shape: "circle", labels: cropLabels }}
           />
         </FormField>
-        <FormField label={t("bannerLabel")}>
+        <FormField label={t("bannerLabel")} hint={t("bannerHint")}>
           <FileUpload
             label={t("bannerUploadCta")}
+            description={t("bannerDropHint")}
             previewUrl={value.storefrontBanner || undefined}
-            onFileSelected={async (file) => onChange({ ...value, storefrontBanner: await fileToDataUrl(file) })}
-            onClear={() => onChange({ ...value, storefrontBanner: "" })}
+            onFileSelected={(file) => handlePhotoSelected("banner", file)}
+            onClear={() => onChange({ ...value, storefrontBanner: "", bannerPath: "" })}
             removeLabel={t("removeCta")}
+            uploading={uploadingKind === "banner"}
+            crop={{ aspect: 3, shape: "rect", labels: cropLabels }}
           />
         </FormField>
       </div>
+      )}
     </div>
   );
 }

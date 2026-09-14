@@ -6,7 +6,6 @@ import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { Select } from "@/components/ui/select";
 import { Drawer } from "@/components/ui/drawer";
 import { Avatar } from "@/components/ui/avatar";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -15,11 +14,9 @@ import { CategoryRibbon } from "./category-ribbon";
 import { LocaleSwitcher } from "./locale-switcher";
 import { MegaMenu } from "./mega-menu";
 import { CATEGORY_OPTIONS } from "@/data/categories";
-import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { QUICK_LINKS } from "@/data/quick-links";
-import { Link } from "@/i18n/routing";
-import { useAuth } from "@/lib/mock-db/auth-context";
-import { getSellerByIdOverlay } from "@/lib/mock-db/sellers";
+import { Link, useRouter } from "@/i18n/routing";
+import { useAuth } from "@/lib/auth/auth-context";
 
 /**
  * Ported from code.html:93-161. The mockup's category dropdown listed six
@@ -29,18 +26,29 @@ import { getSellerByIdOverlay } from "@/lib/mock-db/sellers";
  */
 export function SiteHeader() {
   const t = useTranslations("header");
+  const account = useTranslations("account");
   const common = useTranslations("common");
-  const announcement = useTranslations("announcement");
   const locale = useTranslations("locale");
   const nav = useTranslations("nav");
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const currentLocale = useLocale();
+  const router = useRouter();
   const [sector, setSector] = React.useState("");
   const [query, setQuery] = React.useState("");
+  const [mobileQuery, setMobileQuery] = React.useState("");
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [categoriesOpen, setCategoriesOpen] = React.useState(false);
-  const [tehsil, setTehsil] = React.useState("all");
-  const sellerSlug = user?.sellerId ? getSellerByIdOverlay(user.sellerId)?.slug : undefined;
+  // The session already carries the storefront slug, so the header needs no
+  // lookup of its own.
+  const sellerSlug = user?.sellerSlug;
+
+  function goToSearch(q: string) {
+    const params = new URLSearchParams();
+    if (q.trim()) params.set("q", q.trim());
+    if (sector) params.set("category", sector);
+    const qs = params.toString();
+    router.push(`/search${qs ? `?${qs}` : ""}`);
+  }
 
   return (
     <header className="bg-surface sticky top-0 z-50 border-b border-surface-border shadow-sm">
@@ -99,19 +107,6 @@ export function SiteHeader() {
 
             <div className="border-t border-surface-border pt-4">
               <div className="text-[11px] font-bold text-on-surface-muted uppercase tracking-wider mb-1.5">
-                {announcement("tehsilLabel")}
-              </div>
-              <Select
-                ariaLabel={announcement("tehsilAria")}
-                selectSize="sm"
-                value={tehsil}
-                onValueChange={setTehsil}
-                options={TEHSIL_OPTIONS}
-                className="w-full"
-              />
-            </div>
-            <div>
-              <div className="text-[11px] font-bold text-on-surface-muted uppercase tracking-wider mb-1.5">
                 {locale("aria")}
               </div>
               <LocaleSwitcher />
@@ -128,7 +123,10 @@ export function SiteHeader() {
         <div className="flex-1 min-w-0 max-w-3xl hidden md:block">
           <form
             className="flex items-stretch border-2 border-accent-green rounded-lg overflow-hidden bg-surface shadow-xs"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={(e) => {
+              e.preventDefault();
+              goToSearch(query);
+            }}
             role="search"
           >
             <div className="relative flex items-center bg-surface-low border-r border-surface-border px-3 shrink-0">
@@ -179,7 +177,9 @@ export function SiteHeader() {
                 ...(user.role === "seller"
                   ? [{ label: t("myDashboard"), icon: "dashboard", href: `/${currentLocale}/seller/dashboard/listings` }]
                   : []),
-                { label: t("logout"), icon: "logout", onSelect: () => logout() },
+                { label: account("navFavorites"), icon: "bookmark", href: `/${currentLocale}/account/favorites` },
+                { label: account("navReviews"), icon: "star", href: `/${currentLocale}/account/reviews` },
+                { label: t("logout"), icon: "logout", onSelect: () => { void signOut(); } },
               ]}
             />
           ) : (
@@ -212,13 +212,18 @@ export function SiteHeader() {
       <div className="md:hidden px-4 pb-3">
         <form
           className="flex items-stretch border-2 border-accent-green rounded-lg overflow-hidden bg-surface"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e) => {
+            e.preventDefault();
+            goToSearch(mobileQuery);
+          }}
           role="search"
         >
           <Input
             type="search"
             aria-label={common("search")}
             placeholder={t("searchPlaceholderMobile")}
+            value={mobileQuery}
+            onChange={(e) => setMobileQuery(e.target.value)}
             className="border-0 rounded-none focus:ring-0 h-auto py-2 text-xs"
           />
           <Button type="submit" variant="whatsapp" className="rounded-none px-4">

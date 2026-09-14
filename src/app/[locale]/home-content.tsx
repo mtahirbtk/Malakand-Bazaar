@@ -8,19 +8,11 @@ import { CategoryCircle } from "@/components/marketplace/category-circle";
 import { SectionHeader } from "@/components/marketplace/section-header";
 import { ListingCard } from "@/components/marketplace/listing-card";
 import { SellerCard } from "@/components/marketplace/seller-card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Link } from "@/i18n/routing";
-import { LISTINGS } from "@/data/fixtures/listings";
-import { SELLERS } from "@/data/fixtures/sellers";
-import type { Listing } from "@/types";
-
-function byId(ids: string[]): Listing[] {
-  return ids.map((id) => LISTINGS.find((l) => l.id === id)).filter((l): l is Listing => Boolean(l));
-}
-
-const SHELF_A_IDS = ["l1", "l2", "l3", "l4", "l5"];
-const SHELF_B_IDS = ["l6", "l7", "l8", "l9", "l10"];
-const SHELF_C_IDS = ["l11", "l12", "l13", "l14", "l15"];
+import type { HomePayload } from "@/server/services/home";
 
 const PROMO_STRIPS = [
   {
@@ -49,7 +41,15 @@ const PROMO_STRIPS = [
   },
 ];
 
-export default function HomeContent() {
+/**
+ * Everything below the sectors grid is gated on real data (§6.3): a category
+ * shelf only renders once it clears `home.min_listings_per_shelf`, trending
+ * and top sellers only once `payload.readiness` says there's enough behind
+ * them. Below every threshold, this falls back to one honest launch message
+ * instead of empty/fake shelves — the hero, sectors grid and promo tiles
+ * above and below it are brand content and stay either way.
+ */
+export default function HomeContent({ payload }: { payload: HomePayload }) {
   const t = useTranslations("home");
   const marketplace = useTranslations("marketplace");
   const common = useTranslations("common");
@@ -62,7 +62,7 @@ export default function HomeContent() {
       title: t("hero.slide1Title"),
       titleAccent: t("hero.slide1Accent"),
       body: t("hero.slide1Body"),
-      image: "/images/seed/hero-1.jpg",
+      image: "/images/hero/hero-1.jpg",
       imageAlt: "Malakand Pass & Valley Panorama",
       scrimTone: "primary" as const,
       primaryCta: { label: t("hero.primaryCta"), href: "/search" },
@@ -75,7 +75,7 @@ export default function HomeContent() {
       title: t("hero.slide2Title"),
       titleAccent: t("hero.slide2Accent"),
       body: t("hero.slide2Body"),
-      image: "/images/seed/hero-2.jpg",
+      image: "/images/hero/hero-2.jpg",
       imageAlt: "Batkhela Commercial Bazaar",
       scrimTone: "secondary" as const,
       primaryCta: { label: t("hero.primaryCta"), href: "/search" },
@@ -88,7 +88,7 @@ export default function HomeContent() {
       title: t("hero.slide3Title"),
       titleAccent: t("hero.slide3Accent"),
       body: t("hero.slide3Body"),
-      image: "/images/seed/hero-3.jpg",
+      image: "/images/hero/hero-3.jpg",
       imageAlt: "High Alpine Swat & Malakand Valley",
       scrimTone: "accent-green-dark" as const,
       primaryCta: { label: t("hero.primaryCta"), href: "/search" },
@@ -107,38 +107,21 @@ export default function HomeContent() {
     { icon: "smartphone", label: t("sectors.mobilePhones"), href: "/search?category=mobiles-tablets" },
   ];
 
+  const showTrending = payload.readiness.showTrending && payload.trending.length > 0;
+  const showTopSellers = payload.readiness.showTopSellers && payload.topSellers.length > 0;
+  const nothingToShow = payload.shelves.length === 0 && !showTrending && !showTopSellers;
+
   return (
     <main className="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-8">
       {/* 1. Hero grid */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-        <div className="lg:col-span-8">
+        <div className="lg:col-span-12">
           <HeroCarousel ariaLabel="Highlights" slides={heroSlides} />
         </div>
-        <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-          <PromoCard
-            tone="green"
-            eyebrow={t("promo1.eyebrow")}
-            title={t("promo1.title")}
-            body={t("promo1.body")}
-            highlight={t("promo1.highlight")}
-            linkLabel={t("promo1.link")}
-            href="/search?category=fresh-produce-food"
-            icon="nutrition"
-          />
-          <PromoCard
-            tone="sand"
-            eyebrow={t("promo2.eyebrow")}
-            title={t("promo2.title")}
-            body={t("promo2.body")}
-            highlight={t("promo2.highlight")}
-            linkLabel={t("promo2.link")}
-            href="/search?category=solar-energy"
-            icon="solar_power"
-          />
-        </div>
+       
       </section>
 
-      {/* 2. Popular Marketplace Sectors */}
+      {/* 2. Popular Marketplace Sectors — genuine navigation, valid with zero listings */}
       <section
         aria-label={t("sectors.heading")}
         className="bg-surface rounded-2xl p-5 sm:p-6 border border-surface-border shadow-xs"
@@ -165,76 +148,87 @@ export default function HomeContent() {
         </div>
       </section>
 
-      {/* 3. Shelf A: Electronics & Solar Tech */}
-      <section className="space-y-4">
-        <SectionHeader
-          title={t("shelfA.title")}
-          actionLabel={t("shelfA.action")}
-          actionHref="/search?category=solar-energy"
+      {nothingToShow ? (
+        <EmptyState
+          icon="storefront"
+          title={t("launch.title")}
+          body={t("launch.body")}
+          action={
+            <Button asChild size="sm">
+              <Link href="/sell">
+                <Icon name="how_to_reg" size={16} />
+                <span>{t("launch.cta")}</span>
+              </Link>
+            </Button>
+          }
         />
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-          {byId(SHELF_A_IDS).map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
+      ) : (
+        <>
+          {/* 3. Category shelves — only the ones with enough live stock to be real */}
+          {payload.shelves.map((shelf) => (
+            <section key={shelf.categorySlug} className="space-y-4">
+              <SectionHeader
+                title={shelf.categoryName}
+                actionLabel={common("viewAll")}
+                actionHref={`/search?category=${shelf.categorySlug}`}
+              />
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+                {shelf.items.map((listing) => (
+                  <ListingCard key={listing.id} listing={listing} />
+                ))}
+              </div>
+            </section>
           ))}
-        </div>
-      </section>
 
-      {/* 4. Shelf B: Fresh Valley Fruits & Agro Produce */}
-      <section className="space-y-4">
-        <SectionHeader
-          title={t("shelfB.title")}
-          actionLabel={t("shelfB.action")}
-          actionHref="/search?category=fresh-produce-food"
-        />
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-          {byId(SHELF_B_IDS).map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
-        </div>
-      </section>
+          {/* 4. Trending */}
+          {showTrending && (
+            <section className="space-y-4">
+              <SectionHeader
+                title={t("trending.title")}
+                actionLabel={common("viewAll")}
+                actionHref="/search?sort=featured"
+              />
+              <p className="-mt-3 text-xs text-on-surface-muted">{t("trending.subtitle")}</p>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+                {payload.trending.map((listing) => (
+                  <ListingCard key={listing.id} listing={listing} />
+                ))}
+              </div>
+            </section>
+          )}
 
-      {/* 5. Shelf C: Vehicles & Motorbikes */}
-      <section className="space-y-4">
-        <SectionHeader
-          title={t("shelfC.title")}
-          actionLabel={t("shelfC.action")}
-          actionHref="/search?category=vehicles"
-        />
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-          {byId(SHELF_C_IDS).map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
-        </div>
-      </section>
+          {/* 5. Top Verified Local Sellers */}
+          {showTopSellers && (
+            <section
+              aria-label={t("sellers.title")}
+              className="bg-surface rounded-2xl p-5 sm:p-7 border border-surface-border shadow-xs space-y-5"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-4">
+                <div className="space-y-0.5">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
+                    {t("sellers.title")}
+                  </h2>
+                  <p className="text-xs text-on-surface-muted">{t("sellers.subtitle")}</p>
+                </div>
+                <Link
+                  className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors shadow-2xs self-start sm:self-auto"
+                  href="/sell"
+                >
+                  <Icon name="how_to_reg" size={16} />
+                  <span>{marketplace("registerVerifiedSeller")}</span>
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                {payload.topSellers.map((seller) => (
+                  <SellerCard key={seller.id} seller={seller} />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
+      )}
 
-      {/* 6. Top Verified Local Sellers */}
-      <section
-        aria-label={t("sellers.title")}
-        className="bg-surface rounded-2xl p-5 sm:p-7 border border-surface-border shadow-xs space-y-5"
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-4">
-          <div className="space-y-0.5">
-            <h2 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
-              {t("sellers.title")}
-            </h2>
-            <p className="text-xs text-on-surface-muted">{t("sellers.subtitle")}</p>
-          </div>
-          <Link
-            className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors shadow-2xs self-start sm:self-auto"
-            href="/sell"
-          >
-            <Icon name="how_to_reg" size={16} />
-            <span>{marketplace("registerVerifiedSeller")}</span>
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {SELLERS.map((seller) => (
-            <SellerCard key={seller.id} seller={seller} />
-          ))}
-        </div>
-      </section>
-
-      {/* 7. Mid-page seller banner */}
+      {/* 6. Mid-page seller banner — brand CTA, not listing-dependent */}
       <section className="bg-gradient-to-r from-primary via-primary-light to-secondary rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-md">
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left max-w-2xl">
@@ -266,7 +260,7 @@ export default function HomeContent() {
         </div>
       </section>
 
-      {/* 8. Three-way category promo strips */}
+      {/* 7. Three-way category promo strips */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {PROMO_STRIPS.map((strip) => (
           <div

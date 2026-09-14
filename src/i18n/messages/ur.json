@@ -8,7 +8,10 @@
     "free": "مفت",
     "viewAll": "سب دیکھیں",
     "whatsapp": "واٹس ایپ",
-    "call": "کال کریں"
+    "call": "کال کریں",
+    "loading": "لوڈ ہو رہا ہے",
+    "signingOut": "سائن آؤٹ ہو رہا ہے…",
+    "saving": "محفوظ ہو رہا ہے…"
   },
   "announcement": {
     "message": "کوئی بچولیا فیس نہیں — براہ راست واٹس ایپ پر تصدیق شدہ۔",
@@ -82,9 +85,12 @@
   },
   "marketplace": {
     "saveListing": "اشتہار محفوظ کریں",
+    "unsaveListing": "محفوظ شدہ سے ہٹائیں",
+    "savedCta": "محفوظ شدہ",
     "sold": "فروخت شدہ",
     "reserved": "محفوظ شدہ",
     "verified": "تصدیق شدہ",
+    "activeListings": "فعال اشیاء",
     "visitStore": "دکان دیکھیں اور بات کریں",
     "registerVerifiedSeller": "تصدیق شدہ فروخت کنندہ بنیں",
     "showWhatsappNumber": "واٹس ایپ نمبر دکھائیں",
@@ -94,10 +100,60 @@
     "moreFromSeller": "{seller} کی مزید اشیاء",
     "allListingsBy": "{seller} کی تمام اشیاء",
     "noListingsYet": "ابھی کوئی دوسری اشیاء نہیں۔",
+    "memberSince": "{date} سے رکن",
     "storeLocation": "دکان کا مقام",
     "getDirections": "راستہ دیکھیں",
     "storeNotFoundTitle": "دکان نہیں ملی",
     "storeNotFoundBody": "یہ دکان موجود نہیں یا ابھی اس ڈیوائس پر لوڈ نہیں ہوئی۔"
+  },
+  "search": {
+    "breadcrumbHome": "ہوم",
+    "breadcrumbCurrent": "تلاش اور دریافت",
+    "title": "ملاکنڈ میں اشیاء اور مصنوعات",
+    "resultsFor": "“{query}” کے نتائج",
+    "matches": "{count} نتائج",
+    "subheading": "بٹ خیلہ، درگئی اور تھانہ میں تصدیق شدہ فروخت کنندگان، باغات کی پیداوار، ٹیوب ویل مشینری، سولر سامان، مویشی اور موٹر سائیکلیں۔",
+    "inlineSearchPlaceholder": "اس تلاش کو مزید بہتر بنائیں...",
+    "filters": "اشتہارات فلٹر کریں",
+    "resetAll": "سب دوبارہ ترتیب دیں",
+    "categoryHeading": "زمرہ کے مطابق دیکھیں",
+    "priceHeading": "قیمت کی حد (روپے)",
+    "priceFrom": "سے",
+    "priceTo": "تک",
+    "priceApply": "قیمت فلٹر لاگو کریں",
+    "priceHighest": "منتخب کردہ حد میں سب سے زیادہ قیمت ہے",
+    "availabilityHeading": "دستیابی",
+    "availabilityActiveOnly": "صرف دستیاب اشیاء دکھائیں",
+    "localityHeading": "علاقہ / تحصیل",
+    "sellerHeading": "تصدیق اور فروخت کنندہ",
+    "verifiedOnly": "صرف تصدیق شدہ دکاندار / کسان",
+    "helpTitle": "کوئی چیز ڈھونڈنے میں مدد چاہیے؟",
+    "helpBody": "ہماری بٹ خیلہ سہولت ٹیم آپ کو ملاکنڈ بھر کے تصدیق شدہ فروخت کنندگان سے براہ راست واٹس ایپ پر ملائے گی۔",
+    "helpCta": "واٹس ایپ پر بات کریں",
+    "mobileFiltersButton": "فلٹرز ({count})",
+    "activeFiltersLabel": "فعال فلٹرز:",
+    "clearAll": "سب ہٹا دیں",
+    "sortLabel": "ترتیب دیں:",
+    "sort": {
+      "featured": "نمایاں سب سے پہلے",
+      "relevant": "سب سے زیادہ متعلقہ",
+      "price_low": "قیمت، کم سے زیادہ",
+      "price_high": "قیمت، زیادہ سے کم",
+      "date_new": "تاریخ، نئی سے پرانی",
+      "date_old": "تاریخ، پرانی سے نئی"
+    },
+    "searchFilterChip": "تلاش: “{query}”",
+    "categoryFilterChip": "زمرہ: {category}",
+    "tehsilFilterChip": "علاقہ: {tehsil}",
+    "verifiedFilterChip": "صرف تصدیق شدہ فروخت کنندگان",
+    "priceFilterChip": "روپے {from} - روپے {to}",
+    "showingRange": "ملاکنڈ میں {total} میں سے {from} - {to} مصنوعات دکھائی جا رہی ہیں",
+    "paginationPrevious": "پچھلا",
+    "paginationNext": "اگلا",
+    "paginationPage": "صفحہ",
+    "noResultsTitle": "آپ کے فلٹرز سے کوئی اشتہار میل نہیں کھاتا",
+    "noResultsBody": "قیمت کی حد بڑھائیں، کوئی فلٹر ہٹائیں، یا مختلف الفاظ سے تلاش کریں۔",
+    "clearFiltersCta": "تمام فلٹرز ہٹا دیں"
   },
   "home": {
     "hero": {
@@ -142,17 +198,14 @@
       "honeyHerbs": "شہد اور جڑی بوٹیاں",
       "mobilePhones": "موبائل فونز"
     },
-    "shelfA": {
-      "title": "الیکٹرونکس اور سولر ٹیک",
-      "action": "تمام الیکٹرونکس دیکھیں (410+)"
+    "trending": {
+      "title": "اس ہفتے مقبول",
+      "subtitle": "وہ اشیاء جنہیں ابھی سب سے زیادہ دیکھا جا رہا ہے"
     },
-    "shelfB": {
-      "title": "تازہ وادی پھل اور زرعی پیداوار",
-      "action": "تمام پھل اور تازہ پیداوار دیکھیں (185+)"
-    },
-    "shelfC": {
-      "title": "گاڑیاں اور موٹر سائیکلیں",
-      "action": "تمام گاڑیاں دیکھیں (340+)"
+    "launch": {
+      "title": "ملاکنڈ بازار جلد شروع ہو رہا ہے",
+      "body": "یہاں پہلے فروخت کنندگان میں شامل ہوں — اپنی چیز فہرست کریں اور یہ فوری طور پر لائیو ہو جائے گی، کوئی انتظار نہیں۔",
+      "cta": "اپنی پہلی چیز فہرست کریں"
     },
     "sellers": {
       "title": "نمایاں تصدیق شدہ مقامی فروخت کنندگان اور فارمز",
@@ -194,7 +247,13 @@
     "passwordLabel": "پاس ورڈ",
     "passwordHint": "کم از کم 8 حروف۔",
     "signInCta": "سائن ان",
-    "createAccountCta": "اکاؤنٹ بنائیں"
+    "createAccountCta": "اکاؤنٹ بنائیں",
+    "signingIn": "سائن ان ہو رہا ہے…",
+    "creatingAccount": "آپ کا اکاؤنٹ بن رہا ہے…",
+    "welcomeBackTitle": "خوش آمدید, {name}!",
+    "welcomeBackDescription": "آپ ملاکنڈ بازار میں سائن ان ہو گئے ہیں۔",
+    "accountCreatedTitle": "اکاؤنٹ بن گیا",
+    "accountCreatedDescription": "خوش آمدید, {name} — آپ کا اکاؤنٹ تیار ہے۔"
   },
   "sellerProfile": {
     "storeNameLabel": "دکان کا نام",
@@ -205,11 +264,22 @@
     "localityLabel": "علاقہ",
     "mapLabel": "دکان کا مقام",
     "mapHint": "پن کو گھسیٹیں یا نقشے پر ٹیپ کریں تاکہ صحیح مقام مقرر ہو۔",
-    "avatarLabel": "دکان کا لوگو",
-    "avatarUploadCta": "لوگو اپ لوڈ کریں",
+    "avatarLabel": "پروفائل تصویر",
+    "avatarUploadCta": "تصویر اپ لوڈ کریں",
+    "avatarHint": "پوری سائٹ پر آپ کی دکان کے نام کے ساتھ دکھائی جائے گی۔",
+    "avatarDropHint": "گھسیٹیں یا کلک کریں — JPG، PNG یا WebP، 5MB تک",
     "bannerLabel": "دکان کا بینر",
     "bannerUploadCta": "بینر اپ لوڈ کریں",
-    "removeCta": "ہٹا دیں"
+    "bannerHint": "چوڑی تصویر بہتر رہتی ہے — تصویر منتخب کرنے کے بعد آپ اسے ایڈجسٹ اور کراپ کر سکیں گے۔",
+    "bannerDropHint": "گھسیٹیں یا کلک کریں — JPG، PNG یا WebP، 5MB تک",
+    "cropTitle": "اپنی تصویر ایڈجسٹ کریں",
+    "cropDescription": "پوزیشن بدلنے کے لیے گھسیٹیں، زوم کے لیے سلائیڈر استعمال کریں۔",
+    "cropZoomAria": "زوم",
+    "cropCancel": "منسوخ کریں",
+    "cropSave": "محفوظ کریں",
+    "cropError": "تصویر پروسیس نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+    "removeCta": "ہٹا دیں",
+    "uploadFailedError": "تصویر اپ لوڈ نہیں ہو سکی۔ دوبارہ کوشش کریں۔"
   },
   "sellerRegistration": {
     "pageTitle": "اپنی دکان رجسٹر کریں",
@@ -219,12 +289,34 @@
     "submitCta": "میری دکان بنائیں",
     "alreadySellerTitle": "آپ کی دکان پہلے سے موجود ہے",
     "alreadySellerBody": "یہ اکاؤنٹ پہلے سے بطور فروخت کنندہ رجسٹرڈ ہے۔",
-    "goToDashboardCta": "ڈیش بورڈ پر جائیں"
+    "goToDashboardCta": "ڈیش بورڈ پر جائیں",
+    "submitting": "آپ کا اسٹور بن رہا ہے…",
+    "genericError": "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔",
+    "storefrontCreatedTitle": "اسٹور بن گیا",
+    "storefrontCreatedDescription": "{storeName} ملاکنڈ بازار پر لائیو ہے۔"
   },
   "sellerDashboard": {
     "title": "فروخت کنندہ ڈیش بورڈ",
     "listingsTab": "اشیاء",
+    "analyticsTab": "اعداد و شمار",
     "profileTab": "پروفائل"
+  },
+  "sellerAnalytics": {
+    "last30Days": "پچھلے 30 دن",
+    "last90Days": "پچھلے 90 دن",
+    "periodViewsLabel": "ویوز",
+    "periodContactsLabel": "رابطہ کلکس",
+    "storefrontViewsLabel": "دکان کے وزٹس",
+    "listingCountLabel": "فعال اشیاء",
+    "viewsChartTitle": "روزانہ ویوز",
+    "contactsChartTitle": "روزانہ رابطہ کلکس",
+    "perListingTitle": "فی اشتہار",
+    "listingColumn": "اشتہار",
+    "viewsColumn": "ویوز",
+    "contactsColumn": "رابطے",
+    "emptyTitle": "ابھی کوئی سرگرمی نہیں",
+    "emptyBody": "جیسے ہی خریدار آپ کی اشیاء دیکھنا شروع کریں گے، اعداد و شمار یہاں ظاہر ہوں گے۔",
+    "genericError": "اعداد و شمار لوڈ نہیں ہو سکے۔ دوبارہ کوشش کریں۔"
   },
   "sellerProfileEdit": {
     "pending": "توثیق زیر التوا",
@@ -257,15 +349,21 @@
     "localityLabel": "علاقہ",
     "contactPhoneLabel": "رابطہ نمبر",
     "imagesLabel": "تصاویر",
-    "imagesHint": "زیادہ سے زیادہ 6 تصاویر۔",
-    "addPhotoCta": "تصویر شامل کریں"
+    "imagesHint": "زیادہ سے زیادہ 12 تصاویر۔",
+    "addPhotoCta": "تصویر شامل کریں",
+    "uploadingCta": "اپ لوڈ ہو رہی ہے…",
+    "uploadFailedError": "تصویر اپ لوڈ نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+    "removePhotoCta": "تصویر ہٹائیں",
+    "removePhotoFailedError": "تصویر ہٹائی نہیں جا سکی۔ دوبارہ کوشش کریں۔",
+    "movePhotoEarlierCta": "تصویر پہلے منتقل کریں",
+    "movePhotoLaterCta": "تصویر بعد میں منتقل کریں",
+    "reorderFailedError": "تصاویر کی ترتیب تبدیل نہیں ہو سکی۔ دوبارہ کوشش کریں۔"
   },
   "sellerListingForm": {
     "newPageTitle": "اشتہار شامل کریں",
     "editPageTitle": "اشتہار میں ترمیم کریں",
     "createCta": "اشتہار شائع کریں",
-    "saveCta": "تبدیلیاں محفوظ کریں",
-    "invalidPriceError": "عنوان اور درست قیمت درج کریں۔"
+    "saveCta": "تبدیلیاں محفوظ کریں"
   },
   "reviews": {
     "title": "جائزے",
@@ -276,6 +374,36 @@
     "noReviewsYet": "ابھی کوئی جائزہ نہیں — پہلا جائزہ آپ کا ہو سکتا ہے۔",
     "signInPromptTitle": "جائزہ دینے کے لیے سائن ان کریں",
     "signInPromptBody": "اس فروخت کنندہ کو ریٹ اور جائزہ دینے کے لیے مفت اکاؤنٹ بنائیں یا سائن ان کریں۔",
-    "signInPromptCta": "سائن ان / اکاؤنٹ بنائیں"
+    "signInPromptCta": "سائن ان / اکاؤنٹ بنائیں",
+    "editReviewCta": "ترمیم کریں",
+    "deleteReviewCta": "حذف کریں",
+    "deleteConfirmTitle": "یہ جائزہ حذف کریں؟",
+    "deleteConfirmBody": "اسے واپس نہیں کیا جا سکتا۔",
+    "deleteConfirmCta": "حذف کریں",
+    "cancelCta": "منسوخ کریں",
+    "saveCta": "محفوظ کریں",
+    "loadMoreCta": "مزید جائزے لوڈ کریں"
+  },
+  "sellers": {
+    "title": "فروخت کنندگان کی ڈائریکٹری",
+    "searchPlaceholder": "نام سے فروخت کنندہ تلاش کریں...",
+    "verifiedOnlyLabel": "صرف تصدیق شدہ",
+    "sortAriaLabel": "فروخت کنندگان کو ترتیب دیں",
+    "sortRating": "سب سے زیادہ درجہ بند",
+    "sortNewest": "تازہ ترین",
+    "sortListings": "سب سے زیادہ اشیاء",
+    "emptyTitle": "آپ کے فلٹرز سے کوئی فروخت کنندہ میل نہیں کھاتا",
+    "emptyBody": "کوئی فلٹر ہٹا کر دیکھیں یا مختلف نام تلاش کریں۔",
+    "paginationPrevious": "پچھلا",
+    "paginationNext": "اگلا",
+    "paginationPage": "صفحہ"
+  },
+  "account": {
+    "navFavorites": "محفوظ شدہ اشتہارات",
+    "navReviews": "میرے جائزے",
+    "favoritesEmptyTitle": "ابھی کچھ بھی محفوظ نہیں",
+    "favoritesEmptyBody": "اشتہار کو یہاں رکھنے کے لیے محفوظ کریں کا آئیکن دبائیں۔",
+    "reviewsEmptyTitle": "آپ نے ابھی تک کسی کا جائزہ نہیں لیا",
+    "reviewsEmptyBody": "آپ فروخت کنندگان کے لیے جو جائزے لکھیں گے وہ یہاں نظر آئیں گے۔"
   }
 }

@@ -1,8 +1,8 @@
+import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { getSellerBySlug } from "@/lib/sellers";
-import { getListingsBySeller } from "@/lib/listings";
+import { getSellerDetail } from "@/server/services/sellers";
+import { listPublicSellerListings } from "@/server/services/listings";
 import { SellerStorefront } from "@/components/marketplace/seller-storefront";
-import { ClientSellerStorefront } from "@/components/marketplace/client-seller-storefront";
 
 export default async function SellerStorefrontPage({
   params,
@@ -12,15 +12,18 @@ export default async function SellerStorefrontPage({
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const seller = getSellerBySlug(slug);
+  const seller = await getSellerDetail(slug);
+  if (!seller) notFound();
+
+  const { items: listings } = await listPublicSellerListings(seller.id, {
+    status: "active",
+    sort: "newest",
+    limit: 24,
+  });
 
   return (
     <main className="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {seller ? (
-        <SellerStorefront seller={seller} listings={getListingsBySeller(seller.id)} />
-      ) : (
-        <ClientSellerStorefront slug={slug} />
-      )}
+      <SellerStorefront seller={seller} listings={listings} />
     </main>
   );
 }

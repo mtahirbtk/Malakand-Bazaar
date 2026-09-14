@@ -11,6 +11,20 @@ import { QUICK_LINKS } from "@/data/quick-links";
 export function CategoryRibbon() {
   const t = useTranslations("nav");
   const [open, setOpen] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // The desktop MegaMenu panel only closed on Escape — a click anywhere
+  // else on the page (including the rest of the header) left it open.
+  React.useEffect(() => {
+    if (!open) return;
+    function onPointerDown(e: PointerEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open]);
 
   return (
     // No overflow-x-auto on <nav> itself: per spec, giving one axis auto/scroll
@@ -21,7 +35,7 @@ export function CategoryRibbon() {
     <nav className="bg-surface-low border-t border-surface-border text-on-surface">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center text-xs font-bold whitespace-nowrap">
         <div className="flex items-center divide-x divide-surface-border min-w-0">
-          <div className="relative shrink-0">
+          <div ref={containerRef} className="relative shrink-0">
             <button
               type="button"
               aria-expanded={open}

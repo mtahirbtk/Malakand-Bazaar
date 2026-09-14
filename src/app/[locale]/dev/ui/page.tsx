@@ -4,6 +4,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
 import { FormField } from "@/components/ui/form-field";
 import { Select } from "@/components/ui/select";
@@ -34,6 +35,10 @@ import { Carousel } from "@/components/ui/carousel";
 import { ToastProvider, useToast } from "@/components/ui/toast";
 import { FileUpload } from "@/components/ui/file-upload";
 import { MultiFileUpload } from "@/components/ui/multi-file-upload";
+import { ImageCropModal } from "@/components/ui/image-crop-modal";
+import { Spinner } from "@/components/ui/spinner";
+import { BarChart } from "@/components/ui/bar-chart";
+import { FullscreenLoader } from "@/components/ui/fullscreen-loader";
 import { cn } from "@/lib/cn";
 import { TEHSIL_OPTIONS } from "@/data/tehsils";
 import { CATEGORY_OPTIONS, allSubcategoryOptions } from "@/data/categories";
@@ -71,17 +76,58 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
+const TOAST_POSITIONS = ["top-right", "top-left", "bottom-right", "bottom-left", "center"] as const;
+
 function ToastButtons() {
   const { show } = useToast();
   return (
-    <>
-      <Button size="sm" onClick={() => show("Listing published")}>
-        Success toast
-      </Button>
-      <Button size="sm" variant="ghost" onClick={() => show("Could not save", "error")}>
-        Error toast
-      </Button>
-    </>
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        <Button size="sm" onClick={() => show("Listing published")}>
+          Success
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => show({ title: "Could not save", tone: "error" })}>
+          Error
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => show({ title: "New message from a buyer", tone: "info" })}
+        >
+          Info
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => show({ title: "This listing is missing photos", tone: "warning" })}
+        >
+          Warning
+        </Button>
+      </div>
+      <div>
+        <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-on-surface-muted">
+          Positions (default: top-right)
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {TOAST_POSITIONS.map((position) => (
+            <Button
+              key={position}
+              size="sm"
+              variant="ghost"
+              onClick={() =>
+                show({
+                  title: "Welcome back, Usama!",
+                  description: "Signed in to MalakandBazaar.",
+                  position,
+                })
+              }
+            >
+              {position}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -145,6 +191,7 @@ function PaletteSection() {
 }
 
 export default function GalleryPage() {
+  const [phone, setPhone] = React.useState("");
   const [tehsil, setTehsil] = React.useState("all");
   const [category, setCategory] = React.useState("");
   const [subcategory, setSubcategory] = React.useState("");
@@ -164,6 +211,17 @@ export default function GalleryPage() {
   const [lightboxIndex, setLightboxIndex] = React.useState(0);
   const [filePreview, setFilePreview] = React.useState<string>("");
   const [multiFileUrls, setMultiFileUrls] = React.useState<string[]>([]);
+  const [avatarPreview, setAvatarPreview] = React.useState<string>("");
+  const [bannerPreview, setBannerPreview] = React.useState<string>("");
+  const [cropModalOpen, setCropModalOpen] = React.useState(false);
+  const CROP_LABELS = {
+    title: "Adjust your photo",
+    description: "Drag to reposition, use the slider to zoom in or out.",
+    zoomAria: "Zoom",
+    cancel: "Cancel",
+    save: "Save",
+    error: "Could not process that image. Please try again.",
+  };
 
   const subOptions = React.useMemo(() => allSubcategoryOptions(), []);
 
@@ -250,7 +308,7 @@ export default function GalleryPage() {
                   <Input id="g-price" invalid placeholder="PKR" />
                 </FormField>
                 <FormField label="Phone" hint="+92 300 1234567" htmlFor="g-phone">
-                  <Input id="g-phone" placeholder="3001234567" />
+                  <PhoneInput id="g-phone" placeholder="300 1234567" value={phone} onChange={(e) => setPhone(e.target.value)} />
                 </FormField>
               </div>
             </Row>
@@ -364,6 +422,43 @@ export default function GalleryPage() {
                   }}
                 />
               </div>
+            </Row>
+            <Row label="With crop (profile picture)">
+              <div className="w-40">
+                <FileUpload
+                  label="Upload Photo"
+                  description="PNG, JPG or WebP, up to 5MB"
+                  previewUrl={avatarPreview}
+                  onFileSelected={(file) => setAvatarPreview(URL.createObjectURL(file))}
+                  onClear={() => setAvatarPreview("")}
+                  crop={{ aspect: 1, shape: "circle", labels: CROP_LABELS }}
+                />
+              </div>
+            </Row>
+            <Row label="With crop (storefront banner)">
+              <div className="w-full max-w-md">
+                <FileUpload
+                  label="Upload Banner"
+                  description="PNG, JPG or WebP, up to 5MB"
+                  previewUrl={bannerPreview}
+                  onFileSelected={(file) => setBannerPreview(URL.createObjectURL(file))}
+                  onClear={() => setBannerPreview("")}
+                  crop={{ aspect: 3, shape: "rect", labels: CROP_LABELS }}
+                />
+              </div>
+            </Row>
+            <Row label="Crop modal (standalone)">
+              <Button variant="subtle" size="sm" onClick={() => setCropModalOpen(true)} disabled={!filePreview}>
+                Open crop modal
+              </Button>
+              <ImageCropModal
+                open={cropModalOpen}
+                onOpenChange={setCropModalOpen}
+                imageSrc={filePreview || null}
+                aspect={1}
+                onConfirm={(blob) => setFilePreview(URL.createObjectURL(blob))}
+                labels={CROP_LABELS}
+              />
             </Row>
           </Section>
 
@@ -591,6 +686,57 @@ export default function GalleryPage() {
                 />
               </div>
             </Row>
+          </Section>
+
+          <Section title="Loaders">
+            <div className="space-y-6">
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <Spinner size="sm" />
+                  <span className="text-xs text-on-surface-muted">sm</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Spinner size="md" />
+                  <span className="text-xs text-on-surface-muted">md</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Spinner size="lg" />
+                  <span className="text-xs text-on-surface-muted">lg</span>
+                </div>
+                <Button disabled>
+                  <Spinner size="sm" tone="onBrand" />
+                  Publishing…
+                </Button>
+              </div>
+
+              <div>
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider text-on-surface-muted">
+                  Fullscreen overlay (shown inline here)
+                </p>
+                <FullscreenLoader inline label="Loading your storefront…" />
+              </div>
+            </div>
+          </Section>
+
+          <Section title="Bar Chart">
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-xl border border-surface-border bg-surface p-4">
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider text-on-surface-muted">Views per day</p>
+                <BarChart
+                  data={[3, 7, 2, 0, 9, 5, 6].map((value, i) => ({ label: `Day ${i + 1}`, value }))}
+                  color="bg-brand-600"
+                />
+              </div>
+              <div className="rounded-xl border border-surface-border bg-surface p-4">
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider text-on-surface-muted">
+                  Contacts per day
+                </p>
+                <BarChart
+                  data={[1, 2, 0, 0, 3, 1, 2].map((value, i) => ({ label: `Day ${i + 1}`, value }))}
+                  color="bg-tertiary"
+                />
+              </div>
+            </div>
           </Section>
 
           <Section title="Carousel">

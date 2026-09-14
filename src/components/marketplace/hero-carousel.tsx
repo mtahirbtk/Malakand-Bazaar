@@ -59,7 +59,7 @@ export function HeroCarousel({
             sizes="(max-width: 1024px) 100vw, 66vw"
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary/80 to-primary/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary/40 to-primary/20" />
           <div className={cn("absolute inset-0 mix-blend-multiply", SCRIM[slide.scrimTone])} />
 
           <div className="relative z-10 max-w-xl text-white space-y-3 pb-4">
