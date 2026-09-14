@@ -25,9 +25,33 @@ export const CSRF_HEADER = "x-csrf-token";
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
 function allowedOrigins(): string[] {
-  const origins = [env.NEXT_PUBLIC_SITE_URL];
+  const origins = [env.SITE_URL];
+
+  // The site is often reachable on both the apex and `www` host (DNS/registrar
+  // setup, not app code) — a request can arrive on whichever one the user typed
+  // or a search engine indexed, regardless of which one SITE_URL names. Accept
+  // both automatically instead of hard-failing real users.
+  try {
+    const url = new URL(env.SITE_URL);
+    if (url.hostname.startsWith("www.")) {
+      origins.push(`${url.protocol}//${url.hostname.slice(4)}`);
+    } else {
+      origins.push(`${url.protocol}//www.${url.hostname}`);
+    }
+  } catch {
+    // env.SITE_URL is already zod-validated as a URL; unreachable.
+  }
+
   // Vercel gives each deployment its own hostname; the preview UI must still work.
   if (process.env.VERCEL_URL) origins.push(`https://${process.env.VERCEL_URL}`);
+
+  // Escape hatch for any other legitimate host (a second custom domain, a
+  // staging alias) without needing a code change — comma-separated, no
+  // trailing slashes.
+  if (process.env.ALLOWED_ORIGINS) {
+    origins.push(...process.env.ALLOWED_ORIGINS.split(",").map((s) => s.trim()).filter(Boolean));
+  }
+
   return origins;
 }
 

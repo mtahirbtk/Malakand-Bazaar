@@ -35,7 +35,7 @@ export default async function ListingDetailPage({
         listing.status === "active"
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
-      url: `${env.NEXT_PUBLIC_SITE_URL}/${locale}/listing/${listing.slug}`,
+      url: `${env.SITE_URL}/${locale}/listing/${listing.slug}`,
     },
   };
 

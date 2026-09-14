@@ -18,7 +18,9 @@ const secret = (min: number) =>
 const schema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 
-  NEXT_PUBLIC_SITE_URL: z.string().url().transform((v) => v.replace(/\/+$/, "")),
+  // Server-only: used for absolute URLs (OG images, CSRF Origin check) built
+  // in Server Components / route handlers, never read from the browser.
+  SITE_URL: z.string().url().transform((v) => v.replace(/\/+$/, "")),
 
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
