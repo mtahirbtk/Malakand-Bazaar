@@ -210,18 +210,14 @@
       "honeyHerbs": "Honey & Herbs",
       "mobilePhones": "Mobile Phones"
     },
-    "trending": {
-      "title": "Trending This Week",
-      "subtitle": "Listings getting the most views right now"
+    "topListings": {
+      "title": "Top Listings",
+      "subtitle": "Malakand's most viewed listings, all in one place"
     },
     "launch": {
       "title": "Malakand's marketplace is opening",
       "body": "Be among the first sellers here — list an item and it's live immediately, no waiting.",
       "cta": "List your first item"
-    },
-    "sellers": {
-      "title": "Top Verified Local Sellers & Farms",
-      "subtitle": "Trusted business owners with 100% verified identities and real local stores"
     },
     "banner": {
       "badge": "100% Direct Buyer-Seller Dealings",
@@ -271,7 +267,13 @@
     "welcomeBackTitle": "Welcome back, {name}!",
     "welcomeBackDescription": "You're signed in to MalakandBazar.",
     "accountCreatedTitle": "Account created",
-    "accountCreatedDescription": "Welcome, {name} — your account is ready."
+    "accountCreatedDescription": "Welcome, {name} — your account is ready.",
+    "chooseAccountTypeTitle": "How would you like to join?",
+    "customerCardTitle": "I'm a Customer",
+    "customerCardDescription": "Browse and buy from local sellers.",
+    "sellerCardTitle": "I'm a Seller",
+    "sellerCardDescription": "List products and reach buyers nearby.",
+    "backToAccountType": "Back"
   },
   "sellerProfile": {
     "storeNameLabel": "Store Name",

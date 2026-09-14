@@ -5,9 +5,7 @@ import { useTranslations } from "next-intl";
 import { HeroCarousel } from "@/components/marketplace/hero-carousel";
 import { PromoCard } from "@/components/marketplace/promo-card";
 import { CategoryCircle } from "@/components/marketplace/category-circle";
-import { SectionHeader } from "@/components/marketplace/section-header";
 import { ListingCard } from "@/components/marketplace/listing-card";
-import { SellerCard } from "@/components/marketplace/seller-card";
 import { PatronCredit } from "@/components/marketplace/patron-credit";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
@@ -43,16 +41,14 @@ const PROMO_STRIPS = [
 ];
 
 /**
- * Everything below the sectors grid is gated on real data (§6.3): a category
- * shelf only renders once it clears `home.min_listings_per_shelf`, trending
- * and top sellers only once `payload.readiness` says there's enough behind
- * them. Below every threshold, this falls back to one honest launch message
- * instead of empty/fake shelves — the hero, sectors grid and promo tiles
- * above and below it are brand content and stay either way.
+ * Below the sectors grid: one "Top Listings" shelf (§2.3 #25), ranked by
+ * lifetime views server-side, no minimum-count gate — it renders as soon as
+ * there's a single live listing. Zero listings falls back to one honest
+ * launch message instead of an empty shelf — the hero, sectors grid and
+ * promo tiles above and below it are brand content and stay either way.
  */
 export default function HomeContent({ payload }: { payload: HomePayload }) {
   const t = useTranslations("home");
-  const marketplace = useTranslations("marketplace");
   const common = useTranslations("common");
 
   const heroSlides = [
@@ -147,9 +143,8 @@ export default function HomeContent({ payload }: { payload: HomePayload }) {
     { icon: "smartphone", label: t("sectors.mobilePhones"), href: "/search?category=mobiles-tablets" },
   ];
 
-  const showTrending = payload.readiness.showTrending && payload.trending.length > 0;
-  const showTopSellers = payload.readiness.showTopSellers && payload.topSellers.length > 0;
-  const nothingToShow = payload.shelves.length === 0 && !showTrending && !showTopSellers;
+  const topListings = payload.topListings.slice(0, 12);
+  const nothingToShow = topListings.length === 0;
 
   return (
     <main className="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-8">
@@ -203,69 +198,28 @@ export default function HomeContent({ payload }: { payload: HomePayload }) {
           }
         />
       ) : (
-        <>
-          {/* 3. Category shelves — only the ones with enough live stock to be real */}
-          {payload.shelves.map((shelf) => (
-            <section key={shelf.categorySlug} className="space-y-4">
-              <SectionHeader
-                title={shelf.categoryName}
-                actionLabel={common("viewAll")}
-                actionHref={`/search?category=${shelf.categorySlug}`}
-              />
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-                {shelf.items.map((listing) => (
-                  <ListingCard key={listing.id} listing={listing} />
-                ))}
-              </div>
-            </section>
-          ))}
-
-          {/* 4. Trending */}
-          {showTrending && (
-            <section className="space-y-4">
-              <SectionHeader
-                title={t("trending.title")}
-                actionLabel={common("viewAll")}
-                actionHref="/search?sort=featured"
-              />
-              <p className="-mt-3 text-xs text-on-surface-muted">{t("trending.subtitle")}</p>
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-                {payload.trending.map((listing) => (
-                  <ListingCard key={listing.id} listing={listing} />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* 5. Top Verified Local Sellers */}
-          {showTopSellers && (
-            <section
-              aria-label={t("sellers.title")}
-              className="bg-surface rounded-2xl p-5 sm:p-7 border border-surface-border shadow-xs space-y-5"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-4">
-                <div className="space-y-0.5">
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
-                    {t("sellers.title")}
-                  </h2>
-                  <p className="text-xs text-on-surface-muted">{t("sellers.subtitle")}</p>
-                </div>
-                <Link
-                  className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors shadow-2xs self-start sm:self-auto"
-                  href="/sell"
-                >
-                  <Icon name="how_to_reg" size={16} />
-                  <span>{marketplace("registerVerifiedSeller")}</span>
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                {payload.topSellers.map((seller) => (
-                  <SellerCard key={seller.id} seller={seller} />
-                ))}
-              </div>
-            </section>
-          )}
-        </>
+        // 3. Top Listings — one ranked shelf, no per-category threshold
+        <section className="space-y-4">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
+              {t("topListings.title")}
+            </h2>
+            <p className="text-xs text-on-surface-muted">{t("topListings.subtitle")}</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+            {topListings.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+          <div className="flex justify-center pt-2">
+            <Button asChild variant="subtle">
+              <Link href="/search">
+                <span>{common("viewAll")}</span>
+                <Icon name="arrow_forward" size={16} />
+              </Link>
+            </Button>
+          </div>
+        </section>
       )}
 
       {/* 6. Mid-page seller banner — brand CTA, not listing-dependent */}

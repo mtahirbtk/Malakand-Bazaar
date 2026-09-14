@@ -11,6 +11,7 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
 import { FullscreenLoader } from "@/components/ui/fullscreen-loader";
 import { useToast } from "@/components/ui/toast";
 import { TurnstileWidget, turnstileEnabled } from "./turnstile-widget";
@@ -29,6 +30,10 @@ export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [tab, setTab] = React.useState("sign-in");
+  // Create Account starts on a Customer/Seller choice rather than dropping
+  // straight into a form — a seller belongs on the fuller /sell flow, not
+  // these three fields.
+  const [accountType, setAccountType] = React.useState<"customer" | null>(null);
 
   const [signInPhone, setSignInPhone] = React.useState("");
   const [signInPassword, setSignInPassword] = React.useState("");
@@ -141,7 +146,21 @@ export function SignInForm() {
         </TabPanel>
 
         <TabPanel value="create-account" className="pt-6">
+          {accountType !== "customer" ? (
+            <AccountTypeChoice
+              onChooseCustomer={() => setAccountType("customer")}
+              onChooseSeller={() => router.push("/sell")}
+            />
+          ) : (
           <form className="space-y-4" onSubmit={handleSignUp} noValidate>
+            <button
+              type="button"
+              onClick={() => setAccountType(null)}
+              className="text-sm font-semibold text-brand-600 hover:underline"
+            >
+              <span aria-hidden="true">←</span> {t("backToAccountType")}
+            </button>
+
             <FormField
               label={t("nameLabel")}
               htmlFor="su-name"
@@ -199,9 +218,71 @@ export function SignInForm() {
               {signUpState.pending ? t("creatingAccount") : t("createAccountCta")}
             </Button>
           </form>
+          )}
         </TabPanel>
       </Tabs>
     </div>
+  );
+}
+
+/**
+ * Create Account opens here rather than on a form: a seller's fields don't
+ * belong on this quick two-field flow, so the choice is made up front and a
+ * seller is routed straight to `/sell` instead of being folded into these
+ * three inputs.
+ */
+function AccountTypeChoice({
+  onChooseCustomer,
+  onChooseSeller,
+}: {
+  onChooseCustomer: () => void;
+  onChooseSeller: () => void;
+}) {
+  const t = useTranslations("auth");
+  return (
+    <div className="space-y-4">
+      <p className="text-center text-sm font-semibold text-on-surface-muted">
+        {t("chooseAccountTypeTitle")}
+      </p>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <AccountTypeCard
+          icon="person"
+          title={t("customerCardTitle")}
+          description={t("customerCardDescription")}
+          onClick={onChooseCustomer}
+        />
+        <AccountTypeCard
+          icon="storefront"
+          title={t("sellerCardTitle")}
+          description={t("sellerCardDescription")}
+          onClick={onChooseSeller}
+        />
+      </div>
+    </div>
+  );
+}
+
+function AccountTypeCard({
+  icon,
+  title,
+  description,
+  onClick,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex flex-col items-center gap-2 rounded-xl border border-surface-border bg-surface p-6 text-center transition-colors hover:border-brand-600 hover:bg-brand-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+    >
+      <Icon name={icon} size={32} className="text-brand-600" />
+      <span className="text-base font-bold text-on-surface">{title}</span>
+      <span className="text-xs text-on-surface-muted">{description}</span>
+    </button>
   );
 }
 

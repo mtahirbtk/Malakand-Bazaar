@@ -71,6 +71,7 @@ describe("SignInForm", () => {
 
     renderWithAuth(<SignInForm />);
     await userEvent.click(screen.getByRole("tab", { name: "Create Account" }));
+    await userEvent.click(screen.getByRole("button", { name: /I'm a Customer/ }));
     await userEvent.type(screen.getByLabelText(/Your Name/), "Ayesha");
     await userEvent.type(screen.getByLabelText(/Phone Number/), "3007654321");
     await userEvent.type(screen.getByLabelText(/Password/), "password1");
@@ -81,6 +82,14 @@ describe("SignInForm", () => {
       phone: "+923007654321",
       displayName: "Ayesha",
     });
+  });
+
+  it("sends a seller straight to the seller sign-up page", async () => {
+    renderWithAuth(<SignInForm />);
+    await userEvent.click(screen.getByRole("tab", { name: "Create Account" }));
+    await userEvent.click(screen.getByRole("button", { name: /I'm a Seller/ }));
+
+    expect(pushMock).toHaveBeenCalledWith("/sell");
   });
 
   it("shows the server's message when the credentials are wrong", async () => {
@@ -114,12 +123,29 @@ describe("SignInForm", () => {
 
     renderWithAuth(<SignInForm />);
     await userEvent.click(screen.getByRole("tab", { name: "Create Account" }));
+    await userEvent.click(screen.getByRole("button", { name: /I'm a Customer/ }));
     await userEvent.type(screen.getByLabelText(/Your Name/), "Ayesha");
     await userEvent.type(screen.getByLabelText(/Phone Number/), "3007654321");
     await userEvent.type(screen.getByLabelText(/Password/), "password1");
     await userEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
     expect(await screen.findByText("This number is already registered.")).toBeInTheDocument();
+  });
+
+  it("shows the customer/seller choice before the signup fields, with a way back", async () => {
+    renderWithAuth(<SignInForm />);
+    await userEvent.click(screen.getByRole("tab", { name: "Create Account" }));
+
+    expect(screen.getByRole("button", { name: /I'm a Customer/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /I'm a Seller/ })).toBeInTheDocument();
+    expect(screen.queryByLabelText(/Your Name/)).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: /I'm a Customer/ }));
+    expect(screen.getByLabelText(/Your Name/)).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Back" }));
+    expect(screen.queryByLabelText(/Your Name/)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /I'm a Customer/ })).toBeInTheDocument();
   });
 
   it("does not submit twice while a request is in flight", async () => {
