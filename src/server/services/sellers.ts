@@ -336,16 +336,25 @@ export async function listSellers(query: SellersDirectoryQuery): Promise<{ items
 
 /**
  * Homepage top-sellers widget — §2.4 #30. `getSellerDetail`'s DB query with
- * a rating floor and a hard limit instead of a slug lookup.
+ * a hard limit instead of a slug lookup.
+ *
+ * No rating-count floor: with the marketplace this young, most active
+ * sellers have zero reviews yet, and a hard gate on rating_count >= 1 would
+ * leave the shelf showing only the handful who happen to be reviewed (or
+ * nothing at all) instead of the storefronts actually worth surfacing.
+ * Reviewed sellers still sort first (rating_score defaults to 0 for an
+ * unrated store), with listing_count and recency breaking remaining ties so
+ * an unrated seller with a real catalog still outranks an empty one.
  */
 export async function topSellers(query: TopSellersQuery): Promise<Seller[]> {
   const { data, error } = await db
     .from("sellers")
     .select(PUBLIC_SELLER_COLUMNS)
     .eq("status", "active")
-    .gte("rating_count", 1)
     .order("rating_score", { ascending: false })
     .order("rating_count", { ascending: false })
+    .order("listing_count", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(query.limit);
 
   if (error) {

@@ -1,10 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { useAuth } from "@/lib/auth/auth-context";
-import { ApiClientError } from "@/lib/api-client";
+import { phoneSchema, passwordSchema, requiredString } from "@/lib/validation/schemas";
+import { useFormSubmit } from "@/lib/validation/use-form-submit";
+import { visibleFieldErrors } from "@/lib/validation/visible-errors";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -15,7 +19,11 @@ import { useToast } from "@/components/ui/toast";
 import { TurnstileWidget, turnstileEnabled } from "@/components/auth/turnstile-widget";
 import { SellerProfileFields, MALAKAND_CENTER, type SellerProfileFieldsValue } from "./seller-profile-fields";
 
-const INITIAL_FIELDS: SellerProfileFieldsValue = {
+type RegistrationValues = { phone: string; password: string } & SellerProfileFieldsValue;
+
+const INITIAL_VALUES: RegistrationValues = {
+  phone: "",
+  password: "",
   storeName: "",
   description: "",
   storePhone: "",
@@ -39,18 +47,54 @@ const INITIAL_FIELDS: SellerProfileFieldsValue = {
  */
 export function SellerRegistrationForm() {
   const t = useTranslations("sellerRegistration");
+  const v = useTranslations("validation");
   const locale = useLocale();
   const { user, registerSeller } = useAuth();
   const { show } = useToast();
   const router = useRouter();
 
-  const [phone, setPhone] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [fields, setFields] = React.useState<SellerProfileFieldsValue>(INITIAL_FIELDS);
-  const [pending, setPending] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({});
   const [turnstileToken, setTurnstileToken] = React.useState<string | null>(null);
+  const [topError, setTopError] = React.useState<string | null>(null);
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const needsAccountFields = !user;
+
+  const formik = useFormik<RegistrationValues>({
+    initialValues: INITIAL_VALUES,
+    validationSchema: Yup.object({
+      ...(needsAccountFields ? { phone: phoneSchema(v), password: passwordSchema(v) } : {}),
+      storeName: requiredString(v),
+      storePhone: phoneSchema(v),
+    }),
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: () => {},
+  });
+
+  const handleSubmit = useFormSubmit(
+    formik,
+    formRef,
+    async (values) => {
+      await registerSeller({
+        ...(needsAccountFields
+          ? { phone: values.phone, password: values.password, turnstileToken: turnstileToken ?? undefined }
+          : {}),
+        storeName: values.storeName,
+        description: values.description || undefined,
+        storePhone: values.storePhone,
+        tehsilSlug: values.tehsilSlug,
+        localitySlug: values.localitySlug,
+        coordinates: values.coordinates,
+      });
+      show({
+        title: t("storefrontCreatedTitle"),
+        description: t("storefrontCreatedDescription", { storeName: values.storeName }),
+        tone: "success",
+      });
+      router.push("/seller/dashboard/listings");
+    },
+    setTopError,
+    t("genericError")
+  );
 
   if (user?.role === "seller") {
     return (
@@ -65,55 +109,24 @@ export function SellerRegistrationForm() {
     );
   }
 
-  const needsAccountFields = !user;
-
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setPending(true);
-    setError(null);
-    setFieldErrors({});
-
-    try {
-      await registerSeller({
-        ...(needsAccountFields
-          ? { phone, password, turnstileToken: turnstileToken ?? undefined }
-          : {}),
-        storeName: fields.storeName,
-        description: fields.description || undefined,
-        storePhone: fields.storePhone,
-        tehsilSlug: fields.tehsilSlug,
-        localitySlug: fields.localitySlug,
-        coordinates: fields.coordinates,
-      });
-      show({
-        title: t("storefrontCreatedTitle"),
-        description: t("storefrontCreatedDescription", { storeName: fields.storeName }),
-        tone: "success",
-      });
-      router.push("/seller/dashboard/listings");
-    } catch (caught) {
-      if (caught instanceof ApiClientError) {
-        setFieldErrors(caught.fields ?? {});
-        setError(caught.fields && Object.keys(caught.fields).length ? null : caught.message);
-      } else {
-        setError(t("genericError"));
-      }
-      setPending(false);
-    }
-  }
-
   return (
-    <form className="mx-auto max-w-2xl space-y-6" onSubmit={handleSubmit} noValidate>
-      {pending && <FullscreenLoader label={t("submitting")} />}
+    <form ref={formRef} className="mx-auto max-w-2xl space-y-6" onSubmit={handleSubmit} noValidate>
+      {formik.isSubmitting && <FullscreenLoader label={t("submitting")} />}
       {needsAccountFields && (
         <div className="space-y-4 rounded-xl border border-surface-border bg-surface-low p-4">
-          <FormField label={t("phoneLabel")} htmlFor="reg-phone" required error={fieldErrors.phone}>
+          <FormField
+            label={t("phoneLabel")}
+            htmlFor="reg-phone"
+            required
+            error={formik.touched.phone ? formik.errors.phone : undefined}
+          >
             <PhoneInput
               id="reg-phone"
+              name="phone"
               autoComplete="tel"
-              value={phone}
-              invalid={Boolean(fieldErrors.phone)}
-              onChange={(e) => setPhone(e.target.value)}
+              value={formik.values.phone}
+              invalid={Boolean(formik.touched.phone && formik.errors.phone)}
+              onChange={(e) => formik.setFieldValue("phone", e.target.value)}
             />
           </FormField>
           <FormField
@@ -121,26 +134,33 @@ export function SellerRegistrationForm() {
             htmlFor="reg-password"
             required
             hint={t("passwordHint")}
-            error={fieldErrors.password}
+            error={formik.touched.password ? formik.errors.password : undefined}
           >
             <Input
               id="reg-password"
+              name="password"
               type="password"
               autoComplete="new-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formik.values.password}
+              invalid={Boolean(formik.touched.password && formik.errors.password)}
+              onChange={(e) => formik.setFieldValue("password", e.target.value)}
             />
           </FormField>
         </div>
       )}
 
-      <SellerProfileFields value={fields} onChange={setFields} showImages={false} errors={fieldErrors} />
+      <SellerProfileFields
+        value={formik.values}
+        onChange={(next) => formik.setValues({ ...formik.values, ...next })}
+        showImages={false}
+        errors={visibleFieldErrors(formik.touched, formik.errors)}
+      />
 
       {needsAccountFields && <TurnstileWidget onToken={setTurnstileToken} locale={locale} />}
 
-      {error && (
+      {topError && (
         <p role="alert" className="text-xs font-semibold text-danger">
-          {error}
+          {topError}
         </p>
       )}
 
@@ -148,10 +168,10 @@ export function SellerRegistrationForm() {
         type="submit"
         size="lg"
         className="w-full"
-        disabled={pending || (needsAccountFields && turnstileEnabled() && !turnstileToken)}
-        aria-busy={pending}
+        disabled={formik.isSubmitting || (needsAccountFields && turnstileEnabled() && !turnstileToken)}
+        aria-busy={formik.isSubmitting}
       >
-        {pending ? t("submitting") : t("submitCta")}
+        {formik.isSubmitting ? t("submitting") : t("submitCta")}
       </Button>
     </form>
   );

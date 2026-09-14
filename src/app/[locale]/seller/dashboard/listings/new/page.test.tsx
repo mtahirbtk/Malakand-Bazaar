@@ -50,10 +50,17 @@ describe("NewListingPage", () => {
     });
     renderWithAuth(<NewListingPage />, makeSeller({ sellerId: "s1" }));
 
+    // Client-side validation only checks non-empty — short enough to pass it
+    // but still trip the server's own "at least 4 characters" rule, so this
+    // exercises the server field error rather than the client one.
+    await userEvent.type(screen.getByLabelText("Title"), "Hi");
+    await userEvent.type(screen.getByLabelText("Description"), "Lightly used, well maintained.");
     await userEvent.type(screen.getByLabelText("Price (PKR)"), "15000");
+    await userEvent.clear(screen.getByLabelText("Contact Number"));
+    await userEvent.type(screen.getByLabelText("Contact Number"), "3001234567");
     await userEvent.click(screen.getByRole("button", { name: "Publish Listing" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent("Must be at least 4 characters.");
+    expect(await screen.findByText("Must be at least 4 characters.")).toBeInTheDocument();
     expect(pushMock).not.toHaveBeenCalled();
   });
 });

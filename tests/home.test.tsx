@@ -4,7 +4,24 @@ import { NextIntlClientProvider } from "next-intl";
 import messages from "@/i18n/messages/en.json";
 import HomeContent from "@/app/[locale]/home-content";
 import type { HomePayload } from "@/server/services/home";
-import type { Listing } from "@/types";
+import type { Listing, Seller } from "@/types";
+
+function makeSeller(id: string): Seller {
+  return {
+    id,
+    slug: `seller-${id}`,
+    name: `Seller ${id}`,
+    initials: "S" + id,
+    tehsilSlug: "batkhela",
+    localityLabel: "Batkhela",
+    rating: 4.8,
+    reviewCount: 20,
+    verified: true,
+    responseMinutes: 10,
+    listingCount: 5,
+    phone: "+923001234567",
+  };
+}
 
 function makeListing(id: string, categorySlug = "vehicles"): Listing {
   return {
@@ -29,6 +46,7 @@ function makeListing(id: string, categorySlug = "vehicles"): Listing {
 function emptyPayload(overrides: Partial<HomePayload> = {}): HomePayload {
   return {
     topListings: [],
+    topSellers: [],
     counters: { totalActiveListings: 0, totalSellers: 0 },
     ...overrides,
   };
@@ -72,5 +90,20 @@ describe("Home page", () => {
     expect(screen.getAllByRole("heading", { name: /^Listing \d+$/ })).toHaveLength(12);
     const seeAllLinks = screen.getAllByRole("link", { name: /View All/ });
     expect(seeAllLinks.some((link) => link.getAttribute("href") === "/en/search")).toBe(true);
+  });
+
+  it("omits the Top Sellers shelf when there are no qualifying sellers", () => {
+    renderHome(emptyPayload());
+    expect(screen.queryByText("Top Sellers")).not.toBeInTheDocument();
+  });
+
+  it("renders the Top Sellers shelf and links View All to /sellers", () => {
+    const payload = emptyPayload({ topSellers: [makeSeller("1"), makeSeller("2")] });
+    renderHome(payload);
+    expect(screen.getByText("Top Sellers")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Seller 1" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Seller 2" })).toBeInTheDocument();
+    const seeAllLinks = screen.getAllByRole("link", { name: /View All/ });
+    expect(seeAllLinks.some((link) => link.getAttribute("href") === "/en/sellers")).toBe(true);
   });
 });

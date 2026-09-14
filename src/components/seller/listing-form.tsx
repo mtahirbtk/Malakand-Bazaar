@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useTranslations } from "next-intl";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -10,6 +12,8 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
 import { CATEGORY_OPTIONS, findCategory } from "@/data/categories";
 import { TEHSIL_OPTIONS, findTehsil } from "@/data/tehsils";
+import { requiredString, requiredNonNegativeNumber, nonNegativeNumber, phoneSchema } from "@/lib/validation/schemas";
+import { useFormSubmit } from "@/lib/validation/use-form-submit";
 import type { TehsilSlug } from "@/types";
 
 export type ListingFormValue = {
@@ -25,18 +29,18 @@ export type ListingFormValue = {
 };
 
 export function ListingForm({
-  value,
-  onChange,
+  initialValue,
   onSubmit,
   submitLabel,
-  error,
+  submittingLabel,
   imagesSection,
 }: {
-  value: ListingFormValue;
-  onChange: (value: ListingFormValue) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  initialValue: ListingFormValue;
+  /** Throw (e.g. an ApiClientError with `.fields`) to report a failed save — the form surfaces it itself. */
+  onSubmit: (value: ListingFormValue) => Promise<void>;
   submitLabel: string;
-  error?: string | null;
+  /** Shown on the submit button while the save is in flight. */
+  submittingLabel: string;
   /**
    * Create and edit need different image UIs — a new listing stages uploads
    * locally until the listing itself exists, an existing one attaches,
@@ -47,6 +51,45 @@ export function ListingForm({
   imagesSection?: React.ReactNode;
 }) {
   const t = useTranslations("listingForm");
+  const v = useTranslations("validation");
+  const [topError, setTopError] = React.useState<string | null>(null);
+  const formRef = React.useRef<HTMLFormElement>(null);
+
+  const formik = useFormik<ListingFormValue>({
+    initialValues: initialValue,
+    validationSchema: Yup.object({
+      title: requiredString(v),
+      description: requiredString(v),
+      price: requiredNonNegativeNumber(v),
+      compareAtPrice: nonNegativeNumber(v),
+      contactPhone: phoneSchema(v),
+    }),
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: () => {},
+  });
+
+  const handleSubmit = useFormSubmit(formik, formRef, onSubmit, setTopError, t("genericError"));
+
+  // `initialValue` can change after mount — e.g. NewListingPage backfills the
+  // phone field once its own async fetch resolves. Only apply that once: if
+  // the seller has already started filling the form in, a late-arriving
+  // prefill must not clobber what they typed.
+  const initialValueRef = React.useRef(initialValue);
+  React.useEffect(() => {
+    if (initialValue !== initialValueRef.current) {
+      initialValueRef.current = initialValue;
+      if (!formik.dirty) formik.setValues(initialValue);
+    }
+    // formik's identity is stable across renders (from useFormik).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValue]);
+
+  const value = formik.values;
+  function setField<K extends keyof ListingFormValue>(key: K, next: ListingFormValue[K]) {
+    formik.setFieldValue(key, next);
+  }
+
   const subcategoryOptions = (findCategory(value.categorySlug)?.subcategories ?? []).map((s) => ({
     value: s.slug,
     label: s.nameEn,
@@ -57,36 +100,68 @@ export function ListingForm({
   }));
 
   return (
-    <form className="max-w-2xl space-y-4" onSubmit={onSubmit}>
-      <FormField label={t("titleLabel")} htmlFor="lf-title" required>
-        <Input id="lf-title" value={value.title} onChange={(e) => onChange({ ...value, title: e.target.value })} />
+    <form ref={formRef} className="max-w-2xl space-y-4" onSubmit={handleSubmit} noValidate>
+      <FormField
+        label={t("titleLabel")}
+        htmlFor="lf-title"
+        required
+        error={formik.touched.title ? formik.errors.title : undefined}
+      >
+        <Input
+          id="lf-title"
+          name="title"
+          value={value.title}
+          invalid={Boolean(formik.touched.title && formik.errors.title)}
+          onChange={(e) => setField("title", e.target.value)}
+        />
       </FormField>
 
-      <FormField label={t("descriptionLabel")} htmlFor="lf-description" required>
+      <FormField
+        label={t("descriptionLabel")}
+        htmlFor="lf-description"
+        required
+        error={formik.touched.description ? formik.errors.description : undefined}
+      >
         <Textarea
           id="lf-description"
+          name="description"
           value={value.description}
-          onChange={(e) => onChange({ ...value, description: e.target.value })}
+          invalid={Boolean(formik.touched.description && formik.errors.description)}
+          onChange={(e) => setField("description", e.target.value)}
         />
       </FormField>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <FormField label={t("priceLabel")} htmlFor="lf-price" required>
+        <FormField
+          label={t("priceLabel")}
+          htmlFor="lf-price"
+          required
+          error={formik.touched.price ? formik.errors.price : undefined}
+        >
           <Input
             id="lf-price"
+            name="price"
             type="number"
             min={0}
             value={value.price}
-            onChange={(e) => onChange({ ...value, price: e.target.value })}
+            invalid={Boolean(formik.touched.price && formik.errors.price)}
+            onChange={(e) => setField("price", e.target.value)}
           />
         </FormField>
-        <FormField label={t("compareAtPriceLabel")} htmlFor="lf-compare-price" hint={t("compareAtPriceHint")}>
+        <FormField
+          label={t("compareAtPriceLabel")}
+          htmlFor="lf-compare-price"
+          hint={t("compareAtPriceHint")}
+          error={formik.touched.compareAtPrice ? formik.errors.compareAtPrice : undefined}
+        >
           <Input
             id="lf-compare-price"
+            name="compareAtPrice"
             type="number"
             min={0}
             value={value.compareAtPrice}
-            onChange={(e) => onChange({ ...value, compareAtPrice: e.target.value })}
+            invalid={Boolean(formik.touched.compareAtPrice && formik.errors.compareAtPrice)}
+            onChange={(e) => setField("compareAtPrice", e.target.value)}
           />
         </FormField>
       </div>
@@ -98,7 +173,7 @@ export function ListingForm({
             value={value.categorySlug}
             onValueChange={(categorySlug) => {
               const nextSubcategories = findCategory(categorySlug)?.subcategories ?? [];
-              onChange({ ...value, categorySlug, subcategorySlug: nextSubcategories[0]?.slug ?? "" });
+              formik.setValues({ ...value, categorySlug, subcategorySlug: nextSubcategories[0]?.slug ?? "" });
             }}
             options={CATEGORY_OPTIONS}
             className="w-full"
@@ -108,7 +183,7 @@ export function ListingForm({
           <Select
             ariaLabel={t("subcategoryLabel")}
             value={value.subcategorySlug}
-            onValueChange={(subcategorySlug) => onChange({ ...value, subcategorySlug })}
+            onValueChange={(subcategorySlug) => setField("subcategorySlug", subcategorySlug)}
             options={subcategoryOptions}
             className="w-full"
           />
@@ -122,7 +197,11 @@ export function ListingForm({
             value={value.tehsilSlug}
             onValueChange={(tehsilSlug) => {
               const nextLocalities = findTehsil(tehsilSlug as TehsilSlug)?.localities ?? [];
-              onChange({ ...value, tehsilSlug: tehsilSlug as TehsilSlug, localitySlug: nextLocalities[0]?.slug ?? "" });
+              formik.setValues({
+                ...value,
+                tehsilSlug: tehsilSlug as TehsilSlug,
+                localitySlug: nextLocalities[0]?.slug ?? "",
+              });
             }}
             options={TEHSIL_OPTIONS.filter((o) => o.value !== "all")}
             className="w-full"
@@ -132,18 +211,25 @@ export function ListingForm({
           <Select
             ariaLabel={t("localityLabel")}
             value={value.localitySlug}
-            onValueChange={(localitySlug) => onChange({ ...value, localitySlug })}
+            onValueChange={(localitySlug) => setField("localitySlug", localitySlug)}
             options={localityOptions}
             className="w-full"
           />
         </FormField>
       </div>
 
-      <FormField label={t("contactPhoneLabel")} htmlFor="lf-phone" required>
+      <FormField
+        label={t("contactPhoneLabel")}
+        htmlFor="lf-phone"
+        required
+        error={formik.touched.contactPhone ? formik.errors.contactPhone : undefined}
+      >
         <PhoneInput
           id="lf-phone"
+          name="contactPhone"
           value={value.contactPhone}
-          onChange={(e) => onChange({ ...value, contactPhone: e.target.value })}
+          invalid={Boolean(formik.touched.contactPhone && formik.errors.contactPhone)}
+          onChange={(e) => setField("contactPhone", e.target.value)}
         />
       </FormField>
 
@@ -151,14 +237,14 @@ export function ListingForm({
         {imagesSection}
       </FormField>
 
-      {error && (
+      {topError && (
         <p role="alert" className="text-xs font-semibold text-danger">
-          {error}
+          {topError}
         </p>
       )}
 
-      <Button type="submit" size="lg">
-        {submitLabel}
+      <Button type="submit" size="lg" disabled={formik.isSubmitting} aria-busy={formik.isSubmitting}>
+        {formik.isSubmitting ? submittingLabel : submitLabel}
       </Button>
     </form>
   );

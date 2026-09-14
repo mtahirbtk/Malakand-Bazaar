@@ -1,11 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/routing";
 import { useAuth, type AuthUser } from "@/lib/auth/auth-context";
-import { ApiClientError } from "@/lib/api-client";
+import { phoneSchema, passwordSchema, requiredString } from "@/lib/validation/schemas";
+import { useFormSubmit } from "@/lib/validation/use-form-submit";
 import { Tabs, TabPanel } from "@/components/ui/tabs";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -16,14 +19,19 @@ import { FullscreenLoader } from "@/components/ui/fullscreen-loader";
 import { useToast } from "@/components/ui/toast";
 import { TurnstileWidget, turnstileEnabled } from "./turnstile-widget";
 
+type SignInValues = { phone: string; password: string };
+type SignUpValues = { displayName: string; phone: string; password: string };
+
 /**
  * Sign in and create account.
  *
- * Every check that matters runs on the server; this form's job is to collect
- * two fields, show what came back, and not submit twice.
+ * Every check that matters runs on the server; this form's job is to
+ * validate client-side before that round trip, collect two or three fields,
+ * show what came back, and not submit twice.
  */
 export function SignInForm() {
   const t = useTranslations("auth");
+  const v = useTranslations("validation");
   const locale = useLocale();
   const { signIn, signUp } = useAuth();
   const { show } = useToast();
@@ -35,16 +43,12 @@ export function SignInForm() {
   // these three fields.
   const [accountType, setAccountType] = React.useState<"customer" | null>(null);
 
-  const [signInPhone, setSignInPhone] = React.useState("");
-  const [signInPassword, setSignInPassword] = React.useState("");
-
-  const [name, setName] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [password, setPassword] = React.useState("");
   const [turnstileToken, setTurnstileToken] = React.useState<string | null>(null);
 
-  const signInState = useSubmitState();
-  const signUpState = useSubmitState();
+  const signInFormRef = React.useRef<HTMLFormElement>(null);
+  const signUpFormRef = React.useRef<HTMLFormElement>(null);
+  const [signInError, setSignInError] = React.useState<string | null>(null);
+  const [signUpError, setSignUpError] = React.useState<string | null>(null);
 
   /**
    * `next` comes from the URL, so it is only honoured when it is a relative
@@ -57,10 +61,31 @@ export function SignInForm() {
     return user.role === "seller" ? "/seller/dashboard/listings" : "/";
   }
 
-  async function handleSignIn(event: React.FormEvent) {
-    event.preventDefault();
-    await signInState.run(async () => {
-      const user = await signIn({ phone: signInPhone, password: signInPassword });
+  const signInFormik = useFormik<SignInValues>({
+    initialValues: { phone: "", password: "" },
+    validationSchema: Yup.object({ phone: phoneSchema(v), password: requiredString(v) }),
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: () => {},
+  });
+
+  const signUpFormik = useFormik<SignUpValues>({
+    initialValues: { displayName: "", phone: "", password: "" },
+    validationSchema: Yup.object({
+      displayName: requiredString(v),
+      phone: phoneSchema(v),
+      password: passwordSchema(v),
+    }),
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: () => {},
+  });
+
+  const handleSignIn = useFormSubmit(
+    signInFormik,
+    signInFormRef,
+    async (values) => {
+      const user = await signIn({ phone: values.phone, password: values.password });
       // Fired before the navigation, not after: the toast lives in the root
       // layout's provider, so it survives the client-side route change and
       // is what greets the user on the page they land on.
@@ -70,16 +95,19 @@ export function SignInForm() {
         tone: "success",
       });
       router.push(destinationFor(user));
-    });
-  }
+    },
+    setSignInError,
+    "Something went wrong. Please try again."
+  );
 
-  async function handleSignUp(event: React.FormEvent) {
-    event.preventDefault();
-    await signUpState.run(async () => {
+  const handleSignUp = useFormSubmit(
+    signUpFormik,
+    signUpFormRef,
+    async (values) => {
       const user = await signUp({
-        phone,
-        password,
-        displayName: name,
+        phone: values.phone,
+        password: values.password,
+        displayName: values.displayName,
         turnstileToken: turnstileToken ?? undefined,
       });
       show({
@@ -88,13 +116,15 @@ export function SignInForm() {
         tone: "success",
       });
       router.push(destinationFor(user));
-    });
-  }
+    },
+    setSignUpError,
+    "Something went wrong. Please try again."
+  );
 
   return (
     <div className="mx-auto max-w-md space-y-6">
-      {(signInState.pending || signUpState.pending) && (
-        <FullscreenLoader label={signInState.pending ? t("signingIn") : t("creatingAccount")} />
+      {(signInFormik.isSubmitting || signUpFormik.isSubmitting) && (
+        <FullscreenLoader label={signInFormik.isSubmitting ? t("signingIn") : t("creatingAccount")} />
       )}
       <Tabs
         value={tab}
@@ -105,20 +135,21 @@ export function SignInForm() {
         ]}
       >
         <TabPanel value="sign-in" className="pt-6">
-          <form className="space-y-4" onSubmit={handleSignIn} noValidate>
+          <form ref={signInFormRef} className="space-y-4" onSubmit={handleSignIn} noValidate>
             <FormField
               label={t("phoneLabel")}
               htmlFor="si-phone"
               required
-              error={signInState.fields.phone}
+              error={signInFormik.touched.phone ? signInFormik.errors.phone : undefined}
             >
               <PhoneInput
                 id="si-phone"
+                name="phone"
                 autoComplete="tel"
                 placeholder={t("phonePlaceholder")}
-                value={signInPhone}
-                invalid={Boolean(signInState.fields.phone)}
-                onChange={(e) => setSignInPhone(e.target.value)}
+                value={signInFormik.values.phone}
+                invalid={Boolean(signInFormik.touched.phone && signInFormik.errors.phone)}
+                onChange={(e) => signInFormik.setFieldValue("phone", e.target.value)}
               />
             </FormField>
 
@@ -126,21 +157,28 @@ export function SignInForm() {
               label={t("passwordLabel")}
               htmlFor="si-password"
               required
-              error={signInState.fields.password}
+              error={signInFormik.touched.password ? signInFormik.errors.password : undefined}
             >
               <Input
                 id="si-password"
+                name="password"
                 type="password"
                 autoComplete="current-password"
-                value={signInPassword}
-                onChange={(e) => setSignInPassword(e.target.value)}
+                value={signInFormik.values.password}
+                invalid={Boolean(signInFormik.touched.password && signInFormik.errors.password)}
+                onChange={(e) => signInFormik.setFieldValue("password", e.target.value)}
               />
             </FormField>
 
-            <FormError message={signInState.error} />
+            <FormError message={signInError} />
 
-            <Button type="submit" className="w-full" disabled={signInState.pending} aria-busy={signInState.pending}>
-              {signInState.pending ? t("signingIn") : t("signInCta")}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={signInFormik.isSubmitting}
+              aria-busy={signInFormik.isSubmitting}
+            >
+              {signInFormik.isSubmitting ? t("signingIn") : t("signInCta")}
             </Button>
           </form>
         </TabPanel>
@@ -152,7 +190,7 @@ export function SignInForm() {
               onChooseSeller={() => router.push("/sell")}
             />
           ) : (
-          <form className="space-y-4" onSubmit={handleSignUp} noValidate>
+          <form ref={signUpFormRef} className="space-y-4" onSubmit={handleSignUp} noValidate>
             <button
               type="button"
               onClick={() => setAccountType(null)}
@@ -165,24 +203,32 @@ export function SignInForm() {
               label={t("nameLabel")}
               htmlFor="su-name"
               required
-              error={signUpState.fields.displayName}
+              error={signUpFormik.touched.displayName ? signUpFormik.errors.displayName : undefined}
             >
               <Input
                 id="su-name"
+                name="displayName"
                 autoComplete="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={signUpFormik.values.displayName}
+                invalid={Boolean(signUpFormik.touched.displayName && signUpFormik.errors.displayName)}
+                onChange={(e) => signUpFormik.setFieldValue("displayName", e.target.value)}
               />
             </FormField>
 
-            <FormField label={t("phoneLabel")} htmlFor="su-phone" required error={signUpState.fields.phone}>
+            <FormField
+              label={t("phoneLabel")}
+              htmlFor="su-phone"
+              required
+              error={signUpFormik.touched.phone ? signUpFormik.errors.phone : undefined}
+            >
               <PhoneInput
                 id="su-phone"
+                name="phone"
                 autoComplete="tel"
                 placeholder={t("phonePlaceholder")}
-                value={phone}
-                invalid={Boolean(signUpState.fields.phone)}
-                onChange={(e) => setPhone(e.target.value)}
+                value={signUpFormik.values.phone}
+                invalid={Boolean(signUpFormik.touched.phone && signUpFormik.errors.phone)}
+                onChange={(e) => signUpFormik.setFieldValue("phone", e.target.value)}
               />
             </FormField>
 
@@ -191,20 +237,22 @@ export function SignInForm() {
               htmlFor="su-password"
               required
               hint={t("passwordHint")}
-              error={signUpState.fields.password}
+              error={signUpFormik.touched.password ? signUpFormik.errors.password : undefined}
             >
               <Input
                 id="su-password"
+                name="password"
                 type="password"
                 autoComplete="new-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={signUpFormik.values.password}
+                invalid={Boolean(signUpFormik.touched.password && signUpFormik.errors.password)}
+                onChange={(e) => signUpFormik.setFieldValue("password", e.target.value)}
               />
             </FormField>
 
             <TurnstileWidget onToken={setTurnstileToken} locale={locale} />
 
-            <FormError message={signUpState.error} />
+            <FormError message={signUpError} />
 
             <Button
               type="submit"
@@ -212,10 +260,10 @@ export function SignInForm() {
               // Turnstile solves itself in about a second; keeping submit
               // disabled until it does avoids a guaranteed round trip that
               // could only fail.
-              disabled={signUpState.pending || (turnstileEnabled() && !turnstileToken)}
-              aria-busy={signUpState.pending}
+              disabled={signUpFormik.isSubmitting || (turnstileEnabled() && !turnstileToken)}
+              aria-busy={signUpFormik.isSubmitting}
             >
-              {signUpState.pending ? t("creatingAccount") : t("createAccountCta")}
+              {signUpFormik.isSubmitting ? t("creatingAccount") : t("createAccountCta")}
             </Button>
           </form>
           )}
@@ -293,36 +341,4 @@ function FormError({ message }: { message: string | null }) {
       {message}
     </p>
   );
-}
-
-/**
- * Submit bookkeeping shared by both forms: a pending flag that blocks a double
- * submit, a top-level message, and per-field messages lifted out of the API's
- * `fields` map so they render against the input that caused them.
- */
-function useSubmitState() {
-  const [pending, setPending] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [fields, setFields] = React.useState<Record<string, string>>({});
-
-  const run = React.useCallback(async (action: () => Promise<void>) => {
-    setPending(true);
-    setError(null);
-    setFields({});
-    try {
-      await action();
-    } catch (caught) {
-      if (caught instanceof ApiClientError) {
-        setFields(caught.fields ?? {});
-        // A message already shown beside a field would otherwise appear twice.
-        setError(caught.fields && Object.keys(caught.fields).length ? null : caught.message);
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
-    } finally {
-      setPending(false);
-    }
-  }, []);
-
-  return { pending, error, fields, run };
 }

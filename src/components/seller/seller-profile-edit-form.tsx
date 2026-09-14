@@ -1,9 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useTranslations } from "next-intl";
 import { api, ApiClientError } from "@/lib/api-client";
 import { findTehsil } from "@/data/tehsils";
+import { phoneSchema, requiredString } from "@/lib/validation/schemas";
+import { useFormSubmit } from "@/lib/validation/use-form-submit";
+import { visibleFieldErrors } from "@/lib/validation/visible-errors";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -46,12 +51,32 @@ function toFieldsValue(seller: SellerRecord): SellerProfileFieldsValue {
 export function SellerProfileEditForm() {
   const t = useTranslations("sellerProfileEdit");
   const common = useTranslations("common");
+  const v = useTranslations("validation");
   const [seller, setSeller] = React.useState<SellerRecord | null>(null);
-  const [fields, setFields] = React.useState<SellerProfileFieldsValue | null>(null);
-  const [saving, setSaving] = React.useState(false);
+  const [loadError, setLoadError] = React.useState<string | null>(null);
+  const [topError, setTopError] = React.useState<string | null>(null);
   const [saved, setSaved] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({});
+  const formRef = React.useRef<HTMLFormElement>(null);
+
+  const formik = useFormik<SellerProfileFieldsValue>({
+    initialValues: {
+      storeName: "",
+      description: "",
+      storePhone: "",
+      tehsilSlug: "batkhela",
+      localitySlug: "batkhela-city",
+      coordinates: MALAKAND_CENTER,
+      avatarUrl: "",
+      storefrontBanner: "",
+    },
+    validationSchema: Yup.object({
+      storeName: requiredString(v),
+      storePhone: phoneSchema(v),
+    }),
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: () => {},
+  });
 
   React.useEffect(() => {
     let cancelled = false;
@@ -60,24 +85,55 @@ export function SellerProfileEditForm() {
       .then(({ seller: found }) => {
         if (cancelled) return;
         setSeller(found);
-        setFields(toFieldsValue(found));
+        formik.setValues(toFieldsValue(found));
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof ApiClientError ? err.message : common("genericError"));
+        if (!cancelled) setLoadError(err instanceof ApiClientError ? err.message : common("genericError"));
       });
     return () => {
       cancelled = true;
     };
+    // formik's identity is stable across renders (from useFormik); only the
+    // fetch itself should re-run if the translator changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [common]);
 
-  if (error && !seller) {
+  const handleSubmit = useFormSubmit(
+    formik,
+    formRef,
+    async (values) => {
+      const locality = findTehsil(values.tehsilSlug)?.localities.find((l) => l.slug === values.localitySlug);
+      const { seller: updated } = await api.patch<{ seller: SellerRecord }>("/api/seller/me", {
+        storeName: values.storeName,
+        description: values.description,
+        storePhone: values.storePhone,
+        tehsilSlug: values.tehsilSlug,
+        localitySlug: locality?.slug ?? values.localitySlug,
+        coordinates: values.coordinates,
+        // Only sent when actually touched — see SellerProfileFieldsValue's
+        // doc comment on why undefined and "" mean different things here.
+        ...(values.avatarPath !== undefined ? { avatarPath: values.avatarPath } : {}),
+        ...(values.bannerPath !== undefined ? { bannerPath: values.bannerPath } : {}),
+      });
+      setSeller(updated);
+      formik.setValues(toFieldsValue(updated));
+      setSaved(true);
+    },
+    (message) => {
+      setTopError(message);
+      setSaved(false);
+    },
+    common("genericError")
+  );
+
+  if (loadError && !seller) {
     return (
       <p role="alert" className="text-sm font-semibold text-danger">
-        {error}
+        {loadError}
       </p>
     );
   }
-  if (!seller || !fields) {
+  if (!seller) {
     return (
       <div className="flex justify-center py-10">
         <Spinner size="lg" />
@@ -85,61 +141,27 @@ export function SellerProfileEditForm() {
     );
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!fields) return;
-    setSaving(true);
-    setSaved(false);
-    setError(null);
-    setFieldErrors({});
-
-    const locality = findTehsil(fields.tehsilSlug)?.localities.find((l) => l.slug === fields.localitySlug);
-
-    try {
-      const { seller: updated } = await api.patch<{ seller: SellerRecord }>("/api/seller/me", {
-        storeName: fields.storeName,
-        description: fields.description,
-        storePhone: fields.storePhone,
-        tehsilSlug: fields.tehsilSlug,
-        localitySlug: locality?.slug ?? fields.localitySlug,
-        coordinates: fields.coordinates,
-        // Only sent when actually touched — see SellerProfileFieldsValue's
-        // doc comment on why undefined and "" mean different things here.
-        ...(fields.avatarPath !== undefined ? { avatarPath: fields.avatarPath } : {}),
-        ...(fields.bannerPath !== undefined ? { bannerPath: fields.bannerPath } : {}),
-      });
-      setSeller(updated);
-      setFields(toFieldsValue(updated));
-      setSaved(true);
-    } catch (err) {
-      if (err instanceof ApiClientError) {
-        setError(err.message);
-        setFieldErrors(err.fields ?? {});
-      } else {
-        setError(common("genericError"));
-      }
-    } finally {
-      setSaving(false);
-    }
-  }
-
   return (
-    <form className="max-w-2xl space-y-6" onSubmit={handleSubmit}>
+    <form ref={formRef} className="max-w-2xl space-y-6" onSubmit={handleSubmit}>
       <Badge tone={seller.verified ? "green" : "sand"} icon={seller.verified ? "check_circle" : "hourglass_empty"}>
         {seller.verified ? t("verified") : t("pending")}
       </Badge>
 
-      <SellerProfileFields value={fields} onChange={setFields} errors={fieldErrors} />
+      <SellerProfileFields
+        value={formik.values}
+        onChange={(next) => formik.setValues(next)}
+        errors={visibleFieldErrors(formik.touched, formik.errors)}
+      />
 
-      {error && (
+      {topError && (
         <p role="alert" className="text-xs font-semibold text-danger">
-          {error}
+          {topError}
         </p>
       )}
-      {saved && !error && <p className="text-xs font-semibold text-brand-700">{t("savedMessage")}</p>}
+      {saved && !topError && <p className="text-xs font-semibold text-brand-700">{t("savedMessage")}</p>}
 
-      <Button type="submit" size="lg" disabled={saving} aria-busy={saving}>
-        {saving ? <Spinner size="sm" tone="onBrand" /> : t("saveCta")}
+      <Button type="submit" size="lg" disabled={formik.isSubmitting} aria-busy={formik.isSubmitting}>
+        {formik.isSubmitting ? <Spinner size="sm" tone="onBrand" /> : t("saveCta")}
       </Button>
     </form>
   );

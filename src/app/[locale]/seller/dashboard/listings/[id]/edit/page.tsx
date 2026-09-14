@@ -46,9 +46,7 @@ export default function EditListingPage({ params }: { params: Promise<{ id: stri
   const router = useRouter();
   const [value, setValue] = React.useState<ListingFormValue | null>(null);
   const [images, setImages] = React.useState<ListingImage[]>([]);
-  const [error, setError] = React.useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({});
-  const [submitting, setSubmitting] = React.useState(false);
+  const [loadError, setLoadError] = React.useState<string | null>(null);
   const [loadFailed, setLoadFailed] = React.useState(false);
 
   React.useEffect(() => {
@@ -65,7 +63,7 @@ export default function EditListingPage({ params }: { params: Promise<{ id: stri
         // NOT_FOUND covers both "no such listing" and "someone else's listing"
         // — see assertOwnership's doc comment on why that's 404, not 403.
         if (err instanceof ApiClientError && err.code === "NOT_FOUND") setLoadFailed(true);
-        else setError(err instanceof ApiClientError ? err.message : common("genericError"));
+        else setLoadError(err instanceof ApiClientError ? err.message : common("genericError"));
       });
     return () => {
       cancelled = true;
@@ -76,6 +74,13 @@ export default function EditListingPage({ params }: { params: Promise<{ id: stri
     notFound();
     return null;
   }
+  if (loadError) {
+    return (
+      <p role="alert" className="text-sm font-semibold text-danger">
+        {loadError}
+      </p>
+    );
+  }
   if (!value) {
     return (
       <div className="flex justify-center py-10">
@@ -84,47 +89,32 @@ export default function EditListingPage({ params }: { params: Promise<{ id: stri
     );
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!value) return;
-    setError(null);
-    setFieldErrors({});
-    setSubmitting(true);
-
-    try {
-      await api.patch(`/api/seller/listings/${id}`, {
-        title: value.title,
-        description: value.description,
-        price: Number(value.price),
-        compareAtPrice: value.compareAtPrice ? Number(value.compareAtPrice) : null,
-        categorySlug: value.categorySlug,
-        subcategorySlug: value.subcategorySlug,
-        tehsilSlug: value.tehsilSlug,
-        localitySlug: value.localitySlug,
-        contactPhone: value.contactPhone,
-      });
-      router.push("/seller/dashboard/listings");
-    } catch (err) {
-      if (err instanceof ApiClientError) {
-        setError(err.message);
-        setFieldErrors(err.fields ?? {});
-      } else {
-        setError(common("genericError"));
-      }
-    } finally {
-      setSubmitting(false);
-    }
+  // ListingForm owns validation and submit state (Formik + Yup); this page
+  // only supplies the API call and what happens after it succeeds. A thrown
+  // ApiClientError propagates back up to the form, which shows it itself.
+  async function handleSubmit(next: ListingFormValue) {
+    await api.patch(`/api/seller/listings/${id}`, {
+      title: next.title,
+      description: next.description,
+      price: Number(next.price),
+      compareAtPrice: next.compareAtPrice ? Number(next.compareAtPrice) : null,
+      categorySlug: next.categorySlug,
+      subcategorySlug: next.subcategorySlug,
+      tehsilSlug: next.tehsilSlug,
+      localitySlug: next.localitySlug,
+      contactPhone: next.contactPhone,
+    });
+    router.push("/seller/dashboard/listings");
   }
 
   return (
     <div className="space-y-6">
       <h2 className="text-lg font-extrabold tracking-tight text-on-surface">{t("editPageTitle")}</h2>
       <ListingForm
-        value={value}
-        onChange={setValue}
+        initialValue={value}
         onSubmit={handleSubmit}
-        submitLabel={submitting ? common("saving") : t("saveCta")}
-        error={Object.values(fieldErrors)[0] ?? error}
+        submitLabel={t("saveCta")}
+        submittingLabel={common("saving")}
         imagesSection={<ListingImageManager listingId={id} value={images} onChange={setImages} />}
       />
     </div>

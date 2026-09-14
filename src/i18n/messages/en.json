@@ -11,7 +11,15 @@
     "call": "Call Seller",
     "loading": "Loading",
     "signingOut": "Signing out…",
-    "saving": "Saving…"
+    "saving": "Saving…",
+    "genericError": "Something went wrong. Please try again."
+  },
+  "validation": {
+    "required": "This field is required.",
+    "invalidPhone": "Enter a valid Pakistani mobile number.",
+    "passwordMin": "Password must be at least {min} characters.",
+    "invalidNumber": "Enter a valid number.",
+    "minValue": "Must be {min} or more."
   },
   "announcement": {
     "message": "Zero middleman fees — confirmed directly via WhatsApp.",
@@ -214,6 +222,10 @@
       "title": "Top Listings",
       "subtitle": "Malakand's most viewed listings, all in one place"
     },
+    "topSellers": {
+      "title": "Top Sellers",
+      "subtitle": "The valley's highest-rated stores, chosen by buyers like you"
+    },
     "launch": {
       "title": "Malakand's marketplace is opening",
       "body": "Be among the first sellers here — list an item and it's live immediately, no waiting.",
@@ -377,7 +389,8 @@
     "removePhotoFailedError": "Could not remove that photo. Please try again.",
     "movePhotoEarlierCta": "Move photo earlier",
     "movePhotoLaterCta": "Move photo later",
-    "reorderFailedError": "Could not reorder photos. Please try again."
+    "reorderFailedError": "Could not reorder photos. Please try again.",
+    "genericError": "Something went wrong. Please try again."
   },
   "sellerListingForm": {
     "newPageTitle": "Add Listing",

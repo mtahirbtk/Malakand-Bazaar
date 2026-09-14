@@ -6,6 +6,7 @@ import { HeroCarousel } from "@/components/marketplace/hero-carousel";
 import { PromoCard } from "@/components/marketplace/promo-card";
 import { CategoryCircle } from "@/components/marketplace/category-circle";
 import { ListingCard } from "@/components/marketplace/listing-card";
+import { SellerSpotlightCard } from "@/components/marketplace/seller-spotlight-card";
 import { PatronCredit } from "@/components/marketplace/patron-credit";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
@@ -218,6 +219,34 @@ export default function HomeContent({ payload }: { payload: HomePayload }) {
                 <Icon name="arrow_forward" size={16} />
               </Link>
             </Button>
+          </div>
+        </section>
+      )}
+
+      {/* Top Sellers — ranked by store rating server-side, with unrated
+          stores filling in by listing count/recency; hidden entirely only
+          when there are no active sellers at all. */}
+      {payload.topSellers.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-on-surface tracking-tight">
+                {t("topSellers.title")}
+              </h2>
+              <p className="text-xs text-on-surface-muted">{t("topSellers.subtitle")}</p>
+            </div>
+            <Link
+              className="text-xs font-bold text-accent-green-dark hover:underline flex items-center gap-0.5 shrink-0"
+              href="/sellers"
+            >
+              <span>{common("viewAll")}</span>
+              <Icon name="arrow_forward" size={14} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            {payload.topSellers.map((seller) => (
+              <SellerSpotlightCard key={seller.id} seller={seller} />
+            ))}
           </div>
         </section>
       )}
