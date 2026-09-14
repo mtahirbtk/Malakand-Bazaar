@@ -58,8 +58,10 @@ function contentSecurityPolicy(nonce: string, isDev: boolean): string {
     // browser to Cloudinary's own upload endpoint — bytes never pass through
     // this server, same principle as the old Supabase Storage PUT.
     `connect-src 'self' https://api.cloudinary.com${isDev ? " ws: wss:" : ""}`,
-    // Turnstile renders in an iframe from Cloudflare's challenge origin.
-    `frame-src https://challenges.cloudflare.com`,
+    // Turnstile renders in an iframe from Cloudflare's challenge origin;
+    // the no-key store-location embed (src/components/marketplace/location-map.tsx)
+    // renders in an iframe from Google Maps.
+    `frame-src https://challenges.cloudflare.com https://www.google.com`,
     `frame-ancestors 'none'`,
     `object-src 'none'`,
     `base-uri 'self'`,

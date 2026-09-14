@@ -27,7 +27,7 @@ export function AnnouncementBar() {
                 real page for it yet, and a dead link is worse than no icon. */}
             <a
               className="hover:opacity-80 transition-opacity"
-              href={whatsappUrl(CONTACT_PHONES[0].raw, "Assalam-o-Alaikum MalakandBazaar")}
+              href={whatsappUrl(CONTACT_PHONES[0].raw, "Assalam-o-Alaikum MalakandBazar")}
               target="_blank"
               rel="noopener noreferrer"
               title={t("whatsappCommunity")}

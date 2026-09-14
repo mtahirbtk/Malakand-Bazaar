@@ -18,7 +18,7 @@ export function PatronCredit() {
     >
       <div className="relative w-full h-64 sm:h-80 md:h-full min-h-[280px]">
         <Image
-          src="/images/dc/dc-malakand-portrait.jpg"
+          src="/images/DC/dc-malakand-portrait.jpg"
           alt={t("role")}
           fill
           sizes="(min-width: 768px) 50vw, 100vw"

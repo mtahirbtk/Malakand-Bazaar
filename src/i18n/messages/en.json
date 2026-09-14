@@ -1,6 +1,6 @@
 {
   "common": {
-    "brand": "MalakandBazaar",
+    "brand": "MalakandBazar",
     "tagline": "Regional Marketplace",
     "search": "Search",
     "signIn": "Sign In / Join",
@@ -52,7 +52,7 @@
   "footer": {
     "description": "The dedicated digital marketplace connecting consumers, farmers, and family enterprises across Batkhela, Dargai and Thana Baizai.",
     "whatsappHotline": "Regional WhatsApp Hotline",
-    "email": "support@malakandbazaar.pk",
+    "email": "support@malakandbazar.com",
     "address": "Bazaar Facilitation Center, Main Commercial Road, Batkhela",
     "marketLinksHeading": "Market Links",
     "electronicsSolar": "Electronics & Solar",
@@ -72,11 +72,11 @@
     "newsletterAria": "Phone or email for the weekly bulletin",
     "newsletterSubmitAria": "Subscribe",
     "newsletterNote": "Direct Pashto/Urdu WhatsApp alerts supported.",
-    "copyright": "© 2026 MalakandBazaar.pk • Dedicated Marketplace for the Citizens and Enterprises of Malakand District, KP.",
+    "copyright": "© 2026 MalakandBazar.com • Dedicated Marketplace for the Citizens and Enterprises of Malakand District, KP.",
     "privacyPolicy": "Privacy Policy",
     "termsOfTrade": "Terms of Trade",
     "helpCenter": "Help Center",
-    "whatsappSupport": "Chat with MalakandBazaar Support"
+    "whatsappSupport": "Chat with MalakandBazar Support"
   },
   "locale": {
     "en": "English",
@@ -226,7 +226,7 @@
     "banner": {
       "badge": "100% Direct Buyer-Seller Dealings",
       "title": "Zero Brokerage Fees. Direct WhatsApp Handshake.",
-      "body": "MalakandBazaar connects buyers straight to valley producers. Register your shop, orchard, or livestock stall for free and start receiving direct inquiries immediately.",
+      "body": "MalakandBazar connects buyers straight to valley producers. Register your shop, orchard, or livestock stall for free and start receiving direct inquiries immediately.",
       "cta1": "Become a Verified Seller",
       "cta2": "Seller Registration (Free)"
     },
@@ -250,7 +250,7 @@
     },
     "patron": {
       "eyebrow": "With Appreciation",
-      "body": "MalakandBazaar grew out of the district's push to bring local trade online — built with the encouragement and support of the Malakand administration.",
+      "body": "MalakandBazar grew out of the district's push to bring local trade online — built with the encouragement and support of the Malakand administration.",
       "name": "Muhammad Fayyaz Khan Sherpao",
       "role": "Deputy Commissioner, Malakand"
     }
@@ -269,7 +269,7 @@
     "signingIn": "Signing in…",
     "creatingAccount": "Creating your account…",
     "welcomeBackTitle": "Welcome back, {name}!",
-    "welcomeBackDescription": "You're signed in to MalakandBazaar.",
+    "welcomeBackDescription": "You're signed in to MalakandBazar.",
     "accountCreatedTitle": "Account created",
     "accountCreatedDescription": "Welcome, {name} — your account is ready."
   },
@@ -311,7 +311,7 @@
     "submitting": "Creating your storefront…",
     "genericError": "Something went wrong. Please try again.",
     "storefrontCreatedTitle": "Storefront created",
-    "storefrontCreatedDescription": "{storeName} is live on MalakandBazaar."
+    "storefrontCreatedDescription": "{storeName} is live on MalakandBazar."
   },
   "sellerDashboard": {
     "title": "Seller Dashboard",

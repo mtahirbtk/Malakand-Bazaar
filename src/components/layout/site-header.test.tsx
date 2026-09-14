@@ -37,7 +37,7 @@ beforeEach(() => {
 describe("SiteHeader", () => {
   it("renders the brand name", () => {
     renderHeader();
-    expect(screen.getByRole("banner")).toHaveTextContent("MalakandBazaar");
+    expect(screen.getByRole("banner")).toHaveTextContent("MalakandBazar");
   });
 
   it("uses no native select element", () => {

@@ -23,7 +23,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "MalakandBazaar — Regional Marketplace",
+  title: "MalakandBazar — Regional Marketplace",
   description:
     "Buy and sell across Batkhela, Dargai and Thana Baizai. Direct contact, no commission.",
 };

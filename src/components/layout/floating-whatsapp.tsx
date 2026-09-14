@@ -23,7 +23,7 @@ export function FloatingWhatsapp() {
         <a
           key={phone.raw}
           className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold pl-3 pr-4 h-10 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95"
-          href={whatsappUrl(phone.raw, "Assalam-o-Alaikum MalakandBazaar")}
+          href={whatsappUrl(phone.raw, "Assalam-o-Alaikum MalakandBazar")}
           rel="noopener noreferrer"
           target="_blank"
           title={t("whatsappSupport")}

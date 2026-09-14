@@ -28,7 +28,7 @@ export function BrandLogo({ className = "h-10 sm:h-12 w-auto" }: { className?: s
         x="64"
         y="36"
       >
-        Malakand<tspan fill="#C89B6D">Bazaar</tspan>
+        Malakand<tspan fill="#C89B6D">Bazar</tspan>
       </text>
       <text
         fill="#3F6B52"
